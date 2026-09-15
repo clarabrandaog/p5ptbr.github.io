@@ -1,0 +1,22 @@
+title: p5.js / pt.br
+subtitle: Tutoriais de p5.js em português
+
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+
+# Local dev settings
+port: 6300
+
+collections:
+  pages:
+    output: true
+    permalink: :path/
+
+# Defaults
+defaults:
+  - scope:
+      type: "pages"
+    values:
+      layout: "page"

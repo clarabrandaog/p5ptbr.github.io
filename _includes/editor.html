@@ -1,0 +1,193 @@
+<!-- 1. Load Monaco Editor from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/loader.min.js"></script>
+
+<script>
+  require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs' }});
+
+  window.MonacoEnvironment = {
+    getWorkerUrl: function(workerId, label) {
+      return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+        self.MonacoEnvironment = { baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/' };
+        importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.38.0/min/vs/base/worker/workerMain.js');`
+      )}`;
+    }
+  };
+
+  require(['vs/editor/editor.main'], function() {
+    const codeBlocks = document.querySelectorAll('pre code.language-p5');
+
+    codeBlocks.forEach((block) => {
+      const initialCode = block.innerText;
+      const preNode = block.parentNode;
+
+      // 1. Create main wrapper
+      const wrapper = document.createElement('div');
+      wrapper.style.marginBottom = '20px';
+      wrapper.style.border = '1px solid #ddd';
+      wrapper.style.borderRadius = '6px';
+      wrapper.style.overflow = 'hidden';
+
+      // 2. Create Toolbar
+      const toolbar = document.createElement('div');
+      toolbar.style.backgroundColor = '#f3f3f3';
+      toolbar.style.padding = '8px 12px';
+      toolbar.style.borderBottom = '1px solid #ddd';
+      toolbar.style.display = 'flex';
+      toolbar.style.gap = '8px';
+
+      const startBtn = document.createElement('button');
+      startBtn.innerText = '▶ Start';
+      startBtn.style.cssText = 'cursor:pointer; padding:4px 12px; background:#4CAF50; color:white; border:none; border-radius:4px;';
+
+      const stopBtn = document.createElement('button');
+      stopBtn.innerText = '■ Stop';
+      stopBtn.style.cssText = 'cursor:pointer; padding:4px 12px; background:#f44336; color:white; border:none; border-radius:4px;';
+
+      toolbar.appendChild(startBtn);
+      toolbar.appendChild(stopBtn);
+
+      // 3. Create Split Container
+      const container = document.createElement('div');
+      container.style.display = 'flex';
+      container.style.height = '450px'; // Increased height slightly to fit console
+
+// 4. Create Left Side (Editor + Console)
+      const leftCol = document.createElement('div');
+      leftCol.style.flex = '1';
+      leftCol.style.width = '50%';
+      leftCol.style.display = 'flex';
+      leftCol.style.flexDirection = 'column';
+
+      const editorDiv = document.createElement('div');
+      editorDiv.style.flex = '1'; // Takes remaining space
+
+      // --- NEW: Console Container and Header ---
+      
+      const consoleContainer = document.createElement('div');
+      consoleContainer.style.display = 'flex';
+      consoleContainer.style.flexDirection = 'column';
+      consoleContainer.style.height = '140px'; // Total height for header + output
+      consoleContainer.style.borderTop = '2px solid #333';
+
+      const consoleHeader = document.createElement('div');
+      consoleHeader.innerText = 'Console Output';
+      consoleHeader.style.backgroundColor = '#2d2d2d'; // Slightly lighter than the console
+      consoleHeader.style.color = '#ccc';
+      consoleHeader.style.fontSize = '11px';
+      consoleHeader.style.fontFamily = 'sans-serif';
+      consoleHeader.style.padding = '4px 8px';
+      consoleHeader.style.textTransform = 'uppercase';
+      consoleHeader.style.letterSpacing = '0.5px';
+
+      const consoleDiv = document.createElement('div');
+      consoleDiv.style.flex = '1'; // Fill remaining space in container
+      consoleDiv.style.backgroundColor = '#1e1e1e';
+      consoleDiv.style.color = '#d4d4d4';
+      consoleDiv.style.fontFamily = 'monospace';
+      consoleDiv.style.fontSize = '13px';
+      consoleDiv.style.padding = '8px';
+      consoleDiv.style.overflowY = 'auto';
+      consoleDiv.innerHTML = '<div style="color:#888;">// Console output...</div>';
+
+      // Assemble the console area
+      consoleContainer.appendChild(consoleHeader);
+      consoleContainer.appendChild(consoleDiv);
+
+      // Assemble the left column
+      leftCol.appendChild(editorDiv);
+      leftCol.appendChild(consoleContainer);
+
+      // 5. Create Right Side (Live Canvas)
+      const previewIframe = document.createElement('iframe');
+      previewIframe.style.flex = '1';
+      previewIframe.style.width = '50%';
+      previewIframe.style.border = 'none';
+      previewIframe.style.borderLeft = '1px solid #ddd';
+      previewIframe.srcdoc = "<html><body style='background:#f9f9f9;'></body></html>";
+
+      container.appendChild(leftCol);
+      container.appendChild(previewIframe);
+
+      wrapper.appendChild(toolbar);
+      wrapper.appendChild(container);
+      preNode.parentNode.replaceChild(wrapper, preNode);
+
+      // Mount Monaco
+      const editor = monaco.editor.create(editorDiv, {
+        value: initialCode,
+        language: 'javascript',
+        theme: 'vs-light',
+        minimap: { enabled: false },
+        automaticLayout: true 
+      });
+
+      // 6. Listen for console messages from THIS specific iframe
+      window.addEventListener('message', (event) => {
+        if (event.source === previewIframe.contentWindow && event.data && event.data.source === 'p5-embed') {
+          const logLine = document.createElement('div');
+          logLine.style.borderBottom = '1px solid #333';
+          logLine.style.padding = '2px 0';
+          logLine.style.wordWrap = 'break-word';
+          logLine.innerText = event.data.args.join(' ');
+          
+          if (event.data.method === 'error') logLine.style.color = '#ff5555'; // Red for errors
+          if (event.data.method === 'warn') logLine.style.color = '#ffb86c';  // Yellow/Orange for warnings
+          
+          consoleDiv.appendChild(logLine);
+          consoleDiv.scrollTop = consoleDiv.scrollHeight; // Auto-scroll to bottom
+        }
+      });
+
+      // 7. Function to bundle and run the sketch
+      function runSketch() {
+        // Clear the console on new run
+        consoleDiv.innerHTML = '';
+        
+        const code = editor.getValue();
+        
+        // We inject a script into the iframe that hijacks console.log and errors
+        // and sends them out via postMessage to the parent window.
+        const html = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <script>
+                // Intercept console methods
+                ['log', 'warn', 'error', 'info'].forEach(function(method) {
+                  const original = console[method];
+                  console[method] = function() {
+                    const args = Array.from(arguments).map(a => typeof a === 'object' ? JSON.stringify(a) : String(a));
+                    window.parent.postMessage({ source: 'p5-embed', method: method, args: args }, '*');
+                    original.apply(console, arguments);
+                  };
+                });
+                
+                // Intercept global runtime errors
+                window.onerror = function(msg, url, line) {
+                  window.parent.postMessage({ source: 'p5-embed', method: 'error', args: ['Error: ' + msg] }, '*');
+                  return false;
+                };
+              <\/script>
+              <script src="https://cdn.jsdelivr.net/npm/p5@2/lib/p5.min.js"><\/script>
+              <style>
+                body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; background: #f9f9f9;}
+              </style>
+            </head>
+            <body>
+              <script>${code}<\/script>
+            </body>
+          </html>
+        `;
+        previewIframe.srcdoc = html;
+      }
+
+      startBtn.addEventListener('click', runSketch);
+      
+      stopBtn.addEventListener('click', () => {
+        previewIframe.srcdoc = "<html><body style='background:#f9f9f9;'></body></html>";
+      });
+
+      runSketch();
+    });
+  });
+</script>

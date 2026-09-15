@@ -1,0 +1,11 @@
+<div class="body-section-container">
+  <div class="body-section">
+    <content class="body-section-content">
+      {% if page.url == "/" %}
+        {{ content }}
+      {% else %}
+        {% include tutorial-content.html %}
+      {% endif %}
+    </content>
+  </div>
+</div>
