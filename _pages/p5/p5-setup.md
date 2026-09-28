@@ -1,38 +1,38 @@
 ---
-title: Setting up p5.js
+title: Configurando o p5.js
 ---
-We previously saw how to set up our [local development environment](../../intro/ide/).
+Vimos anteriormente como configurar nosso [ambiente de desenvolvimento local](../../intro/ide/).
 
-Now, let's see how to start a p5.js project.
+Agora, vamos ver como iniciar um projeto p5.js.
 
-## Files
+## Arquivos
 
-The most basic way of starting a project is to just create an empty directory somewhere on our computer:
+A forma mais básica de começar um projeto é simplesmente criar um diretório vazio em algum lugar do nosso computador:
 
 {% include video.html url="p5/setup-00.webm" width="66" %}
 
-Next, we can open this directory in VSCode and create two empty files inside it: `index.html` and `sketch.js`.
+Em seguida, podemos abrir esse diretório no VSCode e criar dois arquivos vazios dentro dele: `index.html` e `sketch.js`.
 
 {% include video.html url="p5/setup-01.webm" %}
 
 ### html
 
-Let's start with the `index.html` file since this is the file that gets loaded first when we access our project in a browser. This file is responsible for loading a few other files with JavaScript code, and setting up a couple of basic `html` elements where the results of our JavaScript code can be drawn.
+Vamos começar pelo arquivo `index.html`, já que este é o arquivo que é carregado primeiro quando acessamos nosso projeto em um navegador. Esse arquivo é responsável por carregar alguns outros arquivos com código JavaScript e por configurar alguns elementos `html` básicos onde os resultados do nosso código JavaScript podem ser desenhados.
 
-[THIS](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/index.html) is what a basic p5.js project `index.html` file looks like. We can just copy the contents of this file into the empty `index.html` file in our local directory.
+[ESTE](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/index.html) é o aspecto de um arquivo `index.html` básico de um projeto p5.js. Podemos simplesmente copiar o conteúdo desse arquivo para o arquivo `index.html` vazio no nosso diretório local.
 
-We don't have to understand everything in this file, but a few lines are worth highlighting:
+Não precisamos entender tudo o que há nesse arquivo, mas algumas linhas merecem destaque:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.3.1/lib/p5.min.js"></script>
 <script src="sketch.js"></script>
 ```
 
-These two lines load the JavaScript code used by our project. The first line loads the p5.js library from a CDN (Content Delivery Service: a server online). This file contains a bunch of pre-written code that we will use in our project.
+Essas duas linhas carregam o código JavaScript usado pelo nosso projeto. A primeira linha carrega a biblioteca p5.js de uma CDN (Content Delivery Service, ou Serviço de Entrega de Conteúdo: um servidor online). Esse arquivo contém um monte de código pré-escrito que vamos usar no nosso projeto.
 
-The second line loads our `sketch.js` JavaScript file from the same directory as our `index.html` file.
+A segunda linha carrega nosso arquivo JavaScript `sketch.js` do mesmo diretório em que está nosso arquivo `index.html`.
 
-Before we look at the JavaScript file, a few more lines of `html`:
+Antes de olharmos o arquivo JavaScript, mais algumas linhas de `html`:
 
 ```html
 <body>
@@ -40,13 +40,13 @@ Before we look at the JavaScript file, a few more lines of `html`:
 </body>
 ```
 
-These lines setup a blank html page, with an empty [`<main>`](https://www.w3schools.com/tags/tag_main.asp) component. This component also has an `id` attribute of `main`, which is what our JavaScript code will look for when it starts drawing things to the screen.
+Essas linhas configuram uma página html em branco, com um componente [`<main>`](https://www.w3schools.com/tags/tag_main.asp) vazio. Esse componente também tem um atributo `id` com valor `main`, que é o que o nosso código JavaScript vai procurar quando começar a desenhar coisas na tela.
 
 ### JavaScript
 
-We will write our project's code in the `sketch.js` file, and we should, eventually, understand everything that it contains.
+Vamos escrever o código do nosso projeto no arquivo `sketch.js`, e, eventualmente, devemos entender tudo o que ele contém.
 
-A very simple `sketch.js` file that we can start with, can look like this:
+Um arquivo `sketch.js` bem simples com o qual podemos começar pode ser assim:
 
 ```js
 function setup() {
@@ -59,32 +59,32 @@ function draw() {
 }
 ```
 
-We can copy these lines into our empty `sketch.js` file or download the file form [HERE](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/sketch.js).
+Podemos copiar essas linhas para o nosso arquivo `sketch.js` vazio ou baixar o arquivo [AQUI](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/sketch.js).
 
-This file has two sections, one called `setup` and another called `draw`. Commands for the `setup` section are grouped within its brackets (`{` `}`), just like the commands for the `draw` section are grouped within brackets.
+Esse arquivo tem duas seções, uma chamada `setup` e outra chamada `draw`. Os comandos da seção `setup` ficam agrupados entre suas chaves (`{` `}`), assim como os comandos da seção `draw` ficam agrupados entre chaves.
 
-Most of our p5.js projects will be organized this way, with a `setup` section that usually sets up some parameters for our project, followed by a `draw` section, which runs repeatedly and is responsible for actually drawing (shapes, images, etc) on the screen and handling user interactivity, amongst other things.
+A maioria dos nossos projetos p5.js será organizada dessa forma, com uma seção `setup` que geralmente configura alguns parâmetros do nosso projeto, seguida de uma seção `draw`, que roda repetidamente e é responsável por desenhar de fato (formas, imagens etc.) na tela e lidar com a interatividade do usuário, entre outras coisas.
 
-Right now our `setup` section just specifies that we want a canvas that is as big as our browser's window, and our `draw` section just fills up our canvas with a red background and draws an ellipse somewhere near the upper left-hand corner of our page's window.
+Neste momento, nossa seção `setup` apenas especifica que queremos um canvas tão grande quanto a janela do nosso navegador, e nossa seção `draw` apenas preenche nosso canvas com um fundo vermelho e desenha uma elipse em algum lugar perto do canto superior esquerdo da janela da nossa página.
 
-How can we check? We'll get a browser to load up our project and see.
+Como podemos conferir? Vamos fazer um navegador carregar nosso projeto e ver.
 
-## Local Server & IDE
+## Servidor Local & IDE
 
-The easiest way to preview our p5.js projects while developing them locally is to open them up in a browser.
+A forma mais fácil de visualizar nossos projetos p5.js enquanto os desenvolvemos localmente é abri-los em um navegador.
 
-But, since the browser treats *local* files on our computer differently than it treats files that it opens from the internet, and eventually we will want our projects to be available on the internet, we have to trick our browser into opening up our local files as if they were coming from the internet.
+Mas, como o navegador trata arquivos *locais* do nosso computador de forma diferente de arquivos que ele abre a partir da internet, e como eventualmente vamos querer que nossos projetos estejam disponíveis na internet, precisamos enganar nosso navegador para que ele abra nossos arquivos locais como se eles viessem da internet.
 
-In other words, in oder to see our project in a browser we have to *serve* our project files as if they were a complete webpage living on a [server](../../intro/javascript/).
+Em outras palavras, para ver nosso projeto em um navegador, precisamos *servir* os arquivos do nosso projeto como se fossem uma página web completa hospedada em um [servidor](../../intro/javascript/).
 
-Luckily, we can use our VSCode IDE and the [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) extension to easily create a local server for our project.
+Felizmente, podemos usar nossa IDE VSCode e a extensão [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer) para criar facilmente um servidor local para o nosso projeto.
 
-All we have to do is navigate to our project directory in VSCode and click the "Go Live" button towards the lower right-hand side of the window. This will start a local server and open a browser with our project:
+Tudo o que precisamos fazer é navegar até o diretório do nosso projeto no VSCode e clicar no botão "Go Live" na parte inferior direita da janela. Isso vai iniciar um servidor local e abrir um navegador com o nosso projeto:
 
 {% include video.html url="p5/setup-02.webm" %}
 
-And now that the server is running, any changes we make to our project code will be reflect on the browser:
+E agora que o servidor está rodando, qualquer mudança que fizermos no código do nosso projeto será refletida no navegador:
 
 {% include video.html url="p5/setup-03.webm" %}
 
-And that URL for our project, `http://127.0.0.1`, is only accessible from our own computer, so the project is ready to be hosted online, but isn't yet on the internet.
+E essa URL do nosso projeto, `http://127.0.0.1`, só é acessível a partir do nosso próprio computador, então o projeto está pronto para ser hospedado online, mas ainda não está na internet.

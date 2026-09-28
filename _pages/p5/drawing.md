@@ -1,28 +1,28 @@
 ---
-title: "Drawing: Shapes and Colors"
+title: "Desenhando: Formas e Cores"
 ---
 
-We briefly saw some commands for drawing shapes on our canvas in the [previous section](../p5-intro/), when we looked at the overall organization of a p5.js project.
+Vimos brevemente alguns comandos para desenhar formas no nosso canvas na [seção anterior](../p5-intro/), quando olhamos a organização geral de um projeto p5.js.
 
-Let's take a more detailed look at our canvas, the commands we can use for drawing shapes and how to represent colors in our p5.js sketches.
+Vamos dar uma olhada mais detalhada no nosso canvas, nos comandos que podemos usar para desenhar formas e em como representar cores nos nossos sketches p5.js.
 
-## The Canvas
+## O Canvas
 
-First, a quick introduction to the canvas.
+Primeiro, uma breve introdução ao canvas.
 
-The canvas is the section of our page where we can actually draw things. There's an actual `html` [`<canvas>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas) element on our page that is responsible for displaying our drawings, but we don't have to worry about interacting directly with it. When we use the [`createCanvas()`](https://p5js.org/reference/#/p5/createCanvas) command, p5.js will automatically take care of creating and placing this `<canvas>` element on our page.
+O canvas é a seção da nossa página onde podemos de fato desenhar coisas. Existe um elemento `html` [`<canvas>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas) real na nossa página, responsável por exibir nossos desenhos, mas não precisamos nos preocupar em interagir diretamente com ele. Quando usamos o comando [`createCanvas()`](https://p5js.org/reference/#/p5/createCanvas), o p5.js cuida automaticamente de criar e posicionar esse elemento `<canvas>` na nossa página.
 
-The `createCanvas()` command takes two parameters, or, two numbers, that specify a `width` and a `height` for our drawing area. We can always give it specific values in pixels, like: `createCanvas(640, 480)` or `createCanvas(1920, 1080)`, but if we want our canvas to be proportional to our browser window, we can use the special p5.js keywords `windowWidth` and `windowHeight` to make the canvas take up as much space as possible on our page: `createCanvas(windowWidth, windowHeight)`.
+O comando `createCanvas()` recebe dois parâmetros, ou seja, dois números, que especificam a largura (`width`) e a altura (`height`) da nossa área de desenho. Sempre podemos dar a ele valores específicos em pixels, como: `createCanvas(640, 480)` ou `createCanvas(1920, 1080)`, mas se quisermos que nosso canvas seja proporcional à janela do navegador, podemos usar as palavras-chave especiais do p5.js `windowWidth` e `windowHeight` para fazer o canvas ocupar o máximo de espaço possível na nossa página: `createCanvas(windowWidth, windowHeight)`.
 
-We can see the difference by running the following two sketches:
+Podemos ver a diferença executando os dois sketches a seguir:
 
 {% include p5-editor.html id="AHvLeXMJM" %}
 {% include p5-editor.html id="FJCJwnz7V" %}
 
 
-And, whether our canvas is created with specific pixel dimensions or using `(windowWidth, windowHeight)`, we can always ask p5.js for the exact size of our canvas by accessing the [`width`](https://p5js.org/reference/#/p5/width) and [`height`](https://p5js.org/reference/#/p5/height) *variables*.
+E, seja nosso canvas criado com dimensões específicas em pixels ou usando `(windowWidth, windowHeight)`, sempre podemos perguntar ao p5.js o tamanho exato do nosso canvas acessando as *variáveis* [`width`](https://p5js.org/reference/#/p5/width) e [`height`](https://p5js.org/reference/#/p5/height).
 
-(clear any cookie warnings and look at the *Console* section after running the sketch below)
+(feche qualquer aviso de cookies e olhe a seção *Console* depois de executar o sketch abaixo)
 
 
 <div class="editor-block-wrapper">
@@ -30,42 +30,42 @@ And, whether our canvas is created with specific pixel dimensions or using `(win
     <iframe class="editor" src="https://editor.p5js.org/shfitz/sketches/M45a9yw5w"></iframe>
   </div>
   <a class="editor-link" href="https://editor.p5js.org/shfitz/sketches/M45a9yw5w">
-    open example in new window
+    abrir exemplo em uma nova janela
   </a>
 </div>
 
-## Coordinate System
+## Sistema de Coordenadas
 
-Before we start drawing, we just need to understand how the canvas is oriented and how to specify locations within its boundaries.
+Antes de começarmos a desenhar, precisamos entender como o canvas está orientado e como especificar localizações dentro dos seus limites.
 
-Just like `createCanvas()` required two numbers, for $$(width, height)$$, to define the size of our canvas, specifying locations on our canvas also requires two numbers, or coordinates, $$(x, y)$$. This is because in p5.js our canvas is a two-dimensional [cartesian plane](https://en.wikipedia.org/wiki/Cartesian_coordinate_system#Two_dimensions), where the first dimension represents the horizontal distance from the origin, and the second dimension the vertical distance. Unlike the traditional cartesian coordinate system from geometry, in p5.js, and most other computer graphics contexts, the origin of our canvas is on the top left corner and the vertical dimension grows downwards.
+Assim como o `createCanvas()` exigiu dois números, $$(width, height)$$, para definir o tamanho do nosso canvas, especificar localizações no canvas também exige dois números, ou coordenadas, $$(x, y)$$. Isso acontece porque, no p5.js, nosso canvas é um [plano cartesiano](https://en.wikipedia.org/wiki/Cartesian_coordinate_system#Two_dimensions) bidimensional, em que a primeira dimensão representa a distância horizontal a partir da origem, e a segunda dimensão a distância vertical. Diferente do sistema de coordenadas cartesiano tradicional da geometria, no p5.js, e na maioria dos outros contextos de computação gráfica, a origem do nosso canvas fica no canto superior esquerdo e a dimensão vertical cresce para baixo.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/canvas-00.jpg' | relative_url }}">
 </div>
 
-And now, the p5.js [`width`](https://p5js.org/reference/#/p5/width) and [`height`](https://p5js.org/reference/#/p5/height) variables can be very useful when we want to specify positions that are relative to the overall size of our canvas. For example, the pixel that's exactly in the center of our canvas can always be specified with coordinates $$(\frac{width}{2}, \frac{height}{2})$$, independent of the exact size of our canvas.
+E agora, as variáveis [`width`](https://p5js.org/reference/#/p5/width) e [`height`](https://p5js.org/reference/#/p5/height) do p5.js podem ser muito úteis quando queremos especificar posições relativas ao tamanho geral do nosso canvas. Por exemplo, o pixel que está exatamente no centro do nosso canvas sempre pode ser especificado com as coordenadas $$(\frac{width}{2}, \frac{height}{2})$$, independentemente do tamanho exato do canvas.
 
-Likewise, the pixel furthest away from the origin has coordinates $$(width - 1, height - 1)$$. The $$-1$$ is necessary because even though our canvas is $$width$$ pixels wide and $$height$$ pixels tall, we have a pixel at $$(0, 0)$$, and if the first pixel along the $$x$$ direction is at coordinate $$0$$, the second pixel at coordinate $$1$$, ..., etc, ..., the last pixel will be at coordinate $$width - 1$$.
+Da mesma forma, o pixel mais distante da origem tem coordenadas $$(width - 1, height - 1)$$. O $$-1$$ é necessário porque, embora nosso canvas tenha $$width$$ pixels de largura e $$height$$ pixels de altura, temos um pixel em $$(0, 0)$$, e se o primeiro pixel ao longo da direção $$x$$ está na coordenada $$0$$, o segundo pixel na coordenada $$1$$, ..., etc, ..., o último pixel estará na coordenada $$width - 1$$.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/canvas-01.jpg' | relative_url }}">
 </div>
 
-## Drawing Shapes
+## Desenhando Formas
 
-Now that we know how to use coordinates to specify locations on our canvas we can start drawing.
+Agora que sabemos usar coordenadas para especificar localizações no nosso canvas, podemos começar a desenhar.
 
-The p5.js commands [`rect()`](https://p5js.org/reference/#/p5/rect) and [`ellipse()`](https://p5js.org/reference/#/p5/ellipse) can be used to draw rectangles and ellipses, respectively. They're very similar in a lot of ways, but also have some differences worth noting.
+Os comandos [`rect()`](https://p5js.org/reference/#/p5/rect) e [`ellipse()`](https://p5js.org/reference/#/p5/ellipse) do p5.js podem ser usados para desenhar retângulos e elipses, respectivamente. Eles são muito parecidos em vários aspectos, mas também têm algumas diferenças que vale a pena notar.
 
-In their simplest form, they both take $$3$$ parameters: `x-location`, `y-location` and `size`.
+Na sua forma mais simples, ambos recebem $$3$$ parâmetros: `x-location` (posição x), `y-location` (posição y) e `size` (tamanho).
 
 ```js
 rect(10, 10, 80);
 ellipse(200, 200, 100);
 ```
 
-If we want the shapes to have different proportions, we just have to use a fourth parameter for the `height` of the shape:
+Se quisermos que as formas tenham proporções diferentes, basta usar um quarto parâmetro para a altura (`height`) da forma:
 
 ```js
 rect(10, 100, 80, 40);
@@ -74,9 +74,9 @@ ellipse(200, 300, 100);
 
 {% include p5-editor.html id="TyHTKL3db" %}
 
-We can play with the coordinates and sizes on the sketch above ☝️ to gain some familiarity and intuition about the coordinate system and these two functions.
+Podemos brincar com as coordenadas e os tamanhos no sketch acima ☝️ para ganhar familiaridade e intuição sobre o sistema de coordenadas e essas duas funções.
 
-Now, for some of the differences between `rect()` and `ellipse()`. Let's say we want to draw an ellipse to the right of a rectangle. They'll be next to each other, in the same vertical location, so we could try something like this:
+Agora, algumas das diferenças entre `rect()` e `ellipse()`. Digamos que queremos desenhar uma elipse à direita de um retângulo. Eles ficarão lado a lado, na mesma posição vertical, então poderíamos tentar algo assim:
 
 ```js
 rect(210, 300, 80);
@@ -87,9 +87,9 @@ ellipse(310, 300, 80);
 
 # 🤔
 
-Even though the first $$2$$ parameters for `rect()` and `ellipse()` specify `x` and `y` coordinates, what they mean is different. For `rect()`, we specify the top-left corner of our shape and for `ellipse()` we specify its center.
+Embora os primeiros $$2$$ parâmetros de `rect()` e `ellipse()` especifiquem coordenadas `x` e `y`, o que eles significam é diferente. Para o `rect()`, especificamos o canto superior esquerdo da nossa forma, e para o `ellipse()` especificamos o seu centro.
 
-Drawing them next to each other requires some adjusting to the coordinates. We can offset the ellipse's `x` and `y` location by half of its diameter:
+Desenhá-los lado a lado exige alguns ajustes nas coordenadas. Podemos deslocar a posição `x` e `y` da elipse pela metade do seu diâmetro:
 
 ```js
 rect(210, 300, 80);
@@ -98,21 +98,21 @@ ellipse(350, 340, 80);
 
 {% include p5-editor.html id="KiSnvsQhf" %}
 
-We can also use the p5.js functions [`rectMode()`](https://p5js.org/reference/#/p5/rectMode) and [`ellipseMode()`](https://p5js.org/reference/#/p5/ellipseMode) to change how rectangles and ellipses are drawn.
+Também podemos usar as funções [`rectMode()`](https://p5js.org/reference/#/p5/rectMode) e [`ellipseMode()`](https://p5js.org/reference/#/p5/ellipseMode) do p5.js para mudar como os retângulos e as elipses são desenhados.
 
-To draw rectangles by specifying their center location, we can use
+Para desenhar retângulos especificando sua posição central, podemos usar
 ```js
 rectMode(CENTER);
 ```
 
-To draw ellipses by specifying their top-left corner, we can use:
+Para desenhar elipses especificando seu canto superior esquerdo, podemos usar:
 ```js
 ellipseMode(CORNER);
 ```
 
 {% include p5-editor.html id="3frUheLXu" %}
 
-One thing to note is that once we call `rectMode()` or `ellipseMode()`, every shape that we draw afterwards will be drawn using the mode specified. To undo this, we can call:
+Uma coisa a notar é que, depois que chamamos `rectMode()` ou `ellipseMode()`, toda forma que desenharmos em seguida será desenhada usando o modo especificado. Para desfazer isso, podemos chamar:
 
 ```js
 rectMode(CORNER);
@@ -122,99 +122,99 @@ ellipseMode(CENTER);
 {% include p5-editor.html id="WTddwWpvG" %}
 
 
-Or, better yet, we can just pick one mode in the beginning, whichever we think will be most useful for our sketch, and keep it throughout the whole sketch.
+Ou, melhor ainda, podemos simplesmente escolher um modo no início, o que acharmos mais útil para o nosso sketch, e mantê-lo durante todo o sketch.
 
-Let's say we want to draw a grid of squares, rectangles and circles. In this situation, where we are starting at the top-left corner of our canvas and drawing to the right and to the bottom, it might be easier to do math for the locations of the top-left corners of our shapes. Since we'll keep the same mode throughout the whole sketch, we can just put `ellipseMode(CORNER)` inside our `setup()` function.
+Digamos que queremos desenhar uma grade de quadrados, retângulos e círculos. Nessa situação, em que começamos no canto superior esquerdo do nosso canvas e desenhamos para a direita e para baixo, pode ser mais fácil fazer as contas para as posições dos cantos superiores esquerdos das nossas formas. Como manteremos o mesmo modo durante todo o sketch, podemos simplesmente colocar `ellipseMode(CORNER)` dentro da nossa função `setup()`.
 
 {% include p5-editor.html id="NL-wqSSL1" %}
 
-But, on the other hand, if we are drawing concentric shapes, or placing them relative to the center of the canvas, we might find it easier to use `rectMode(CENTER)` throughout our whole sketch:
+Mas, por outro lado, se estivermos desenhando formas concêntricas, ou posicionando-as em relação ao centro do canvas, pode ser mais fácil usar `rectMode(CENTER)` durante todo o sketch:
 
 {% include p5-editor.html id="hmROElyh4" %}
 
-## More Shapes
+## Mais Formas
 
-p5.js has commands for a bunch of [other shapes](https://p5js.org/reference/#group-Shape) besides rectangles and ellipses.
+O p5.js tem comandos para várias [outras formas](https://p5js.org/reference/#group-Shape) além de retângulos e elipses.
 
-The [`quad()`](https://p5js.org/reference/#/p5/quad) function can be used to draw non-rectangle quadrilaterals by specifying $$4$$ pairs of `x` and `y` coordinates.
+A função [`quad()`](https://p5js.org/reference/#/p5/quad) pode ser usada para desenhar quadriláteros que não são retângulos, especificando $$4$$ pares de coordenadas `x` e `y`.
 
-Similarly, the [`triangle()`](https://p5js.org/reference/#/p5/triangle) function draws a triangle from $$3$$ pairs of `x` and `y` coordinates.
+De forma semelhante, a função [`triangle()`](https://p5js.org/reference/#/p5/triangle) desenha um triângulo a partir de $$3$$ pares de coordenadas `x` e `y`.
 
 {% include p5-editor.html id="rkWRuOQ26" %}
 
-The [`arc()`](https://p5js.org/reference/#/p5/arc) function draws partial ellipses, and its first $$4$$ parameters are just like the `ellipse()` parameters for `x` and `y` coordinates, `width` and `height`, but the 5$$^{th}$$ an 6$$^{th}$$ parameters specify the angles of where the arc starts and stops, respectively.
+A função [`arc()`](https://p5js.org/reference/#/p5/arc) desenha elipses parciais, e seus primeiros $$4$$ parâmetros são iguais aos parâmetros do `ellipse()` para as coordenadas `x` e `y`, largura e altura, mas o 5$$^{o}$$ e o 6$$^{o}$$ parâmetros especificam os ângulos onde o arco começa e termina, respectivamente.
 
-Angles in p5.js are measured in [radians](https://en.wikipedia.org/wiki/Radian) in relation to the positive `x` direction. And because our `y` values increase as we go down the canvas, increasing angles will also go towards this positive `y` direction.
+Os ângulos no p5.js são medidos em [radianos](https://en.wikipedia.org/wiki/Radian) em relação à direção positiva de `x`. E como nossos valores de `y` aumentam conforme descemos no canvas, ângulos crescentes também vão em direção a essa direção positiva de `y`.
 
-How angles are measured in p5.js and degree/radian equivalents for some common angles:
+Como os ângulos são medidos no p5.js e equivalências entre graus e radianos para alguns ângulos comuns:
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/drawing-angles.jpg' | relative_url }}">
 </div>
 
-So now, we can use this drawing as reference to help us draw some partial ellipses:
+Então agora podemos usar este desenho como referência para nos ajudar a desenhar algumas elipses parciais:
 
 {% include p5-editor.html id="12qrmbjku" %}
 
-## Non-regular and Custom Shapes
+## Formas Irregulares e Personalizadas
 
-p5.js has a method for allowing us to draw custom and non-regular shapes.
+O p5.js tem um método que nos permite desenhar formas personalizadas e irregulares.
 
-First, we call the [`beginShape()`](https://p5js.org/reference/#/p5/beginShape) function, then we add as many vertices as we want to our shape, with the [`vertex()`](https://p5js.org/reference/#/p5/vertex) function, in the order they are to drawn, and finally we let p5.js know we finished our shape by calling the [`endShape()`](https://p5js.org/reference/#/p5/endShape) function.
+Primeiro, chamamos a função [`beginShape()`](https://p5js.org/reference/#/p5/beginShape), depois adicionamos quantos vértices quisermos à nossa forma, com a função [`vertex()`](https://p5js.org/reference/#/p5/vertex), na ordem em que devem ser desenhados, e por fim avisamos ao p5.js que terminamos nossa forma chamando a função [`endShape()`](https://p5js.org/reference/#/p5/endShape).
 
-We can call `endShape(CLOSE)` to close our shape without having to replicate the first vertex as the last vertex.
+Podemos chamar `endShape(CLOSE)` para fechar nossa forma sem precisar replicar o primeiro vértice como último vértice.
 
 {% include p5-editor.html id="_ewE9wElh" %}
 
-## Colors
+## Cores
 
-We saw some possibilities for drawing shapes.
+Vimos algumas possibilidades para desenhar formas.
 
-Let's talk about colors.
+Vamos falar sobre cores.
 
-The default color mode for p5.js sketches is `RGB`, or `RGBA`, which means that colors are specified using $$3$$ or $$4$$ values between $$0$$ and $$255$$.
+O modo de cor padrão dos sketches p5.js é `RGB`, ou `RGBA`, o que significa que as cores são especificadas usando $$3$$ ou $$4$$ valores entre $$0$$ e $$255$$.
 
-The first value corresponds to the amount of red in the color, the second to the amount of green and the third to the amount of blue. Those are the $$3$$ color channels in `RGB` mode because they correspond to the physical pixels on a monitor, which have tiny red, green and blue lights.
+O primeiro valor corresponde à quantidade de vermelho na cor, o segundo à quantidade de verde e o terceiro à quantidade de azul. Esses são os $$3$$ canais de cor no modo `RGB` porque correspondem aos pixels físicos de um monitor, que têm pequenas luzes vermelhas, verdes e azuis.
 
-The fourth value, when specified, corresponds to the amount of opacity of our color, where $$0$$ is a fully transparent color and $$255$$ fully opaque.
+O quarto valor, quando especificado, corresponde à opacidade da nossa cor, onde $$0$$ é uma cor totalmente transparente e $$255$$ totalmente opaca.
 
-We can also specify `RGB` colors by just using $$1$$ value. This is a shortcut to specify that all three values for the red, green and blue channels are the same, and the result is a grayscale color.
+Também podemos especificar cores `RGB` usando apenas $$1$$ valor. Esse é um atalho para especificar que os três valores dos canais vermelho, verde e azul são iguais, e o resultado é uma cor em escala de cinza.
 
-Besides the `background()` command, which we've been using to specify the pink color of our background, we can also use the [`fill()`](https://p5js.org/reference/#/p5/fill) and [`stroke()`](https://p5js.org/reference/#/p5/stroke) commands to specify the fill and outline colors for our shapes.
+Além do comando `background()`, que temos usado para especificar a cor rosa do nosso fundo, também podemos usar os comandos [`fill()`](https://p5js.org/reference/#/p5/fill) e [`stroke()`](https://p5js.org/reference/#/p5/stroke) para especificar as cores de preenchimento e de contorno das nossas formas.
 
-And, just like the `rectMode()` and `ellipseMode()` commands, once we call `fill()` or `stroke()`, everything drawn afterwards will have the same color.
+E, assim como os comandos `rectMode()` e `ellipseMode()`, depois que chamamos `fill()` ou `stroke()`, tudo que for desenhado em seguida terá a mesma cor.
 
 {% include p5-editor.html id="oCr-eh9CB" %}
 
-Colors can also be specified using [html color names](https://www.w3schools.com/tags/ref_colornames.asp), or [hex notation](https://www.w3schools.com/html/html_colors_hex.asp).
+As cores também podem ser especificadas usando [nomes de cores html](https://www.w3schools.com/tags/ref_colornames.asp), ou [notação hexadecimal](https://www.w3schools.com/html/html_colors_hex.asp).
 
-Hex notation might be familiar from image-editing software. It contains the exact same information as the `RGB` format, but represented in [hexadecimal notation](https://byjus.com/maths/hexadecimal-number-system/), where each of the $$3$$ channel values between $$0$$ and $$255$$ is represented as a hexadecimal number between `00` and `FF`, where `FF` is the hexadecimal notation for the number $$255$$.
+A notação hexadecimal pode ser familiar de softwares de edição de imagem. Ela contém exatamente a mesma informação do formato `RGB`, mas representada em [notação hexadecimal](https://byjus.com/maths/hexadecimal-number-system/), onde cada um dos $$3$$ valores de canal entre $$0$$ e $$255$$ é representado como um número hexadecimal entre `00` e `FF`, sendo `FF` a notação hexadecimal para o número $$255$$.
 
 {% include p5-editor.html id="4ycW7yWmV" %}
 
-### Color Modes
+### Modos de Cor
 
-In addition to the default `RGB` color mode, p5.js also allows us to describe colors using the `HSB` color mode.
+Além do modo de cor `RGB` padrão, o p5.js também nos permite descrever cores usando o modo de cor `HSB`.
 
-`HSB` stands for Hue, Saturation and Brightness, and sometimes is also referred to as [`HSV`](https://en.wikipedia.org/wiki/HSL_and_HSV) for Hue-Saturation-Value.
+`HSB` significa Hue (matiz), Saturation (saturação) e Brightness (brilho), e às vezes também é chamado de [`HSV`](https://en.wikipedia.org/wiki/HSL_and_HSV), de Hue-Saturation-Value.
 
-The Hue value describes the color itself: whether it's red, blue, purple, orange, etc. The Saturation and Brightness components are attributes of the color, where Saturation describes how "*colorful*" the color is and Brightness its "*illuminance*". Decreasing the saturation value will make the color more gray, where decreasing its Brightness will make it more black.
+O valor de Hue descreve a cor em si: se é vermelha, azul, roxa, laranja etc. Os componentes de Saturation e Brightness são atributos da cor, onde a Saturation descreve o quão "*colorida*" a cor é e o Brightness sua "*luminosidade*". Diminuir o valor de saturação deixa a cor mais cinza, enquanto diminuir seu Brightness a deixa mais preta.
 
-In order to enable the `HSB` color mode in p5.js we have to call the [`colorMode()`](https://p5js.org/reference/#/p5/colorMode) function with `HSB` for its parameter: `colorMode(HSB)`.
+Para ativar o modo de cor `HSB` no p5.js, precisamos chamar a função [`colorMode()`](https://p5js.org/reference/#/p5/colorMode) com `HSB` como parâmetro: `colorMode(HSB)`.
 
-After that, all of the color commands like `background()`, `fill()` and `stroke()` will interpret their $$3$$ parameters as `HSB` values.
+Depois disso, todos os comandos de cor como `background()`, `fill()` e `stroke()` vão interpretar seus $$3$$ parâmetros como valores `HSB`.
 
-In `HSB` mode the Hue value has a range from $$0$$ to $$359$$, and Saturation and Brightness go from $$0$$ to $$100$$. The unit for Saturation and Brightness is $$\%$$, where the Hue value is represented in degrees. This means that hue values wrap around their range, and a hue value of $$359$$ is actually right next to the hue value of $$0$$.
+No modo `HSB`, o valor de Hue vai de $$0$$ a $$359$$, e Saturation e Brightness vão de $$0$$ a $$100$$. A unidade de Saturation e Brightness é $$\%$$, enquanto o valor de Hue é representado em graus. Isso significa que os valores de hue dão a volta no seu intervalo, e um valor de hue de $$359$$ está, na verdade, logo ao lado do valor de hue $$0$$.
 
-This sketch demonstrates how you can describe the color red in several different ways
+Este sketch demonstra como você pode descrever a cor vermelha de várias maneiras diferentes
 <div class="editor-block-wrapper">
   <div class="p5-editor-wrapper editor-wrapper">
     <iframe class="editor" src="https://editor.p5js.org/shfitz/sketches/uzKrIICkm"></iframe>
   </div>
   <a class="editor-link" href="https://editor.p5js.org/shfitz/sketches/uzKrIICkm">
-    open example in new window
+    abrir exemplo em uma nova janela
   </a>
 </div>
 
 
-Some people find it easier to interpolate between colors and create color transitions in the `HSB` space because we can go through a wide palette of colors by just varying hue value. Where in `RGB` we always have to account for all $$3$$ channels when creating transitions or interpolating colors.
+Algumas pessoas acham mais fácil interpolar entre cores e criar transições de cor no espaço `HSB`, porque podemos percorrer uma ampla paleta de cores apenas variando o valor de hue. Já no `RGB`, sempre precisamos considerar todos os $$3$$ canais ao criar transições ou interpolar cores.

@@ -1,9 +1,9 @@
 ---
-title: Intro to p5.js
+title: Introdução ao p5.js
 ---
-Now that we've seen how to [setup a p5.js project](../p5-setup/) on our computer, let's take a closer look at how p5.js works and how we can start writing code for our projects.
+Agora que vimos como [configurar um projeto p5.js](../p5-setup/) no nosso computador, vamos olhar mais de perto como o p5.js funciona e como podemos começar a escrever código para nossos projetos.
 
-[THIS](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/sketch.js) is a bare `sketch.js` file we can start with:
+[ESTE](https://github.com/IDMp5/IDMp5.github.io/blob/main/_pages/p5js-template/sketch.js) é um arquivo `sketch.js` básico com o qual podemos começar:
 
 ```js
 function setup() {
@@ -20,22 +20,22 @@ function draw() {
 
 ## Setup & Draw
 
-As mentioned previously, our project code, or *sketch*, is divided into two main sections, or *functions*, a `setup()` function and a `draw()` function.
+Como mencionado anteriormente, o código do nosso projeto, ou *sketch*, é dividido em duas seções principais, ou *funções*, uma função `setup()` e uma função `draw()`.
 
-We specify what each of these functions will do by adding code inside their curly braces (`{` `}`).
+Especificamos o que cada uma dessas funções fará adicionando código dentro das suas chaves (`{` `}`).
 
-In the example above, the `createCanvas(windowWidth, windowHeight)` command belongs to the `setup()` function and the other two commands, `background(220, 20, 20)` and `ellipse(120, 120, 50, 50)`, are inside the `draw()` function.
+No exemplo acima, o comando `createCanvas(windowWidth, windowHeight)` pertence à função `setup()` e os outros dois comandos, `background(220, 20, 20)` e `ellipse(120, 120, 50, 50)`, estão dentro da função `draw()`.
 
-The difference between these two parts of our code is that the code inside the `setup()` function only gets executed once, while the code inside our `draw()` function runs repeatedly, over and over and over and over...
+A diferença entre essas duas partes do nosso código é que o código dentro da função `setup()` só é executado uma vez, enquanto o código dentro da nossa função `draw()` roda repetidamente, de novo e de novo e de novo e de novo...
 
 ### `setup()`
-The `setup()` function runs when we first load our page and the `html` file includes the p5.js library, and then our `sketch.js` file. The commands that we put inside the `setup()` function usually have to do with *setting up* our environment and canvas: How big do we want our canvas to be? Do we need a canvas? What color mode are we using? Should we specify image positioning using their corners or center? What's our default font style and size? Do we have to load any external files?
+A função `setup()` roda quando carregamos nossa página pela primeira vez e o arquivo `html` inclui a biblioteca p5.js, e depois o nosso arquivo `sketch.js`. Os comandos que colocamos dentro da função `setup()` geralmente têm a ver com *configurar* nosso ambiente e canvas: Qual tamanho queremos para o nosso canvas? Precisamos de um canvas? Qual modo de cor estamos usando? Devemos especificar o posicionamento das imagens usando seus cantos ou o centro? Qual é o estilo e o tamanho padrão da nossa fonte? Precisamos carregar algum arquivo externo?
 
-We don't always have to answer all of these questions in our `setup()` function, and we can always change how we do things later in our code, but for parameters and settings that are fixed, it's more efficient to just set them up once, at the beginning of our program, by putting commands in the `setup()` function.
+Nem sempre precisamos responder a todas essas perguntas na nossa função `setup()`, e sempre podemos mudar como fazemos as coisas mais tarde no nosso código, mas para parâmetros e configurações que são fixos, é mais eficiente configurá-los uma única vez, no início do nosso programa, colocando comandos na função `setup()`.
 
-In the example above, our `setup()` function just sets the area where we can draw and detect interactions, our canvas, to be as big as our window.
+No exemplo acima, nossa função `setup()` apenas define que a área onde podemos desenhar e detectar interações, nosso canvas, seja tão grande quanto nossa janela.
 
-If, for example, in our project, we were only ever gonna draw blue shapes, with thick orange outlines, we can add the commands for setting those up in our `setup()` function:
+Se, por exemplo, no nosso projeto só fôssemos desenhar formas azuis, com contornos laranja grossos, podemos adicionar os comandos para configurar isso na nossa função `setup()`:
 
 ```js
 strokeWeight(8);
@@ -47,9 +47,9 @@ fill('blue');
 
 
 ### `draw()`
-This is where we'll want to put commands that actually *draw* anything on the screen, whether they are shapes, images, movie frames or animations.
+É aqui que vamos querer colocar comandos que de fato *desenham* qualquer coisa na tela, sejam formas, imagens, quadros de filmes ou animações.
 
-For example, the commands for drawing the ellipses in the code above:
+Por exemplo, os comandos para desenhar as elipses no código acima:
 
 ```js
 ellipse(120, 120, 50, 50);
@@ -58,14 +58,14 @@ ellipse(220, 120, 50, 50);
 ellipse(250, 250, 50, 50);
 ```
 
-Even though they look like they are static, those ellipses are actually being redrawn on the screen many times a second.
+Embora pareçam estáticas, essas elipses estão, na verdade, sendo redesenhadas na tela muitas vezes por segundo.
 
-Unlike the `setup()` function, the `draw()` function runs repeatedly as long as our project's webpage is open, and whatever code we put inside its `{ }` will execute about 60 times per second. This is what allows us to create animations and handle interactions.
+Diferente da função `setup()`, a função `draw()` roda repetidamente enquanto a página web do nosso projeto estiver aberta, e qualquer código que colocarmos dentro de suas `{ }` será executado cerca de 60 vezes por segundo. Isso é o que nos permite criar animações e lidar com interações.
 
-Without worrying too much about the details, but just to check that whatever we put inside `draw()` is always running, let's modify the code above and use the number of times that the `draw()` function has executed to move the ellipses across the canvas:
+Sem nos preocuparmos muito com os detalhes, mas só para verificar que tudo que colocamos dentro do `draw()` está sempre rodando, vamos modificar o código acima e usar o número de vezes que a função `draw()` foi executada para mover as elipses pelo canvas:
 
 {% include p5-editor.html id="tmnnt_GsQ" %}
 
-That special `frameCount` keyword keeps track of how many times our code has executed and we can use that value to draw our ellipses at a slightly different location every time.
+Aquela palavra-chave especial `frameCount` mantém a contagem de quantas vezes nosso código foi executado, e podemos usar esse valor para desenhar nossas elipses em uma posição um pouco diferente a cada vez.
 
-We'll sometimes refer to each execution of the `draw()` function as a *frame* because it is often used to redraw our entire canvas every time it runs, just like a film or flip-book animation frame.
+Às vezes vamos nos referir a cada execução da função `draw()` como um *frame* (quadro), porque ela costuma ser usada para redesenhar todo o nosso canvas a cada execução, assim como um quadro de um filme ou de uma animação em flip-book.
