@@ -1,35 +1,35 @@
 ---
-title: The Browser and JavaScript
+title: O Navegador e o JavaScript
 ---
-## The Internet
+## A Internet
 
-Since JavaScript is a language that was originally designed to run on browsers over the internet, it could be useful to understand a little bit more about the internet and how it works.
+Já que o JavaScript é uma linguagem originalmente projetada para rodar em navegadores pela internet, pode ser útil entender um pouco mais sobre a internet e como ela funciona.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/internet-00.jpg' | relative_url }}">
 </div>
 
-To put it simply, The Internet is just other people's computers. There is no cloud, nor matrix, just a bunch of really big, hot and well-connected computers, called servers, that live in warehouses and store files that our phones and computers can download.
+Para simplificar, a Internet é apenas os computadores de outras pessoas. Não existe nuvem nem matrix, apenas um monte de computadores grandes, quentes e bem conectados, chamados servidores, que ficam em galpões e armazenam arquivos que nossos celulares e computadores podem baixar.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/internet-01.jpg' | relative_url }}">
 </div>
 
-The process is similar for other types of services, but when we access a URL with our browser, our computer sends a request to one of these servers, asking for a particular file at the specified address. Requests made to URLs like `p5js.org` or `nyu.edu` are actually asking for a file called `index.html` that lives in the `p5js.org` (or `nyu.edu`) server computers.
+O processo é parecido para outros tipos de serviços, mas quando acessamos uma URL com nosso navegador, nosso computador envia uma solicitação para um desses servidores, pedindo um arquivo específico no endereço indicado. Solicitações feitas a URLs como `p5js.org` ou `nyu.edu` estão na verdade pedindo um arquivo chamado `index.html` que fica nos servidores de `p5js.org` (ou `nyu.edu`).
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/request-00.jpg' | relative_url }}">
 </div>
 
-## The Browser
+## O Navegador
 
-When our browser makes a correct and authorized request to a server, asking for an `html` file, the server responds with a text file with `html` code:
+Quando nosso navegador faz uma solicitação correta e autorizada a um servidor, pedindo um arquivo `html`, o servidor responde com um arquivo de texto com código `html`:
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/request-01.jpg' | relative_url }}">
 </div>
 
-The `html` code might look something like this:
+O código `html` pode se parecer com algo assim:
 ```html
 <html>
   <head>
@@ -44,9 +44,9 @@ The `html` code might look something like this:
 </html>
 ```
 
-It's not very important right now to understand `html` in detail. We should just know that it's a language mostly used to specify the content that our browser should display for us and how that content should be organized on the screen.
+Não é muito importante agora entender o `html` em detalhes. Só precisamos saber que é uma linguagem usada principalmente para especificar o conteúdo que nosso navegador deve exibir e como esse conteúdo deve ser organizado na tela.
 
-A lot of this content is text, and links, but more often than not, the `html` file will also reference other files, like image or video files. When the browser sees these references in the `html` code, it makes additional requests to the server, asking for those files.
+Boa parte desse conteúdo é texto e links, mas, na maioria das vezes, o arquivo `html` também vai referenciar outros arquivos, como imagens ou vídeos. Quando o navegador encontra essas referências no código `html`, ele faz solicitações adicionais ao servidor, pedindo esses arquivos.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/request-02.jpg' | relative_url }}">
@@ -56,8 +56,8 @@ A lot of this content is text, and links, but more often than not, the `html` fi
   <img src="{{ '/assets/images/intro/request-03.jpg' | relative_url }}">
 </div>
 
-Other common types of files referenced by `html` are `css` files and `JavaScript` files. These are special because, unlike media files that the browser just has to show to us, they are files that change *how* the browser shows content and how it behaves.
-`css` files usually specify the style of webpages. They tell the browser how to format the content in the `html` file: which fonts to use, what size the text should be, the colors of different elements, etc.
+Outros tipos comuns de arquivos referenciados pelo `html` são os arquivos `css` e `JavaScript`. Eles são especiais porque, diferente dos arquivos de mídia que o navegador só precisa nos mostrar, são arquivos que mudam *como* o navegador exibe o conteúdo e como ele se comporta.
+Os arquivos `css` geralmente especificam o estilo das páginas web. Eles dizem ao navegador como formatar o conteúdo do arquivo `html`: quais fontes usar, qual tamanho o texto deve ter, as cores dos diferentes elementos, etc.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/request-04.jpg' | relative_url }}">
@@ -67,24 +67,24 @@ Other common types of files referenced by `html` are `css` files and `JavaScript
   <img src="{{ '/assets/images/intro/request-05.jpg' | relative_url }}">
 </div>
 
-If a webpage was an apartment, the `html` file defines where the walls, doors and windows should go, while the `css` file specifies their materials and colors. Once the `css` file is downloaded, the browser has to go back through the content in the `html` file and apply the styles specified.
+Se uma página web fosse um apartamento, o arquivo `html` definiria onde ficam as paredes, portas e janelas, enquanto o arquivo `css` especificaria seus materiais e cores. Depois que o arquivo `css` é baixado, o navegador precisa passar novamente pelo conteúdo do arquivo `html` e aplicar os estilos especificados.
 
-JavaScript files, on the other hand, describe how the browser should behave and what it should do with the content of the `html` file as a user interacts with it. Our analogy might be running out of steam, but if webpages were apartments, JavaScript might be the specification of what should happen when different light switches are pressed in a room.
+Os arquivos JavaScript, por sua vez, descrevem como o navegador deve se comportar e o que fazer com o conteúdo do arquivo `html` conforme o usuário interage com ele. Nossa analogia pode estar ficando sem fôlego, mas se páginas web fossem apartamentos, o JavaScript seria a especificação do que deve acontecer quando diferentes interruptores de luz são acionados em um cômodo.
 
 ## JavaScript
 
-In the early days of the internet, before JavaScript was a fully developed language recognized by all browsers, websites were pretty *static*. Once the `html` and `css` files were downloaded and the content of the page was styled and displayed, the browser's job was done and we had on our screens the digital equivalent of a printed newspaper.
+Nos primeiros dias da internet, antes de o JavaScript ser uma linguagem totalmente desenvolvida e reconhecida por todos os navegadores, os sites eram bastante *estáticos*. Uma vez baixados os arquivos `html` e `css` e estilizado e exibido o conteúdo da página, o trabalho do navegador estava concluído, e tínhamos em nossas telas o equivalente digital de um jornal impresso.
 
-JavaScript gradually enabled websites to become more dynamic, allowing the content and style of a webpage to change based on user interaction.
+O JavaScript foi gradualmente permitindo que os sites se tornassem mais dinâmicos, possibilitando que o conteúdo e o estilo de uma página web mudassem conforme a interação do usuário.
 
-Once a JavaScript file (usually a `.js` file) is downloaded by a page, and while the `html` file and `css` file finish figuring out how to display the page's content, the browser will start a separate parallel process to read and *interpret* the content of the JavaScript file.
+Depois que um arquivo JavaScript (geralmente um arquivo `.js`) é baixado por uma página, e enquanto o arquivo `html` e o arquivo `css` terminam de definir como exibir o conteúdo da página, o navegador inicia um processo paralelo separado para ler e *interpretar* o conteúdo do arquivo JavaScript.
 
-This JavaScript interpreter (or engine), is an internal part of the browser that is responsible for going through the JavaScript file line-by-line and executing its commands. This is what it means for JavaScript to be an *interpreted* language: instead of running directly on the computer's hardware, a JavaScript program needs another program to run it. It isn't something unique to JavaScript, but does make it different from some programming languages, and is something we should keep in mind.
+Esse interpretador (ou motor) de JavaScript é uma parte interna do navegador responsável por percorrer o arquivo JavaScript linha por linha e executar seus comandos. É isso que significa o JavaScript ser uma linguagem *interpretada*: em vez de rodar diretamente no hardware do computador, um programa em JavaScript precisa de outro programa para executá-lo. Isso não é algo exclusivo do JavaScript, mas o diferencia de algumas linguagens de programação, e é algo que devemos ter em mente.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/JavaScript.jpg' | relative_url }}">
 </div>
 
-Nowadays, JavaScript is considered a robust, general purpose language that can be used to create almost any kind of programs, inside or outside a browser (but always with an interpreter). As such, we can find many resources in the form of libraries (reusable code) and frameworks (reusable code and predefined methodologies) that extend the language and make it easier for us to write certain types of programs without always starting from scratch.
+Hoje em dia, o JavaScript é considerado uma linguagem robusta e de propósito geral, que pode ser usada para criar praticamente qualquer tipo de programa, dentro ou fora de um navegador (mas sempre com um interpretador). Por isso, podemos encontrar muitos recursos em forma de bibliotecas (código reutilizável) e frameworks (código reutilizável e metodologias predefinidas) que estendem a linguagem e facilitam a escrita de certos tipos de programas sem precisar começar do zero.
 
-[p5js](https://p5js.org/) is an example of a JavaScript library. It's focused on creative coding and making it easier for everyone to learn how to create interactive experiences using JavaScript.
+O [p5js](https://p5js.org/) é um exemplo de biblioteca JavaScript. Ele é focado em creative coding e em facilitar para todos o aprendizado de como criar experiências interativas usando JavaScript.

@@ -1,51 +1,50 @@
 ---
-title: Setting up a Development Environment
+title: Configurando um Ambiente de Desenvolvimento
 ---
 ## IDE
 
-Before we start writing code and creating websites, let's set up our computers with a couple of programs that will help us work more efficiently.
+Antes de começarmos a escrever código e criar sites, vamos configurar nossos computadores com alguns programas que vão nos ajudar a trabalhar de forma mais eficiente.
 
-In the past, it was common to have to download a bunch of different programs in order to setup a local development environment with a good text editor, a local server, version control, compilers/interpreters, emulators and FTP clients.
+No passado, era comum ter que baixar vários programas diferentes para configurar um ambiente de desenvolvimento local com um bom editor de texto, um servidor local, controle de versão, compiladores/interpretadores, emuladores e clientes FTP.
 
-Nowadays, Integrated Development Environments (IDEs) allow us to work in different languages, edit, test, fix and upload our code, all within the same program.
+Hoje em dia, os Ambientes de Desenvolvimento Integrado (IDEs) nos permitem trabalhar em diferentes linguagens, editar, testar, corrigir e publicar nosso código, tudo dentro do mesmo programa.
 
-Some popular IDEs that we can use for developing HTML/JavaScript projects are:
+Algumas IDEs populares que podemos usar para desenvolver projetos em HTML/JavaScript são:
 - [VS Code](https://code.visualstudio.com/)
 - [Phoenix](https://phcode.io/#/home)
 - [Sublime Text](https://www.sublimetext.com/)
 - [IntelliJ IDEA](https://www.jetbrains.com/idea/)
 
-They are all very similar in their basic functionalities. Some are better suited for working with specific languages, or operating systems. Others are more customizable and extendable through plugins.
+Todas são bem parecidas em suas funcionalidades básicas. Algumas são mais adequadas para trabalhar com linguagens ou sistemas operacionais específicos. Outras são mais customizáveis e extensíveis por meio de plugins.
 
-The one that seems to work more consistently across different operating systems, programming languages and application domains is Microsoft's Visual Studio Code.
+A que parece funcionar de forma mais consistente entre diferentes sistemas operacionais, linguagens de programação e domínios de aplicação é o Visual Studio Code, da Microsoft.
 
-It's free, easy to setup, and has many useful plugins that will help us write, maintain and share our HTML/JavaScript projects.
+É gratuito, fácil de configurar e tem muitos plugins úteis que vão nos ajudar a escrever, manter e compartilhar nossos projetos em HTML/JavaScript.
 
-It can be downloaded [here](https://code.visualstudio.com/#alt-downloads), and this video shows how to set it up:
+Pode ser baixado [aqui](https://code.visualstudio.com/#alt-downloads), e este vídeo mostra como configurá-lo:
 
 {% include youtube.html id="epQgFt4NTPI" ratio="9x6" %}
 
-## Plugins / Extensions
+## Plugins / Extensões
 
-Installing extensions on VS Code is easy:
+Instalar extensões no VS Code é fácil:
 
 {% include video.html url="intro/ide-plugins.webm" %}
 
-The following extensions are really useful for developing HTML/JavaScript and p5.js projects:
+As seguintes extensões são muito úteis para desenvolver projetos em HTML/JavaScript e p5.js:
 
 ### [p5.js 2.x Project Generator](https://github.com/IrtizaNasar/p5-2.vscode)
 
-An extension that creates standalone projects really quickly, preparing html and javascript files for you
+Uma extensão que cria projetos independentes rapidamente, preparando os arquivos html e javascript para você
 
 ### [Live Server](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
 
-This makes it easier for us to start a local web server so we can preview, test and fix our project before uploading it to a public server on the internet.
+Isso facilita iniciar um servidor web local para que possamos visualizar, testar e corrigir nosso projeto antes de publicá-lo em um servidor público na internet.
 
 ### [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 
-This plugin helps us format our code in a consistent manner, so it's easier to read.
+Esse plugin nos ajuda a formatar nosso código de forma consistente, tornando-o mais fácil de ler.
 
 ### [p5js Snippets](https://marketplace.visualstudio.com/items?itemName=acidic9.p5js-snippets)
 
-This gives the IDE information about p5.js functions, so it can help us with suggestions and auto-complete.
-
+Isso fornece à IDE informações sobre as funções do p5.js, para que ela possa nos ajudar com sugestões e autocompletar.

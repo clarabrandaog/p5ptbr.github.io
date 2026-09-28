@@ -1,81 +1,81 @@
 ---
-title: Programming Computers
+title: Programando Computadores
 ---
-## Computation
+## Computação
 
-Let's consider two moments from the history of computing to get some context about how we design, build and use computers today.
+Vamos considerar dois momentos da história da computação para termos um contexto sobre como projetamos, construímos e usamos computadores hoje.
 
-This is just one narrative from the history of computing. Follow the links below for more information about other stories and figures important to the development of computers and computation.
+Essa é apenas uma narrativa da história da computação. Siga os links abaixo para mais informações sobre outras histórias e figuras importantes para o desenvolvimento dos computadores e da computação.
 
-For now, let's start in the $$1930$$s with the parallel development of two abstract mathematical ideas: the binary properties of electrical switches and the Turing Machine.
+Por enquanto, vamos começar nos anos $$1930$$ com o desenvolvimento paralelo de duas ideias matemáticas abstratas: as propriedades binárias dos interruptores elétricos e a Máquina de Turing.
 
-### The Turing Machine
+### A Máquina de Turing
 
-English mathematician Alan Turing came up with the concept of the [Turing Machine](https://en.wikipedia.org/wiki/Turing_machine) in $$1936$$ during his PhD at Princeton University.
+O matemático inglês Alan Turing criou o conceito da [Máquina de Turing](https://en.wikipedia.org/wiki/Turing_machine) em $$1936$$ durante seu doutorado na Universidade de Princeton.
 
-The Turing Machine is a conceptual model of computation that describes a simple machine that uses very few rules to perform arbitrary and complex computation.
+A Máquina de Turing é um modelo conceitual de computação que descreve uma máquina simples que usa poucas regras para realizar computações arbitrárias e complexas.
 
-In its simplest form, the machine consists of an infinite tape that holds data and instructions. During its operation, the machine reads a value from the tape and, depending on the history of values read so far, it will either overwrite the value on the tape, move one position and read a new value, or stop. That's it.
+Em sua forma mais simples, a máquina consiste em uma fita infinita que armazena dados e instruções. Durante sua operação, a máquina lê um valor da fita e, dependendo do histórico de valores lidos até então, ela vai sobrescrever o valor na fita, mover uma posição e ler um novo valor, ou parar. Só isso.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/turing-machine.jpg' | relative_url }}">
 </div>
-*Simplified representation of a Turing Machine with instruction set $$\{$$ $$X$$, $$Y$$, $$\varnothing$$, $$\forall$$ $$\}$$*
+*Representação simplificada de uma Máquina de Turing com o conjunto de instruções $$\{$$ $$X$$, $$Y$$, $$\varnothing$$, $$\forall$$ $$\}$$*
 
-This simple model of reading and writing instructions and data from the same place is still used today, and is what enables computers to do an almost infinite number of tasks using a finite number of instructions.
+Esse modelo simples de ler e escrever instruções e dados no mesmo lugar ainda é usado hoje, e é o que permite que os computadores realizem um número quase infinito de tarefas usando um número finito de instruções.
 
-### Electrical Switches
+### Interruptores Elétricos
 
-In $$1937$$ Claude Shannon wrote his master's thesis "[A Symbolic Analysis of Relay and Switching Circuits](https://en.wikipedia.org/wiki/A_Symbolic_Analysis_of_Relay_and_Switching_Circuits)" while at MIT. In his thesis Shannon showed how to optimize telephone relay circuits by using a form of algebra that only uses two numbers: $$1$$s and $$0$$s.
+Em $$1937$$ Claude Shannon escreveu sua dissertação de mestrado "[A Symbolic Analysis of Relay and Switching Circuits](https://en.wikipedia.org/wiki/A_Symbolic_Analysis_of_Relay_and_Switching_Circuits)" no MIT. Em sua dissertação, Shannon mostrou como otimizar circuitos de relés telefônicos usando uma forma de álgebra que usa apenas dois números: $$1$$s e $$0$$s.
 
-He went on to prove that this type of math, called [Boolean Algebra](https://en.wikipedia.org/wiki/Boolean_algebra), could be implemented using electrical switches that were either $$on$$ or $$\mathit{off}$$.
+Ele então provou que esse tipo de matemática, chamada [Álgebra Booleana](https://en.wikipedia.org/wiki/Boolean_algebra), podia ser implementado usando interruptores elétricos que estavam ligados ($$on$$) ou desligados ($$\mathit{off}$$).
 
-The properties of this binary algebra make it easy to build complex circuits from very basic, repeatable, building blocks. What this means is that many types of calculations and logic problems could now be solved using physical circuits that were easy to conceptualize, design and scale.
+As propriedades dessa álgebra binária tornam fácil construir circuitos complexos a partir de blocos de construção bem básicos e repetíveis. Isso significa que muitos tipos de cálculos e problemas lógicos passaram a poder ser resolvidos usando circuitos físicos fáceis de conceitualizar, projetar e escalar.
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/intro/shannon-switches.jpg' | relative_url }}">
 </div>
-*Different representations of the logic operations that were implemented by Shannon using electrical switches*
+*Diferentes representações das operações lógicas implementadas por Shannon usando interruptores elétricos*
 
-This enabled the physical construction of Turing Machines that use $$0$$s and $$1$$s to describe instructions, data and state, and is still used today to build more complex computation machines.
+Isso possibilitou a construção física de Máquinas de Turing que usam $$0$$s e $$1$$s para descrever instruções, dados e estado, e ainda é usado hoje para construir máquinas de computação mais complexas.
 
-## Programming
+## Programação
 
-In these two stories we can not only see the beginnings of what later developed into more refined systems for computation, but we can also see the appearance of certain concepts that are still important today when we want to tell computers what to do.
+Nessas duas histórias podemos ver não só o início do que depois se transformou em sistemas mais refinados de computação, mas também o surgimento de certos conceitos que continuam importantes hoje quando queremos dizer a um computador o que fazer.
 
-The kinds of things that a computer can do has constantly evolved since the $$1930$$s, but *how* we tell computers what to do is still vastly influenced by concepts like memory, instructions, internal state, loops, boolean logic and binary circuits that can be traced back to a time when what we understand today as a *computer* wasn't even physically possible.
+Os tipos de coisas que um computador pode fazer evoluíram constantemente desde os anos $$1930$$, mas *como* dizemos aos computadores o que fazer ainda é fortemente influenciado por conceitos como memória, instruções, estado interno, loops, lógica booleana e circuitos binários que remontam a uma época em que o que entendemos hoje por *computador* nem sequer era fisicamente possível.
 
-Programming, or coding, is the art and science of telling a computer to do *something* by giving it some data along with sequences of instructions that specify exactly what it should do with the data.
+Programar, ou codificar, é a arte e a ciência de dizer a um computador para fazer *algo*, dando a ele alguns dados junto com sequências de instruções que especificam exatamente o que ele deve fazer com esses dados.
 
-Some form of computer programming has been happening since at least the $$1830$$s when [Ada Lovelace](https://en.wikipedia.org/wiki/Ada_Lovelace) wrote a program to calculate a sequence of Bernoulli numbers on a mechanical computer. Mechanical computers were programmed using punched cards, physical pieces of cardboard with holes, that were fed into the machine at specific times. The holes, or lack of holes, in specific positions of the cards is what determined whether certain mechanical connections were made, and this is what caused the computer to behave in a specific way.
+Alguma forma de programação de computadores já acontecia desde pelo menos os anos $$1830$$, quando [Ada Lovelace](https://en.wikipedia.org/wiki/Ada_Lovelace) escreveu um programa para calcular uma sequência de números de Bernoulli em um computador mecânico. Computadores mecânicos eram programados usando cartões perfurados, pedaços físicos de papelão com furos, que eram alimentados na máquina em momentos específicos. Os furos, ou a ausência deles, em posições específicas dos cartões, determinavam se certas conexões mecânicas eram feitas, e isso é o que fazia o computador se comportar de uma maneira específica.
 
-It wasn't until the $$1940$$s, with the advance of electronic computers, that writing and running a computer program could be done on the same machine. The commands that were given to these computers, however, were still pretty much written out in a way that specified sequences of $$on$$ and $$\mathit{off}$$ signals for electronic switches and other components.
+Só nos anos $$1940$$, com o avanço dos computadores eletrônicos, é que escrever e executar um programa de computador passou a poder ser feito na mesma máquina. Os comandos dados a esses computadores, porém, ainda eram basicamente escritos especificando sequências de sinais ligado e desligado para interruptores eletrônicos e outros componentes.
 
-## Languages
+## Linguagens
 
-We can trace the origins of the programming languages that we use today to the late $$1950$$s, and the work of American computer scientist and Navy admiral [Grace Hopper](https://en.wikipedia.org/wiki/Grace_Hopper). Hopper showed that English terms could be used to describe instructions for a program in a generic way, that could later be translated into sequences of $$on$$ and $$\mathit{off}$$ signals for specific computers.
+Podemos rastrear a origem das linguagens de programação que usamos hoje até o final dos anos $$1950$$, com o trabalho da cientista da computação e almirante da Marinha americana [Grace Hopper](https://en.wikipedia.org/wiki/Grace_Hopper). Hopper mostrou que termos em inglês podiam ser usados para descrever instruções de um programa de forma genérica, que depois seriam traduzidas em sequências de sinais ligado e desligado para computadores específicos.
 
-This led to the advent of "high-level", machine-independent, programming languages like FORTRAN, ALGOL and COBOL, which could be used to write programs in human-readable English. The term "high-level" here is somewhat relative and fluid. It's used to describe how close a programming language is to a natural language and to denote a level of abstraction provided by the language in relation to the specific hardware that its resulting programs will run on.
+Isso levou ao surgimento de linguagens de programação "de alto nível", independentes de máquina, como FORTRAN, ALGOL e COBOL, que podiam ser usadas para escrever programas em uma linguagem legível para humanos. O termo "alto nível" aqui é um tanto relativo e fluido. É usado para descrever o quão próxima uma linguagem de programação está de uma linguagem natural, e para indicar o nível de abstração que a linguagem oferece em relação ao hardware específico em que os programas resultantes vão rodar.
 
-What was considered "high-level" in the $$1950$$s and $$1960$$s is certainly not what is considered "high-level" today.
+O que era considerado "alto nível" nos anos $$1950$$ e $$1960$$ certamente não é o que consideramos "alto nível" hoje.
 
-Most of the popular programming languages used today have very expressive syntaxes with single-word commands that get turned into very long sequences of instructions for the computer to execute. Some of these languages don't even require a separate translation step to turn the human-readable code into computer instructions.
+A maioria das linguagens de programação populares usadas hoje tem sintaxes bastante expressivas, com comandos de uma única palavra que se transformam em sequências muito longas de instruções para o computador executar. Algumas dessas linguagens nem sequer exigem uma etapa separada de tradução para transformar o código legível por humanos em instruções para o computador.
 
-## JavaScript and p5.js
+## JavaScript e p5.js
 
-One such language is JavaScript.
+Uma dessas linguagens é o JavaScript.
 
-JavaScript is an interpreted language, which means that the code that we write doesn't get compiled, or, translated, into instructions for the computer, but instead gets *interpreted* one line at a time by a separate program that is responsible for executing our code.
+JavaScript é uma linguagem interpretada, o que significa que o código que escrevemos não é compilado, ou seja, traduzido, em instruções para o computador, mas sim *interpretado* linha por linha por um programa separado responsável por executar nosso código.
 
-One of the main reasons behind JavaScript's popularity is that, in most instances, the program that interprets and executes our JavaScript code is a browser. Most computers, phones, watches, etc have a browser. This means that not only do we not have to worry about the specifics of the hardware it will run on, but in most cases we don't even have to worry about its operating system or any other compatibility issues.
+Uma das principais razões para a popularidade do JavaScript é que, na maioria dos casos, o programa que interpreta e executa nosso código JavaScript é um navegador. A maioria dos computadores, celulares, relógios etc. têm um navegador. Isso significa que não só não precisamos nos preocupar com as especificidades do hardware em que ele vai rodar, mas, na maioria dos casos, nem precisamos nos preocupar com o sistema operacional ou outras questões de compatibilidade.
 
-Being a high-level, multi-paradigm programming language, JavaScript can be used to write different types of programs using different techniques or styles of programming. And like most other general programming languages, it relies on *libraries* to extend its core functionalities and provide easier ways of doing specific tasks.
+Por ser uma linguagem de programação de alto nível e multiparadigma, o JavaScript pode ser usado para escrever diferentes tipos de programas usando diferentes técnicas ou estilos de programação. E, como a maioria das outras linguagens de programação genéricas, ele depende de *bibliotecas* para estender suas funcionalidades principais e oferecer formas mais fáceis de realizar tarefas específicas.
 
-The [p5.js](https://p5js.org/) library is a JavaScript library for creative coding, with a focus on making coding accessible and inclusive. It extends the core functionality of the JavaScript language and makes it easier for programmers to create audio-visual experiences using images, drawings, videos, sound, etc, directly on a webpage in a browser.
+A biblioteca [p5.js](https://p5js.org/) é uma biblioteca JavaScript para creative coding, com foco em tornar a programação acessível e inclusiva. Ela estende a funcionalidade principal da linguagem JavaScript e facilita para os programadores a criação de experiências audiovisuais usando imagens, desenhos, vídeos, som etc., diretamente em uma página web no navegador.
 
-## References
+## Referências
 
-Again, this is a very high-level and particular narrative of some moments in the history of computation. Other notable moments, people and histories can be found by following these links:
+Novamente, essa é uma narrativa bem resumida e particular de alguns momentos da história da computação. Outros momentos, pessoas e histórias importantes podem ser encontrados nos seguintes links:
 
 - [A sketch for an alternate history of computing](https://phoenixperry.medium.com/an-alternate-history-of-computing-a-sketch-1811197814ff)
 - [The Story of NASA’s *Hidden Figures*](https://www.scientificamerican.com/article/the-story-of-nasas-real-ldquo-hidden-figures-rdquo/)
