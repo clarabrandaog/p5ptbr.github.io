@@ -1,98 +1,98 @@
 ---
-title: Sound Files
+title: Arquivos de Som
 ---
-## NOTE:
-To use the sound library, we have to include the [p5.sound library](https://p5js.org/reference/#/libraries/p5.sound) in our project's `index.html` file after the p5.js file, like this:
+## NOTA:
+Para usar a biblioteca de som, temos que incluir a [biblioteca p5.sound](https://p5js.org/reference/#/libraries/p5.sound) no arquivo `index.html` do nosso projeto, depois do arquivo do p5.js, assim:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@2.3.1/lib/p5.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/p5.sound@0.4.1/dist/p5.sound.min.js"></script>
 ```
 
-## Playing Sounds
-Let's use some html elements in a sketch to create a simple sound player.
+## Tocando Sons
+Vamos usar alguns elementos html em um sketch para criar um player de som simples.
 
-First, we'll load an audio file using the [`loadSound()`](https://p5js.org/reference/#/p5/loadSound) function and test it. This is similar to how we have loaded images, text files, datasets, etc using the `preload()` function.
+Primeiro, vamos carregar um arquivo de áudio usando a função [`loadSound()`](https://p5js.org/reference/#/p5/loadSound) e testá-lo. Isso é parecido com a forma como carregamos imagens, arquivos de texto, conjuntos de dados, etc, usando a função `preload()`.
 
-The `loadSound()` function returns a [`SoundFile`](https://p5js.org/reference/#/p5.SoundFile) object, and we can use its [`play()`](https://p5js.org/reference/#/p5.SoundFile/play) function to play the song whenever we click the mouse:
+A função `loadSound()` retorna um objeto [`SoundFile`](https://p5js.org/reference/#/p5.SoundFile), e podemos usar sua função [`play()`](https://p5js.org/reference/#/p5.SoundFile/play) para tocar a música sempre que clicarmos o mouse:
 
 {% include p5-editor.html id="kZLiBslTX" %}
 
-What happens if we click the mouse multiple times? It sounds like the `song` object starts playing the file multiple times over itself.
+O que acontece se clicarmos o mouse várias vezes? Parece que o objeto `song` começa a tocar o arquivo várias vezes, uma por cima da outra.
 
-There are two ways we can fix this.
+Existem duas formas de resolver isso.
 
-First, we can specify the file's [`playMode()`](https://p5js.org/reference/#/p5.SoundFile/playMode) to be either `restart` or `untilDone`, and that will make it only play one instance of the file, either by starting the song over or not doing anything until it plays until the end:
+Primeiro, podemos especificar o [`playMode()`](https://p5js.org/reference/#/p5.SoundFile/playMode) do arquivo como `restart` ou `untilDone`, e isso fará com que ele toque apenas uma instância do arquivo, recomeçando a música ou não fazendo nada até que ela toque até o fim:
 
 {% include p5-editor.html id="U8GL6qdUD" %}
 
-The other way is to check first if the object is already playing the file and only call `play()` if it's not. We can also use [`isPlaying()`](https://p5js.org/reference/#/p5.SoundFile/isPlaying) to change the background color as an indication of the play state:
+A outra forma é verificar primeiro se o objeto já está tocando o arquivo e só chamar `play()` se não estiver. Também podemos usar [`isPlaying()`](https://p5js.org/reference/#/p5.SoundFile/isPlaying) para mudar a cor de fundo como indicação do estado de reprodução:
 
 {% include p5-editor.html id="hABEaYEA1" %}
 
-## Sound Player
-Now that we know how to play a sound file, let's organize our sound player.
+## Player de Som
+Agora que sabemos como tocar um arquivo de som, vamos organizar nosso player de som.
 
-We are going to have $$3$$ buttons: skip to beginning, play/pause and stop. Our song also has $$3$$ states it can be in: `PLAYING`, `PAUSED` and `STOPPED`. The skip to beginning button always resets the song's playing position, but it doesn't change what state it's in. The other buttons make the song change states between `PLAYING`, `PAUSED` and `STOPPED`.
+Vamos ter $$3$$ botões: voltar ao início, tocar/pausar e parar. Nossa música também tem $$3$$ estados em que pode estar: `PLAYING` (tocando), `PAUSED` (pausada) e `STOPPED` (parada). O botão de voltar ao início sempre reinicia a posição de reprodução da música, mas não muda o estado em que ela está. Os outros botões fazem a música mudar de estado entre `PLAYING`, `PAUSED` e `STOPPED`.
 
-This state diagram specifies the changes related to $$2$$ of our buttons:
+Este diagrama de estados especifica as mudanças relacionadas a $$2$$ dos nossos botões:
 
 <div class="scaled-images left w75">
   <img src = "{{ '/assets/images/creative-coding/sound-files-00.jpg' | relative_url }}"/>
 </div>
 
-We can *read* the state diagram by starting with its initial state and considering its transitions.
+Podemos *ler* o diagrama de estados começando pelo seu estado inicial e considerando suas transições.
 
-This state diagram starts at a state called `STOPPED`, and it transitions to state `PLAYING` whenever the `play` button is pressed. If the `stop` button is pressed, it stays in the `STOPPED` state.
+Este diagrama de estados começa em um estado chamado `STOPPED` e transiciona para o estado `PLAYING` sempre que o botão `play` é pressionado. Se o botão `stop` for pressionado, ele permanece no estado `STOPPED`.
 
-One it's in the `PLAYING` state, pressing the `stop` button changes the state to `STOPPED` and pressing the `pause` button changes it to `PAUSED`.
+Quando está no estado `PLAYING`, pressionar o botão `stop` muda o estado para `STOPPED` e pressionar o botão `pause` muda para `PAUSED`.
 
-Likewise, in the `PAUSED` state, pressing the `stop` button changes the state to `STOPPED` and pressing the `play` button changes it to `PLAYING`.
+Da mesma forma, no estado `PAUSED`, pressionar o botão `stop` muda o estado para `STOPPED` e pressionar o botão `play` muda para `PLAYING`.
 
-Now we can add what happens when the `back` button is pressed:
+Agora podemos adicionar o que acontece quando o botão `back` é pressionado:
 
 <div class="scaled-images left w75">
   <img src = "{{ '/assets/images/creative-coding/sound-files-01.jpg' | relative_url }}"/>
 </div>
 
-What this diagram is saying is that, no matter what state we're in, if the `back` button is pressed, we should reset the song back to its beginning, and stay in whatever state we're in.
+O que esse diagrama está dizendo é que, não importa em que estado estejamos, se o botão `back` for pressionado, devemos reiniciar a música ao seu começo e permanecer no estado em que estamos.
 
-Let's write some pseudo-code:
+Vamos escrever um pseudocódigo:
 
 {% include p5-editor.html id="r5r5Y3QRq" %}
 
-We'll have to double check some things that aren't so clear from the documentation, like whether the [`stop()`](https://p5js.org/reference/#/p5.SoundFile/stop) function also resets the tracks position, and what happens if we call [`jump(0)`](https://p5js.org/reference/#/p5.SoundFile/jump) on a file that is not playing.
+Vamos ter que verificar algumas coisas que não ficam tão claras na documentação, como se a função [`stop()`](https://p5js.org/reference/#/p5.SoundFile/stop) também reinicia a posição da faixa, e o que acontece se chamarmos [`jump(0)`](https://p5js.org/reference/#/p5.SoundFile/jump) em um arquivo que não está tocando.
 
-Let's use this code to check:
+Vamos usar este código para verificar:
 
 {% include p5-editor.html id="SLCmRcdbd" %}
 
-Some things to note about the code:
+Algumas coisas a notar sobre o código:
 
-1. The [`jump()`](https://p5js.org/reference/#/p5.SoundFile/jump) function only works if the file is playing, so we had to use an extra global variable to keep track of whether the file should restart after a pause.
-2. The buttons could probably be in a class, since they have the same size and style and right now there's lots of repeated code.
+1. A função [`jump()`](https://p5js.org/reference/#/p5.SoundFile/jump) só funciona se o arquivo estiver tocando, então tivemos que usar uma variável global extra para registrar se o arquivo deve recomeçar depois de uma pausa.
+2. Os botões provavelmente poderiam estar em uma classe, já que têm o mesmo tamanho e estilo e agora há muito código repetido.
 
-Let's make a [class](../../coding/classes/) for our buttons to encapsulate their style and behavior:
+Vamos criar uma [classe](../../coding/classes/) para os nossos botões para encapsular seu estilo e comportamento:
 
 {% include p5-editor.html id="H4SNKePvH" %}
 
-Now, let's add a fourth button for skipping to the next song, and detect double clicks on the back button to skip to the previous song:
+Agora, vamos adicionar um quarto botão para pular para a próxima música e detectar cliques duplos no botão de voltar para pular para a música anterior:
 
 {% include p5-editor.html id="gBeE2zqYi" %}
 
-Again, there's some extra logic that we have to use to set `shouldRestart` every time we change songs or states while paused.
+De novo, há alguma lógica extra que precisamos usar para definir `shouldRestart` toda vez que mudamos de música ou de estado enquanto está pausado.
 
-## Seeing Sound
+## Vendo o Som
 
-One more last thing, hopefully a fun one.
+Mais uma última coisa, que esperamos que seja divertida.
 
-Let's visualize the songs while they're playing.
+Vamos visualizar as músicas enquanto elas tocam.
 
-The p5.js `SoundFile` object doesn't seem to have any function or variable that tells us the exact values of the samples that are currently playing. The closest thing it has is a [`getPeaks()`](https://p5js.org/reference/#/p5.SoundFile/getPeaks) function that gives us a simplified, resampled, version of values for the entire sound file.
+O objeto `SoundFile` do p5.js parece não ter nenhuma função ou variável que nos diga os valores exatos das amostras que estão tocando no momento. O mais próximo que ele tem é uma função [`getPeaks()`](https://p5js.org/reference/#/p5.SoundFile/getPeaks) que nos dá uma versão simplificada e reamostrada dos valores do arquivo de som inteiro.
 
-The default length of the array returned by `getPeaks()` is $$5$$ times the canvas `width`, so no matter how long the song is, the length of the peaks array will always be the same. The numbers in this array represent samples, which are like the pixels of sound files. In this case they have been normalized to a range of $$[-1, 1]$$, where numbers with larger absolute values represent louder samples.
+O tamanho padrão do array retornado por `getPeaks()` é $$5$$ vezes a largura (`width`) do canvas, então, não importa quão longa seja a música, o tamanho do array de picos será sempre o mesmo. Os números nesse array representam amostras, que são como os pixels dos arquivos de som. Neste caso, elas foram normalizadas para o intervalo $$[-1, 1]$$, em que números com valores absolutos maiores representam amostras mais altas.
 
-We can use this to map the sample values of the current song from $$[-1, 1]$$ to values between $$[-width, width]$$ that we can use to draw some ellipses:
+Podemos usar isso para mapear os valores de amostra da música atual de $$[-1, 1]$$ para valores entre $$[-width, width]$$ que podemos usar para desenhar algumas elipses:
 ```js
 function toWidth(_peakVal) {
   return map(abs(_peakVal), 0, 1, 0, width);
@@ -101,9 +101,9 @@ function toWidth(_peakVal) {
 waveDiameters = song.getPeaks().map(toWidth);
 ```
 
-Since `song.getPeaks()` returns an array of samples, we can use the JavaScript array special function [`map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) to transform every sample in the array. The `toWidth()` function that we use to do the actual mapping of each array value uses the p5.js [`map()`](https://p5js.org/reference/#/p5/map) function internally. They are both named `map()`, they both transform numbers from one range of values into another, but they are different functions.
+Como `song.getPeaks()` retorna um array de amostras, podemos usar a função especial de arrays do JavaScript [`map()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) para transformar cada amostra do array. A função `toWidth()` que usamos para fazer o mapeamento de cada valor do array usa internamente a função [`map()`](https://p5js.org/reference/#/p5/map) do p5.js. Ambas se chamam `map()`, ambas transformam números de um intervalo de valores em outro, mas são funções diferentes.
 
-Once we have that array of ellipse diameters, we just have to know which one to draw at each frame. That's this code here in `draw()`:
+Depois que temos esse array de diâmetros de elipses, só precisamos saber qual deles desenhar em cada frame. Esse é o código aqui no `draw()`:
 ```js
 let tPos = song.currentTime() / song.duration();
 let dIndexDelay = floor(tPos * waveDiameters.length + DELAY);
@@ -112,14 +112,14 @@ let diam = waveDiameters[dIndex];
 ellipse(width / 2, height / 2, diam, diam);
 ```
 
-The `tPos` variable uses the song's [`currentTime()`](https://p5js.org/reference/#/p5.SoundFile/currentTime) and [`duration()`](https://p5js.org/reference/#/p5.SoundFile/duration) functions to determine how far we are along the song that is playing. Its value will always be between $$[0, 1]$$, and represents the percentage of the track that has been played.
+A variável `tPos` usa as funções [`currentTime()`](https://p5js.org/reference/#/p5.SoundFile/currentTime) e [`duration()`](https://p5js.org/reference/#/p5.SoundFile/duration) da música para determinar quão adiante estamos na música que está tocando. Seu valor sempre estará entre $$[0, 1]$$ e representa a porcentagem da faixa que já foi tocada.
 
-The `dIndexDelay` variable turns the `tPos` value into an index value by multiplying the percentage by the length of the diameter array. `DELAY` is a constant that we added to account for delays between the screen and the computer's speakers. We can play with that variable in the beginning of the file to shift which index we use at a given frame to account for delays when using bluetooth headphones or speakers.
+A variável `dIndexDelay` transforma o valor de `tPos` em um valor de índice, multiplicando a porcentagem pelo tamanho do array de diâmetros. `DELAY` é uma constante que adicionamos para compensar atrasos entre a tela e os alto-falantes do computador. Podemos brincar com essa variável no começo do arquivo para deslocar qual índice usamos em um dado frame e compensar atrasos ao usar fones ou caixas de som bluetooth.
 
-This value then goes through `floor()` and `constrain()` in order to guarantee that we are always using a whole-number integer (no decimal) that is within the array's bounds.
+Esse valor então passa por `floor()` e `constrain()` para garantir que estejamos sempre usando um número inteiro (sem decimais) que esteja dentro dos limites do array.
 
-After that we use it to index into our arrays of diameters and draw an ellipse whose size is proportional to the volume of the current sample being played:
+Depois disso, usamos esse valor para indexar nossos arrays de diâmetros e desenhar uma elipse cujo tamanho é proporcional ao volume da amostra que está tocando:
 
 {% include p5-editor.html id="DnPLOOgea" %}
 
-Try it out on both tracks, and remember to adjust the `DELAY` value to get better synchronization if using bluetooth speakers/earbuds or if the browser is overloaded.
+Experimente nas duas faixas, e lembre-se de ajustar o valor de `DELAY` para obter uma sincronização melhor se estiver usando caixas de som/fones bluetooth ou se o navegador estiver sobrecarregado.

@@ -1,141 +1,141 @@
 ---
-title: More Random
+title: Mais Aleatoriedade
 ---
-We've already seen how to generate continuous [random numbers](../../coding/random/) within a range, and also how to use those numbers to pick values from a pre-determined set of options.
+Já vimos como gerar [números aleatórios](../../coding/random/) contínuos dentro de um intervalo, e também como usar esses números para escolher valores de um conjunto predeterminado de opções.
 
-Just to review, let's use `random()` to generate a grid of ellipses with different, unpredictable, diameters:
+Só para revisar, vamos usar `random()` para gerar uma grade de elipses com diâmetros diferentes e imprevisíveis:
 
 {% include p5-editor.html id="JYdWqKl2W" %}
 
-We're using `random(0.2 * gridW, 0.8 * gridW)` to pick random ellipse diameter values that are between $$20\%$$ and $$80\%$$ of the grid width.
+Estamos usando `random(0.2 * gridW, 0.8 * gridW)` para escolher valores aleatórios de diâmetro das elipses entre $$20\%$$ e $$80\%$$ da largura da grade.
 
-## Uniform
-Calling `random(min, max)` gives us uniformly distributed values: any value between its `min` and `max` parameters are equally likely to occur.
+## Uniforme
+Chamar `random(min, max)` nos dá valores uniformemente distribuídos: qualquer valor entre seus parâmetros `min` e `max` tem a mesma probabilidade de ocorrer.
 
-We can visually this in a couple of ways.
+Podemos visualizar isso de algumas maneiras.
 
-In one-dimension, using a random variable to set the diameter of ellipses. All values between $$0$$ and `width` are equally likely:
+Em uma dimensão, usando uma variável aleatória para definir o diâmetro de elipses. Todos os valores entre $$0$$ e `width` são igualmente prováveis:
 
 {% include p5-editor.html id="--jfZGT-3" %}
 
-We can rerun the sketch and get different results, but overall, the ellipses don't seem to follow any pattern.
+Podemos executar o sketch de novo e obter resultados diferentes, mas, no geral, as elipses não parecem seguir nenhum padrão.
 
-We can also visually the distribution of the `random()` function in two-dimensions, using random variables to pick `x` and `y` positions for ellipses. All positions on the canvas are equally likely:
+Também podemos visualizar a distribuição da função `random()` em duas dimensões, usando variáveis aleatórias para escolher as posições `x` e `y` das elipses. Todas as posições do canvas são igualmente prováveis:
 
 {% include p5-editor.html id="I6-rCuYnY" %}
 
-And, again, we can rerun the sketch and get slightly different results, but it will always look like the ellipses are equally spread throughout our canvas.
+E, de novo, podemos executar o sketch outra vez e obter resultados um pouco diferentes, mas sempre vai parecer que as elipses estão igualmente espalhadas pelo nosso canvas.
 
-Uniform random variables are strongly related to choice events like rolling a die, picking a card from a deck, or thinking of a number between $$0$$ and $$100$$.
+Variáveis aleatórias uniformes estão fortemente relacionadas a eventos de escolha, como jogar um dado, tirar uma carta de um baralho ou pensar em um número entre $$0$$ e $$100$$.
 
-This isn't the only way randomness occurs though. If we look at values for people's heights, shoe sizes and blood pressure, or even something like wine pH levels and subway occupancy throughout the day, we'll see that even though exact values are not predictable, these events or measurements tend to have a non-uniform distribution where certain values are more likely to occur.
+Essa não é a única forma como a aleatoriedade ocorre, porém. Se olharmos para valores como a altura das pessoas, o tamanho de sapatos e a pressão arterial, ou até algo como os níveis de pH de vinhos e a lotação do metrô ao longo do dia, vamos ver que, embora os valores exatos não sejam previsíveis, esses eventos ou medições tendem a ter uma distribuição não uniforme, em que certos valores são mais prováveis de ocorrer.
 
-## Normal Gaussians
-Subway occupancy, wine pH levels, shoe size and blood pressure are examples of variables that follow a [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution) (sometimes also called a Gaussian distribution). This might sound familiar from algebra or statistics class, but just to review: in a normal distribution, not all numbers are equally likely to occur; the distribution has a specific *expected value* and a *spread*.
+## Gaussianas Normais
+Lotação do metrô, pH de vinhos, tamanho de sapatos e pressão arterial são exemplos de variáveis que seguem uma [distribuição normal](https://en.wikipedia.org/wiki/Normal_distribution) (às vezes também chamada de distribuição gaussiana). Isso pode soar familiar das aulas de álgebra ou estatística, mas só para revisar: em uma distribuição normal, nem todos os números são igualmente prováveis de ocorrer; a distribuição tem um *valor esperado* e uma *dispersão* específicos.
 
-The *expected value* is the average, or mean, value of the distribution, usually denoted by the greek letter *mu* $$\mu$$. If we sample a bunch of numbers from a normally distributed event, we would expect half of the numbers to be larger than the mean, and the other half to be smaller.
+O *valor esperado* é o valor médio da distribuição, geralmente denotado pela letra grega *mi* $$\mu$$. Se amostrarmos vários números de um evento normalmente distribuído, esperaríamos que metade dos números fosse maior que a média e a outra metade menor.
 
-The *spread* of a distribution is officially called a *standard deviation*. It's commonly denoted by the greek letter *sigma* $$\sigma$$, and it specifies how likely numbers far from the mean are to occur. This plot shows the relationship between mean and standard deviation for a gaussian distribution with mean $$0$$ and standard deviation $$\sigma$$:
+A *dispersão* de uma distribuição é oficialmente chamada de *desvio padrão*. Ela é comumente denotada pela letra grega *sigma* $$\sigma$$ e especifica quão prováveis são os números distantes da média. Este gráfico mostra a relação entre a média e o desvio padrão para uma distribuição gaussiana com média $$0$$ e desvio padrão $$\sigma$$:
 
 <div class="scaled-images w75">
   <img src = "{{ '/assets/images/creative-coding/gaussian-00.jpg' | relative_url }}"/>
 </div>
 
-What this graph shows is that about $$68\%$$ of the values chosen from a gaussian distribution will be within $$1$$ standard deviation from the mean, about $$95\%$$ will be within $$2$$ standard deviations, and almost all of the values ($$99.6\%$$ of them) will be within $$3$$ standard deviations from the mean.
+O que esse gráfico mostra é que cerca de $$68\%$$ dos valores escolhidos de uma distribuição gaussiana estarão a até $$1$$ desvio padrão da média, cerca de $$95\%$$ estarão a até $$2$$ desvios padrão, e quase todos os valores ($$99.6\%$$ deles) estarão a até $$3$$ desvios padrão da média.
 
-We can check this with the p5.js [`randomGaussian()`](https://p5js.org/reference/#/p5/randomGaussian) function.
+Podemos verificar isso com a função [`randomGaussian()`](https://p5js.org/reference/#/p5/randomGaussian) do p5.js.
 
-Let's use it to repeat the same two visualizations we used for the `random()` function above.
+Vamos usá-la para repetir as mesmas duas visualizações que usamos acima para a função `random()`.
 
-In one-dimension, let's use $$0$$ for the mean and $$\frac{width}{3}$$ for the standard deviation for our ellipses's diameters. One way to pick the value for the standard deviation is to take whatever we would like to be the largest value returned by `randomGaussian()` and divide it by $$3$$. We want our ellipses to have a maximum diameter of `width`, so our standard deviation should be $$\frac{1}{3}$$ of that value. This should make it so that most of the ellipses fall within the canvas:
+Em uma dimensão, vamos usar $$0$$ como média e $$\frac{width}{3}$$ como desvio padrão para os diâmetros das nossas elipses. Uma forma de escolher o valor do desvio padrão é pegar o maior valor que gostaríamos que o `randomGaussian()` retornasse e dividi-lo por $$3$$. Queremos que nossas elipses tenham um diâmetro máximo de `width`, então nosso desvio padrão deve ser $$\frac{1}{3}$$ desse valor. Isso deve fazer com que a maioria das elipses fique dentro do canvas:
 
 {% include p5-editor.html id="5X5OnNGP_" %}
 
-In two-dimensions, we want our ellipses to be clustered around the center and mostly stay within the canvas. This makes our means $$\frac{width}{2}$$ and $$\frac{height}{2}$$, and since we would like our `x` position to be at most $$\frac{width}{2}$$ away from the mean (at $$0$$ or `width`), we divide $$\frac{width}{2}$$ by $$3$$ to get the standard deviation. The same logic is used to calculate the standard deviation for the `y` position and the values we'll use for $$\sigma$$ are: $$\frac{width}{6}$$ and $$\frac{height}{6}$$.
+Em duas dimensões, queremos que nossas elipses fiquem agrupadas ao redor do centro e, na maioria, permaneçam dentro do canvas. Isso faz com que nossas médias sejam $$\frac{width}{2}$$ e $$\frac{height}{2}$$ e, como gostaríamos que nossa posição `x` ficasse no máximo a $$\frac{width}{2}$$ da média (em $$0$$ ou `width`), dividimos $$\frac{width}{2}$$ por $$3$$ para obter o desvio padrão. A mesma lógica é usada para calcular o desvio padrão da posição `y`, e os valores que vamos usar para $$\sigma$$ são: $$\frac{width}{6}$$ e $$\frac{height}{6}$$.
 
-From the reasoning above we can see that a more general way to pick standard deviation values when using `randomGaussian()` is: $$\sigma = \frac{max - mean}{3}$$.
+Do raciocínio acima, podemos ver que uma forma mais geral de escolher valores de desvio padrão ao usar `randomGaussian()` é: $$\sigma = \frac{max - mean}{3}$$.
 
 {% include p5-editor.html id="6f5jIIUOj" %}
 
-We can even plot some markers at $$1$$, $$2$$ and $$3$$ standard deviations to check that the values returned by the `randomGaussian()` function follow the expected $$68\%$$, $$95\%$$ and $$99.6\%$$ distributions.
+Podemos até desenhar alguns marcadores em $$1$$, $$2$$ e $$3$$ desvios padrão para verificar se os valores retornados pela função `randomGaussian()` seguem as distribuições esperadas de $$68\%$$, $$95\%$$ e $$99.6\%$$.
 
 {% include p5-editor.html id="dds08wUTa" %}
 
-In the sketch above, $$68\%$$ of the ellipses should be within the smallest white circle, $$27\%$$ should be between the two smallest white circles, $$4\%$$ between the two largest white circles, and very rarely we'll see an ellipse outside the largest white circle. So, $$68\%$$ of the ellipses are within $$1$$ $$\sigma$$ from the mean, $$95\%$$ ($$68\% + 27\%$$) are within $$2$$ $$\sigma$$ and almost all of them are within $$3$$ $$\sigma$$ from the mean of $$0$$.
+No sketch acima, $$68\%$$ das elipses devem estar dentro do menor círculo branco, $$27\%$$ devem estar entre os dois menores círculos brancos, $$4\%$$ entre os dois maiores círculos brancos, e muito raramente vamos ver uma elipse fora do maior círculo branco. Então, $$68\%$$ das elipses estão a $$1$$ $$\sigma$$ da média, $$95\%$$ ($$68\% + 27\%$$) estão a $$2$$ $$\sigma$$ e quase todas estão a $$3$$ $$\sigma$$ da média de $$0$$.
 
-We can see something similar in our two-dimensional example:
+Podemos ver algo semelhante no nosso exemplo bidimensional:
 
 {% include p5-editor.html id="jArRRDRhN" %}
 
-Finally, let's see what happens if we use a gaussian distribution to pick ellipse diameters for the grid pattern we looked at in the beginning of this section. Let's try $$0$$ for the mean and $$\frac{gridW}{3}$$ for the standard deviation (since we want our largest possible diameter to be `gridW`):
+Por fim, vamos ver o que acontece se usarmos uma distribuição gaussiana para escolher os diâmetros das elipses no padrão de grade que vimos no começo desta seção. Vamos tentar $$0$$ como média e $$\frac{gridW}{3}$$ como desvio padrão (já que queremos que o maior diâmetro possível seja `gridW`):
 
 {% include p5-editor.html id="yxSDQp5CL" %}
 
-Since it's very unlikely that we'll get $$2$$ maximum diameter ellipses next to each other, we can even experiment with slightly larger values for $$\sigma$$, like $$\frac{gridW}{2.5}$$ or even $$\frac{gridW}{2}$$.
+Como é muito improvável que tenhamos $$2$$ elipses de diâmetro máximo lado a lado, podemos até experimentar valores um pouco maiores de $$\sigma$$, como $$\frac{gridW}{2.5}$$ ou até $$\frac{gridW}{2}$$.
 
-Try it out above ☝️ and see if the difference is noticeable!
+Experimente acima ☝️ e veja se a diferença é perceptível!
 
 ## Noise
 
-Uniform and gaussian distributions aren't the only ways of creating random numbers.
+Distribuições uniformes e gaussianas não são as únicas formas de criar números aleatórios.
 
-The random numbers generated by the `random()` and `randomGaussian()` functions are unpredictable because knowing something about one of the numbers doesn't say anything about the next. But, what if we want to use sequences of random numbers where each number is somehow related to the previous value in the sequence?
+Os números aleatórios gerados pelas funções `random()` e `randomGaussian()` são imprevisíveis porque saber algo sobre um dos números não diz nada sobre o próximo. Mas e se quisermos usar sequências de números aleatórios em que cada número esteja de alguma forma relacionado ao valor anterior da sequência?
 
-Of course, p5.js has another function for generating these types of random numbers: [`noise()`](https://p5js.org/reference/#/p5/noise).
+Claro que o p5.js tem outra função para gerar esse tipo de número aleatório: [`noise()`](https://p5js.org/reference/#/p5/noise).
 
-Noise is different from the other functions because its parameters aren't used to specify anything about the distribution of the numbers, or their range, but instead to determine how close sequentially chosen numbers should be.
+O noise é diferente das outras funções porque seus parâmetros não são usados para especificar nada sobre a distribuição dos números, ou seu intervalo, e sim para determinar quão próximos devem ser os números escolhidos em sequência.
 
-For example, calling noise with the same parameter during a sketch:
+Por exemplo, chamar o noise com o mesmo parâmetro durante um sketch:
 ```js
 print(noise(1010));
 print(noise(1010));
 print(noise(1010));
 ```
 
-Will give the same number (always between $$0$$ and $$1$$):
+Vai dar o mesmo número (sempre entre $$0$$ e $$1$$):
 ```js
 0.63951621
 0.63951621
 0.63951621
 ```
 
-But, the parameter can be used to determine how *similar* two or more consecutive random numbers should be.
+Mas o parâmetro pode ser usado para determinar quão *parecidos* dois ou mais números aleatórios consecutivos devem ser.
 
-For example, calling noise with consecutive whole numbers:
+Por exemplo, chamar o noise com números inteiros consecutivos:
 ```js
 print(noise(1010));
 print(noise(1011));
 print(noise(1012));
 ```
 
-Gives a sequence of different numbers that are all within $$0.2$$ of each other:
+Dá uma sequência de números diferentes que estão todos a até $$0.2$$ uns dos outros:
 ```js
 0.40770879
 0.49712939
 0.29742239
 ```
 
-Calling noise with numbers that only vary by $$0.1$$:
+Chamando o noise com números que variam apenas $$0.1$$:
 ```js
 print(noise(1010.0));
 print(noise(1010.1));
 print(noise(1010.2));
 ```
 
-we get a sequence of different numbers that are more alike, and vary by, maybe, $$0.02$$:
+obtemos uma sequência de números diferentes que são mais parecidos e variam em, talvez, $$0.02$$:
 ```js
 0.36829471
 0.38614744
 0.39177833
 ```
 
-*So... How do we use it?*
+*Então... Como usamos isso?*
 
-Well, `noise()` is useful because we can use values we have in our sketch to control by how much the numbers in the sequence will vary.
+Bem, o `noise()` é útil porque podemos usar valores que temos no nosso sketch para controlar o quanto os números da sequência vão variar.
 
-A simple example, similar to the ones above, would be to use `noise()` to pick random `x` and `y` locations for some ellipses.
+Um exemplo simples, parecido com os de cima, seria usar `noise()` para escolher posições `x` e `y` aleatórias para algumas elipses.
 
-Let's say we start with something like this:
+Digamos que começamos com algo assim:
 ```js
 for (let i = 0; i < width; i++) {
   let x = width * noise(i);
@@ -144,15 +144,15 @@ for (let i = 0; i < width; i++) {
 }
 ```
 
-Since the values returned by `noise()` are in the range $$[0, 1]$$, we multiply them by `width` and `height` to get values that stretch across our whole canvas:
+Como os valores retornados por `noise()` estão no intervalo $$[0, 1]$$, nós os multiplicamos por `width` e `height` para obter valores que se estendem por todo o nosso canvas:
 
 {% include p5-editor.html id="Go0Xi5bXM" %}
 
 ## 🤔
 
-Since `noise()` returns the same value when called with the same parameter, the $$x$$ and $$y$$ variables in the sketch above will always have the same value and our ellipses get drawn in a diagonal line. Boring.
+Como `noise()` retorna o mesmo valor quando chamado com o mesmo parâmetro, as variáveis $$x$$ e $$y$$ no sketch acima sempre terão o mesmo valor e nossas elipses são desenhadas em uma linha diagonal. Chato.
 
-One way to fix this is to give the `noise()` function for each variable a different, fixed offset, like:
+Uma forma de resolver isso é dar à função `noise()` de cada variável um deslocamento diferente e fixo, assim:
 ```js
 for (let i = 0; i < width; i++) {
   let x = width * noise(1010 + i);
@@ -163,11 +163,11 @@ for (let i = 0; i < width; i++) {
 
 {% include p5-editor.html id="VOGOgVAa6" %}
 
-This is better, but it still looks a lot like the `random()` or the `randomGaussian()` functions. This is because the parameter that we are giving to the `noise()` function vary by $$1$$ between iterations, and from our exploration above we saw that calling `noise()` with consecutive whole numbers will return numbers that change by about $$0.2$$ between consecutive calls.
+Isso é melhor, mas ainda se parece bastante com as funções `random()` ou `randomGaussian()`. Isso acontece porque o parâmetro que estamos passando para a função `noise()` varia de $$1$$ entre as iterações, e da nossa exploração acima vimos que chamar `noise()` com números inteiros consecutivos retorna números que mudam cerca de $$0.2$$ entre chamadas consecutivas.
 
-This is quite a lot. $$0.2$$ is $$\frac{1}{5}$$ of our total range, and the resulting sequence can look pretty much like `random()` or `randomGaussian()`.
+Isso é bastante. $$0.2$$ é $$\frac{1}{5}$$ do nosso intervalo total, e a sequência resultante pode se parecer muito com `random()` ou `randomGaussian()`.
 
-We can make consecutive numbers more similar by incrementing the parameter to noise by $$0.01$$ instead of $$1$$:
+Podemos deixar números consecutivos mais parecidos incrementando o parâmetro do noise de $$0.01$$ em vez de $$1$$:
 ```js
 for (let i = 0; i < width; i++) {
   let x = width * noise(1010 + i / 100);
@@ -178,53 +178,53 @@ for (let i = 0; i < width; i++) {
 
 {% include p5-editor.html id="7xkp7ELGy" %}
 
-Oh, whoa. So now both the `x` and `y` locations for our ellipses vary by small amounts between each iteration, and since each value is slightly related to the previous one we get something that looks like the trail of a moving ellipse.
+Uau. Agora tanto a posição `x` quanto a `y` das nossas elipses variam por pequenas quantidades entre cada iteração e, como cada valor está levemente relacionado ao anterior, obtemos algo que parece o rastro de uma elipse em movimento.
 
-Pretty cool !
+Muito legal !
 
-We can even increase the number of iterations above from `width` to `4 * width` or `10 * width` to get longer trails.
+Podemos até aumentar o número de iterações acima de `width` para `4 * width` ou `10 * width` para obter rastros mais longos.
 
-Try it out ☝️ !
+Experimente ☝️ !
 
-Let's see what `noise()` looks like in the one-dimension visualization. We'll again use `noise(i / 100)` so that our diameter doesn't vary too much between iterations:
+Vamos ver como o `noise()` fica na visualização em uma dimensão. Vamos usar `noise(i / 100)` de novo para que nosso diâmetro não varie demais entre as iterações:
 
 {% include p5-editor.html id="FwqCTeqRU" %}
 
-We can see that the diameters vary by small smalls between iterations and we almost get patterns when all the ellipses overlap.
+Podemos ver que os diâmetros variam em passos pequenos entre as iterações e quase obtemos padrões quando todas as elipses se sobrepõem.
 
-Let's try `noise()` in our grid example:
+Vamos experimentar `noise()` no nosso exemplo da grade:
 
 {% include p5-editor.html id="HPub93Kv5" %}
 
 ## 🤔
 
-Maybe if we use `y / 100` ? ...
+Talvez se usarmos `y / 100` ? ...
 
 {% include p5-editor.html id="oib4-fdue" %}
 
-Or, `(x + y) / 100` ?
+Ou `(x + y) / 100` ?
 
 {% include p5-editor.html id="Qjh-iKRFm" %}
 
-Even thought the last one looks kind of cool, all of these are predictable: either their rows, columns or diagonals are the same. Which makes sense since we're calling `noise()` with repeating values coming from `x`, `y` or `x + y`.
+Mesmo que o último pareça legal, todos esses são previsíveis: ou suas linhas, ou colunas, ou diagonais são iguais. O que faz sentido, já que estamos chamando `noise()` com valores repetidos vindos de `x`, `y` ou `x + y`.
 
-Unlike the 2D case above where we used separate calls to `noise()` to get values for `x` and `y` locations, now we would like to get *one* value for diameter based on *two* values for location. Luckily, we can just call `noise()` with two parameters, like this:
+Diferente do caso 2D acima, em que usamos chamadas separadas a `noise()` para obter valores para as posições `x` e `y`, agora gostaríamos de obter *um* valor de diâmetro com base em *dois* valores de posição. Felizmente, podemos simplesmente chamar `noise()` com dois parâmetros, assim:
 ```js
 let d = noise(x / 100, y / 100);
 ```
 
-Now, the `noise()` function will take both sequences into account when it returns a value, so even if one of the values stays the same, the other changes and the resulting value will change:
+Agora, a função `noise()` vai levar as duas sequências em consideração ao retornar um valor, então mesmo que um dos valores permaneça o mesmo, o outro muda e o valor resultante vai mudar:
 
 {% include p5-editor.html id="cLIOZhjLs" %}
 
-Pretty cool. We'll soon see how to use this version of 2D and even 3D noise.
+Muito legal. Em breve vamos ver como usar essa versão de noise 2D e até 3D.
 
-## Review
+## Revisão
 
-`random(min, max)`: gives us uniformly distributed values between `min` and `max`, where every value is equally likely to occur.
+`random(min, max)`: nos dá valores uniformemente distribuídos entre `min` e `max`, em que todo valor tem a mesma probabilidade de ocorrer.
 
-`randomGaussian(`$$\mu$$`, `$$\sigma$$`)`: gives us normally distributed values clustered around $$\mu$$, and with most of the values between $$\mu - 3\sigma$$ and $$\mu + 3\sigma$$.
+`randomGaussian(`$$\mu$$`, `$$\sigma$$`)`: nos dá valores normalmente distribuídos agrupados ao redor de $$\mu$$, com a maioria dos valores entre $$\mu - 3\sigma$$ e $$\mu + 3\sigma$$.
 
-`noise(i, j)`: gives us sequences of values between $$0$$ and $$1$$, that don't vary much between consecutive calls when `i` and `j` are sequences of gradually increasing (or decreasing) values.
+`noise(i, j)`: nos dá sequências de valores entre $$0$$ e $$1$$ que não variam muito entre chamadas consecutivas quando `i` e `j` são sequências de valores que aumentam (ou diminuem) gradualmente.
 
 {% include random-examples.html %}

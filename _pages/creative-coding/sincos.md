@@ -1,73 +1,73 @@
 ---
-title: Sine & Cosine
+title: Seno & Cosseno
 ---
 
-In the previous [section](../cycles/) we saw how to define a cycle in terms of $$amplitude$$, $$period$$ and $$\mathit{offset}$$:
+Na [seção](../cycles/) anterior vimos como definir um ciclo em termos de $$amplitude$$, $$period$$ e $$\mathit{offset}$$:
 
 {% include p5-editor.html id="Qw8RJhauV" %}
 
-A little review:
+Uma pequena revisão:
 
-$$Amplitude$$: how far the circle moves before going back to the beginning.
+$$Amplitude$$: a distância que o círculo percorre antes de voltar ao começo.
 
-$$Period$$: how long it takes for one cycle to complete and start again (can be in seconds, but number of frames is more useful when using `frameCount`).
+$$Período$$: quanto tempo leva para um ciclo se completar e recomeçar (pode ser em segundos, mas o número de frames é mais útil ao usar `frameCount`).
 
-$$\mathit{Offset}$$: starting position of the circle.
+$$\mathit{Offset}$$ (deslocamento): posição inicial do círculo.
 
-Other than the modulus operator and the triangle wave, another easy way of generating cycles is by using the [sine and cosine](https://en.wikipedia.org/wiki/Sine_and_cosine) trigonometric functions. This might not be immediately clear from the wikipedia definition: *In the context of a right triangle: for a given angle, its sine is the ratio of the length of the side that is opposite that angle to the length of its hypotenuse; and the cosine is the ratio of the length of the adjacent leg to that of the hypotenuse*.
+Além do operador módulo e da onda triangular, outra forma fácil de gerar ciclos é usando as funções trigonométricas [seno e cosseno](https://en.wikipedia.org/wiki/Sine_and_cosine). Isso pode não ficar imediatamente claro na definição da wikipedia: *No contexto de um triângulo retângulo: para um dado ângulo, seu seno é a razão entre o comprimento do cateto oposto a esse ângulo e o comprimento da hipotenusa; e o cosseno é a razão entre o comprimento do cateto adjacente e o da hipotenusa*.
 
-But, what's important to us here is to remember that both the sine and cosine functions repeat every 360º or $$2\pi$$ radians.
+Mas o que importa aqui é lembrar que tanto a função seno quanto a função cosseno se repetem a cada 360º ou $$2\pi$$ radianos.
 
-In the case of sine, as the angle $$\theta$$ grows from $$0$$ to $$\frac{\pi}{2}$$, $$sin(\theta)$$ grows from $$0$$ to $$1$$. As $$\theta$$ grows from $$\frac{\pi}{2}$$ to $$\pi$$, $$sin(\theta)$$ decreases from $$1$$ to $$0$$. As $$\theta$$ grows from $$\pi$$ to $$\frac{3\pi}{2}$$, $$sin(\theta)$$ goes from $$0$$ to $$-1$$, and finally as $$\theta$$ grows from $$\frac{3\pi}{2}$$ to $$2\pi$$, $$sin(\theta)$$ increases from $$-1$$ to $$0$$. After that, as $$\theta$$ keeps growing, to $$3\pi$$, $$4\pi$$, $$5\pi$$, etc, the values of $$sin(\theta)$$ will keep repeating and always be between $$[-1 , 1]$$. In other words: \$$sin(\theta + 2\pi) = sin(\theta)$$
+No caso do seno, conforme o ângulo $$\theta$$ cresce de $$0$$ a $$\frac{\pi}{2}$$, $$sin(\theta)$$ cresce de $$0$$ a $$1$$. Conforme $$\theta$$ cresce de $$\frac{\pi}{2}$$ a $$\pi$$, $$sin(\theta)$$ diminui de $$1$$ a $$0$$. Conforme $$\theta$$ cresce de $$\pi$$ a $$\frac{3\pi}{2}$$, $$sin(\theta)$$ vai de $$0$$ a $$-1$$ e, por fim, conforme $$\theta$$ cresce de $$\frac{3\pi}{2}$$ a $$2\pi$$, $$sin(\theta)$$ aumenta de $$-1$$ a $$0$$. Depois disso, conforme $$\theta$$ continua crescendo, a $$3\pi$$, $$4\pi$$, $$5\pi$$, etc, os valores de $$sin(\theta)$$ vão continuar se repetindo e ficando sempre entre $$[-1 , 1]$$. Em outras palavras: \$$sin(\theta + 2\pi) = sin(\theta)$$
 
-Visually:
+Visualmente:
 <div class="scaled-images w75">
   <img src="{{ '/assets/images/creative-coding/sine-00.jpg' | relative_url }}">
 </div>
 
-If we look for equations that relate the sine and cosine functions to cyclic or [harmonic](https://phys.libretexts.org/Bookshelves/Classical_Mechanics/Classical_Mechanics_(Dourmashkin)/23%3A_Simple_Harmonic_Motion/23.01%3A_Introduction_to_Periodic_Motion#Simple_Harmonic_Motion:_Quantitative) motion, we might find something like this:
+Se procurarmos equações que relacionem as funções seno e cosseno ao movimento cíclico ou [harmônico](https://phys.libretexts.org/Bookshelves/Classical_Mechanics/Classical_Mechanics_(Dourmashkin)/23%3A_Simple_Harmonic_Motion/23.01%3A_Introduction_to_Periodic_Motion#Simple_Harmonic_Motion:_Quantitative), podemos encontrar algo assim:
 
 $$y(t) = A \times sin\left(\frac{2\pi}{P}\times t\right)$$
 
-where $$A$$ is the amplitude and $$P$$ is the period.
+onde $$A$$ é a amplitude e $$P$$ é o período.
 
-In p5.js this could be rewritten as:
+No p5.js isso poderia ser reescrito como:
 ```js
 let x = A * sin(2 * PI / periodFrames * frameCount);
 ```
 
-where $$A$$ is the amplitude, $$P$$ is the period in number of frames and `frameCount` is the variable that keeps growing indefinitely:
+onde $$A$$ é a amplitude, $$P$$ é o período em número de frames e `frameCount` é a variável que continua crescendo indefinidamente:
 
 {% include p5-editor.html id="nN5UJPZkB" %}
 
-Hmmm.... this kind of works. Since the range of `sin()` is $$[-1, 1]$$, our circle is oscillating between $$[-amplitude, amplitude]$$, which isn't really what we want. One easy way to fix this is to add 1 to the `sin()` function so we have a range that goes between $$[0, 2]$$, then divide that by $$2$$ to bring the range down to $$[0, 1]$$ and, finally, multiply by the amplitude:
+Hmmm.... isso meio que funciona. Como o intervalo de `sin()` é $$[-1, 1]$$, nosso círculo está oscilando entre $$[-amplitude, amplitude]$$, o que não é exatamente o que queremos. Uma forma fácil de corrigir isso é somar 1 à função `sin()`, para termos um intervalo que vai de $$[0, 2]$$, depois dividir por $$2$$ para reduzir o intervalo a $$[0, 1]$$ e, finalmente, multiplicar pela amplitude:
 
 $$x = \frac{A}{2}\times \left(sin\left(\frac{2\pi}{P}\times frameCount\right) + 1\right)$$
 
 {% include p5-editor.html id="92DpmSO0y" %}
 
-Much better. And this same equation works for other parameters, like the circle radius. We just have to define an $$amplitude$$, $$period$$ and $$\mathit{offset}$$ that makes sense for radius values:
+Muito melhor. E essa mesma equação funciona para outros parâmetros, como o raio do círculo. Só precisamos definir uma $$amplitude$$, um $$period$$ e um $$\mathit{offset}$$ que façam sentido para valores de raio:
 
 {% include p5-editor.html id="rlVJhxgnD" %}
 
-We can take some time to play with the parameters here and build some intuition about how they affect the motion of the circle. Try changing `xPeriodSec`, `rPeriodSec`, `rAmplitude` and `rOffset`.
+Podemos tirar um tempo para brincar com os parâmetros aqui e construir alguma intuição sobre como eles afetam o movimento do círculo. Tente mudar `xPeriodSec`, `rPeriodSec`, `rAmplitude` e `rOffset`.
 
-If we want, we can easily change the variable names and equations to make the circle oscillate vertically:
+Se quisermos, podemos facilmente mudar os nomes das variáveis e as equações para fazer o círculo oscilar verticalmente:
 
 {% include p5-editor.html id="TtPK-g8nM" %}
 
-Here $$amplitude$$ is the whole screen `height` and there's no $$\mathit{offset}$$, so it starts at $$0$$.
+Aqui a $$amplitude$$ é a `height` inteira da tela e não há $$\mathit{offset}$$, então ele começa em $$0$$.
 
-Now, we can combine *harmonic motion* in the `x` and `y` direction to get *elliptic cycles*:
+Agora, podemos combinar *movimento harmônico* nas direções `x` e `y` para obter *ciclos elípticos*:
 
 {% include p5-editor.html id="kSxgebmnj" %}
 
-We just have to make sure we use $$sin()$$ for one direction and $$cos()$$ for the other, or else we'll just get motion in a straight diagonal line.
+Só precisamos garantir que usamos $$sin()$$ para uma direção e $$cos()$$ para a outra, senão vamos obter apenas movimento em linha reta diagonal.
 
-If we make the `x` and `y` functions have different periods, we will get a nice [Lissajous](https://en.wikipedia.org/wiki/Lissajous_curve) movement:
+Se fizermos as funções de `x` e `y` terem períodos diferentes, vamos obter um belo movimento de [Lissajous](https://en.wikipedia.org/wiki/Lissajous_curve):
 
 {% include p5-editor.html id="9P_BKTs_5" %}
 
-Putting it all together, and using $$sin()$$ and $$cos()$$ for the `x`, `y` and `radius` parameters ends up giving our sketch a 3D effect:
+Juntando tudo, e usando $$sin()$$ e $$cos()$$ para os parâmetros `x`, `y` e `radius`, nosso sketch acaba ganhando um efeito 3D:
 
 {% include p5-editor.html id="qN37xEOH9" %}

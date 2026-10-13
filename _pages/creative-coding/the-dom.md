@@ -1,24 +1,24 @@
 ---
-title: The DOM
+title: O DOM
 ---
-We are now going to look at p5js's functions for accessing and manipulating the DOM.
+Vamos agora olhar as funções do p5js para acessar e manipular o DOM.
 
-Before we get started, it might be helpful to review our [Browser and JavaScript](../../intro/javascript/) material.
+Antes de começarmos, pode ser útil revisar nosso material sobre [Navegador e JavaScript](../../intro/javascript/).
 
-First, The DOM (Document Object Model) is just the official way of referring to the collection of HTML elements that make up a webpage. These are the `<p>`, `<img>` and `<a>` elements for holding text, images and links, and also some more complex elements, like `<canvas>` elements, where our p5.js sketch gets drawn or `<video>` and `<audio>` elements for displaying different kinds of media on a webpage.
+Primeiro, o DOM (Document Object Model, ou Modelo de Objetos do Documento) é apenas a forma oficial de se referir à coleção de elementos HTML que compõem uma página web. São os elementos `<p>`, `<img>` e `<a>`, que guardam texto, imagens e links, e também alguns elementos mais complexos, como os elementos `<canvas>`, onde nosso sketch p5.js é desenhado, ou os elementos `<video>` e `<audio>`, para exibir diferentes tipos de mídia em uma página web.
 
 <div class="scaled-images left w75">
   <img src = "{{ '/assets/images/creative-coding/dom-00.jpg' | relative_url }}"/>
 </div>
 
-Usually, these elements and their content are defined in the html file for the webpage, and any special behavior is specified using a separate JavaScript file. We might have a button defined in our html file and then a JavaScript file would specify what happens when that button is clicked.
+Normalmente, esses elementos e seu conteúdo são definidos no arquivo html da página web, e qualquer comportamento especial é especificado usando um arquivo JavaScript separado. Podemos ter um botão definido no nosso arquivo html e então um arquivo JavaScript especificaria o que acontece quando esse botão é clicado.
 
-Somewhere in the html we could have something like this:
+Em algum lugar do html poderíamos ter algo assim:
 ```html
 <button onclick="displayTime()">Display Time</button>
 ```
 
-And then in a JavaScript file:
+E então em um arquivo JavaScript:
 ```js
 function displayTime() {
   let time = new Date();
@@ -26,52 +26,52 @@ function displayTime() {
 }
 ```
 
-In this example, the `displayTime()` function uses the JavaScript `alert()` function to show a popup with the current time and date. Don't worry about the details; it's just a simple example of html with JavaScript to show that, traditionally, html defines the *what* of our webpages and then JavaScript defines the *how*.
+Neste exemplo, a função `displayTime()` usa a função `alert()` do JavaScript para mostrar um popup com a data e hora atuais. Não se preocupe com os detalhes; é só um exemplo simples de html com JavaScript para mostrar que, tradicionalmente, o html define o *quê* das nossas páginas web e o JavaScript define o *como*.
 
-Elements in a webpage that are *static*, or, don't have to move around or change, will be defined in the html. Elements that are created based on user interaction can be created in the JavaScript file and added to the webpage's DOM *dynamically*.
+Elementos de uma página web que são *estáticos*, ou seja, que não precisam se mover ou mudar, serão definidos no html. Elementos que são criados com base na interação do usuário podem ser criados no arquivo JavaScript e adicionados ao DOM da página web *dinamicamente*.
 
-Nowadays it's become more common to use frameworks like [Angular](https://angular.io/), [React](https://react.dev/), [Vue](https://vuejs.org/) or [Svelte](https://svelte.dev/) to create webpages with elements that have more complex behaviors, like submitting forms, accessing databases, validating passwords, etc.
+Hoje em dia ficou mais comum usar frameworks como [Angular](https://angular.io/), [React](https://react.dev/), [Vue](https://vuejs.org/) ou [Svelte](https://svelte.dev/) para criar páginas web com elementos que têm comportamentos mais complexos, como enviar formulários, acessar bancos de dados, validar senhas, etc.
 
-And even though p5.js is not the best tool to create these kinds of websites and interactions, it provides us with a [bunch of functions](https://p5js.org/reference/#group-DOM) to create and manipulate html elements on the page.
+E, embora o p5.js não seja a melhor ferramenta para criar esses tipos de sites e interações, ele nos oferece um [monte de funções](https://p5js.org/reference/#group-DOM) para criar e manipular elementos html na página.
 
-One important thing to note is that, the code for our sketch gets drawn in a `<canvas>` element that is part of our html page. All of the elements that we add with the p5.js DOM functions will get added to our html page, and *NOT* our canvas. They're two separate, but connected worlds. And even though we can make DOM elements show up on top of our canvas, they're not *in* our canvas.
+Uma coisa importante a notar é que o código do nosso sketch é desenhado em um elemento `<canvas>` que faz parte da nossa página html. Todos os elementos que adicionamos com as funções de DOM do p5.js são adicionados à nossa página html, e *NÃO* ao nosso canvas. São dois mundos separados, mas conectados. E embora possamos fazer elementos do DOM aparecerem por cima do nosso canvas, eles não estão *dentro* do nosso canvas.
 
-Keep that in mind as we go through these examples and start using DOM elements in our sketches.
+Tenha isso em mente enquanto passamos por esses exemplos e começamos a usar elementos do DOM nos nossos sketches.
 
-## Links and Text
-We can add links to our sketch like this:
+## Links e Texto
+Podemos adicionar links ao nosso sketch assim:
 
 {% include p5-editor.html id="IhgQ06zCM" %}
 
-And we can use our p5.js `draw()` and `mouseClick()` functions to dynamically calculate the position for a link, or to dynamically keep adding links as we click:
+E podemos usar nossas funções `draw()` e `mouseClick()` do p5.js para calcular dinamicamente a posição de um link, ou para continuar adicionando links dinamicamente conforme clicamos:
 
 {% include p5-editor.html id="cVl54_Chi" %}
 
-This is fine and fun, but unless there's a real good reason for creating these kinds of static elements dynamically in our p5js, it's best to have them defined and positioned in the html file, and styled with css.
+Isso é bom e divertido, mas a menos que haja uma boa razão para criar esses tipos de elementos estáticos dinamicamente no nosso p5js, o melhor é defini-los e posicioná-los no arquivo html, e estilizá-los com css.
 
-Creating elements to display dynamic content that comes from the p5.js sketch could be more useful. For example, we can create elements to display our mouse's position and the current frame rate:
+Criar elementos para exibir conteúdo dinâmico que vem do sketch p5.js pode ser mais útil. Por exemplo, podemos criar elementos para exibir a posição do nosso mouse e a taxa de quadros atual:
 
 {% include p5-editor.html id="zpsAqlRi8" %}
 
-The same thing can be achieved using the p5.js `text()` function, but what's nice about using a [`p5.Element`](https://p5js.org/reference/#/p5.Element) is that it's easy to detect interactions on those elements by attaching listeners to their `mousePressed()`, `mouseOver()`, etc, events:
+A mesma coisa pode ser obtida com a função `text()` do p5.js, mas o legal de usar um [`p5.Element`](https://p5js.org/reference/#/p5.Element) é que é fácil detectar interações nesses elementos associando listeners aos seus eventos `mousePressed()`, `mouseOver()`, etc:
 
 {% include p5-editor.html id="OiLGOTucx" %}
 
-## Inputs
-[`p5.Elements`](https://p5js.org/reference/#/p5.Element) become really useful in situations where we want to create some simple user input elements.
+## Entradas
+Os [`p5.Elements`](https://p5js.org/reference/#/p5.Element) se tornam realmente úteis em situações em que queremos criar alguns elementos simples de entrada do usuário.
 
-We can use the `createSlider()` function to create an html `<input>` element of type `range`. Then, in `draw()` we use the object's `value()` function to access its current value and use it to change the background and text colors.
+Podemos usar a função `createSlider()` para criar um elemento html `<input>` do tipo `range`. Então, no `draw()`, usamos a função `value()` do objeto para acessar seu valor atual e usá-lo para mudar as cores do fundo e do texto.
 
 {% include p5-editor.html id="v7Y9dy88s" %}
 
-We can also create html `<button>` elements in a similar way, and, kind of like what we saw above with the `<p>` elements, attach a function to its `mouseClicked()` event:
+Também podemos criar elementos html `<button>` de forma parecida e, como vimos acima com os elementos `<p>`, associar uma função ao seu evento `mouseClicked()`:
 
 {% include p5-editor.html id="ozXc5GHd4" %}
 
-We can combine our button with the sliders in a way that every time the button is clicked, the sliders get updated with the new RGB values for the background:
+Podemos combinar nosso botão com os sliders de modo que, toda vez que o botão for clicado, os sliders sejam atualizados com os novos valores RGB do fundo:
 
 {% include p5-editor.html id="GV0s_G5CA" %}
 
-The more correct way of doing this in 2024 is using an `<input>` element of type `color` that creates a browser-specific color picker element with a lot of options:
+A forma mais correta de fazer isso em 2024 é usando um elemento `<input>` do tipo `color`, que cria um seletor de cores específico do navegador com muitas opções:
 
 {% include p5-editor.html id="SsC8rWpog" %}

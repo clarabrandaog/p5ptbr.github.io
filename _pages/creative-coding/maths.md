@@ -1,37 +1,37 @@
 ---
-title: "Maths: mod and map"
+title: "Matemática: mod e map"
 ---
-## Boundary Conditions
+## Condições de Contorno
 
-Now that we know how to set up animations using the `draw()` cycle, and also detect user input using event functions, we'll very often find ourselves having to deal with *boundary conditions*. Boundary conditions sometimes involve physical boundaries on our canvas, like, detecting and deciding what to do when a shape moves beyond our screen boundary, Other times, these boundary conditions involve setting limits for the minimum and maximum values a variable can have.
+Agora que sabemos configurar animações usando o ciclo do `draw()`, e também detectar entradas do usuário usando funções de evento, com frequência vamos nos deparar com *condições de contorno*. Às vezes, as condições de contorno envolvem limites físicos no nosso canvas, como detectar e decidir o que fazer quando uma forma se move além da borda da nossa tela. Outras vezes, essas condições envolvem definir limites para os valores mínimo e máximo que uma variável pode ter.
 
-In this tutorial we are going to take a look at $$2$$ strategies/techniques/functions for handling boundary conditions elegantly.
+Neste tutorial vamos ver $$2$$ estratégias/técnicas/funções para lidar com condições de contorno de forma elegante.
 
 ## Mod
 
-Let's consider a simple animation of a circle that moves across our canvas.
+Vamos considerar uma animação simples de um círculo que se move pelo nosso canvas.
 
-We'll use the p5.js [`frameCount`](https://p5js.org/reference/#/p5/frameCount) variable to set the `x` location of our circle. This variable keeps track of how many times the `draw()` function has executed in our program, and since it starts at $$0$$ and grows indefinitely, our circle will start at $$0$$ and go infinitely to the right, eventually leaving the screen.
+Vamos usar a variável do p5.js [`frameCount`](https://p5js.org/reference/#/p5/frameCount) para definir a posição `x` do nosso círculo. Essa variável registra quantas vezes a função `draw()` foi executada no nosso programa e, como ela começa em $$0$$ e cresce indefinidamente, nosso círculo vai começar em $$0$$ e seguir infinitamente para a direita, eventualmente saindo da tela.
 
 {% include p5-editor.html id="sq5gwzjWb" %}
 
-If we wanted to keep the circle always on the screen, we could create a separate variable that increments once per frame, just like `frameCount`, but once it gets bigger than `width` it resets back to $$0$$.
+Se quisermos manter o círculo sempre na tela, podemos criar uma variável separada que incrementa uma vez por frame, assim como o `frameCount`, mas que volta a $$0$$ assim que fica maior que `width`.
 
-This also has the advantage of letting us control the speed of the circle by changing how much `x` grows with each `draw()`.
+Isso também tem a vantagem de nos deixar controlar a velocidade do círculo mudando quanto o `x` cresce a cada `draw()`.
 
 {% include p5-editor.html id="s8NNTlNKp" %}
 
-Try it out! Change `x += 4` to `x += 8`, or `x += 12` on the sketch above ☝️.
+Experimente! Mude `x += 4` para `x += 8`, ou `x += 12` no sketch acima ☝️.
 
-Another way to write this exact same logic, but without an `if()` statement, is using the [modulo operator](https://betterexplained.com/articles/fun-with-modular-arithmetic/) (`%`). This operator calculates the remainder of a division between two numbers.
+Outra maneira de escrever exatamente essa mesma lógica, sem uma instrução `if()`, é usando o [operador módulo](https://betterexplained.com/articles/fun-with-modular-arithmetic/) (`%`). Esse operador calcula o resto da divisão entre dois números.
 
-$$\frac{10}{2} = 5$$ (remainder: $$0$$)
+$$\frac{10}{2} = 5$$ (resto: $$0$$)
 
-$$\frac{11}{3} = 3$$ (remainder: $$2$$)
+$$\frac{11}{3} = 3$$ (resto: $$2$$)
 
-$$\frac{13}{6} = 2$$ (remainder: $$1$$)
+$$\frac{13}{6} = 2$$ (resto: $$1$$)
 
-In JavaScript:
+Em JavaScript:
 
 ```js
 10 % 2; // 0
@@ -39,82 +39,82 @@ In JavaScript:
 13 % 6; // 1
 ```
 
-And this is useful to us because we can use the modulo operator to create repeating sequences of numbers.
+E isso é útil para nós porque podemos usar o operador módulo para criar sequências repetitivas de números.
 
-Let's say we have a variable that grows and grows and grows, and we want it to *reset* back to $$0$$ once it gets to $$10$$. So, we have a sequence $$[0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]$$ and we want to get another sequence $$[0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9, 0,1,2,...]$$. The second sequence is just the list of values we get when we calculate the *remainder* of dividing all of the numbers on the first sequence by $$10$$.
+Digamos que temos uma variável que cresce e cresce e cresce, e queremos que ela *reinicie* em $$0$$ quando chegar a $$10$$. Então temos uma sequência $$[0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]$$ e queremos obter outra sequência $$[0,1,2,3,4,5,6,7,8,9, 0,1,2,3,4,5,6,7,8,9, 0,1,2,...]$$. A segunda sequência é simplesmente a lista de valores que obtemos ao calcular o *resto* da divisão de todos os números da primeira sequência por $$10$$.
 
-More generally, if we have a variable `X` that grows and grows and grows and we want a sequence that repeats after $$N$$ values, all we have to do is calculate `X % N`.
+De forma mais geral, se temos uma variável `X` que cresce e cresce e cresce e queremos uma sequência que se repita depois de $$N$$ valores, basta calcular `X % N`.
 
-If we want to repeat the sequence after `width` elements, so, turn $$[0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]$$ into $$[0,1,2,...,width - 2,width - 1, 0,1,2,...,width - 2,width-1, 0,1,...]$$, we can just use the remainder of the natural numbers when they are divided by `width`.
+Se quisermos repetir a sequência depois de `width` elementos, ou seja, transformar $$[0,1,2,3,4,...,10,11,12,13,...,20,21,22,23,...]$$ em $$[0,1,2,...,width - 2,width - 1, 0,1,2,...,width - 2,width-1, 0,1,...]$$, podemos simplesmente usar o resto dos números naturais quando divididos por `width`.
 
-In our case, using p5.js, the [`frameCount`](https://p5js.org/reference/#/p5/frameCount) variable already gives us a sequence of the natural numbers. And, since in this example we want the circle to reset to $$0$$ once it gets to `width`, all we have to do is set the `x` position of our circle to be `frameCount % width`.
+No nosso caso, usando p5.js, a variável [`frameCount`](https://p5js.org/reference/#/p5/frameCount) já nos dá uma sequência dos números naturais. E, como neste exemplo queremos que o círculo volte a $$0$$ quando chegar a `width`, basta definir a posição `x` do nosso círculo como `frameCount % width`.
 
 {% include p5-editor.html id="KanH50nEv" %}
 
-And if we now want to make it move faster, we just multiply the `frameCount` variable by a constant, so instead of growing by $$1$$ it grows by $$2$$ or by $$3$$, etc:
+E se agora quisermos que ele se mova mais rápido, basta multiplicar a variável `frameCount` por uma constante, de modo que em vez de crescer de $$1$$ em $$1$$ ela cresça de $$2$$ em $$2$$ ou de $$3$$ em $$3$$, etc:
 
 ```js
 2 * frameCount; // [0, 2, 4, 6, 8, ...]
 3 * frameCount; // [0, 3, 6, 9, 12, ...]
 ```
 
-Either way, no matter how fast our initial sequence grows, as long as we calculate its remainder when divided by `width`, the `x` position of our circle will wrap around to $$0$$ once it gets bigger than `width`.
+De qualquer forma, não importa a rapidez com que nossa sequência inicial cresça, desde que calculemos seu resto quando dividida por `width`, a posição `x` do nosso círculo vai voltar a $$0$$ assim que ficar maior que `width`.
 
 {% include p5-editor.html id="-QT45J7JU" %}
 
-It's good to keep the modulo operator (`%`) in mind whenever we are working with *sequences*, or, *cycles*, and want to create a sequence of values that *start over*, or *reset*.
+É bom ter o operador módulo (`%`) em mente sempre que estivermos trabalhando com *sequências*, ou *ciclos*, e quisermos criar uma sequência de valores que *recomeça*, ou *reinicia*.
 
-For example, let's say we want to cycle our background colors between $$3$$ values, changing color every time there's a click on the canvas.
+Por exemplo, digamos que queremos alternar nossas cores de fundo entre $$3$$ valores, mudando de cor toda vez que houver um clique no canvas.
 
-We can just create a variable that will count the number of clicks and use the modulo operator (`%`) to calculate which color to show. In this case, the `clickCount` variable is the sequence that just grows and grows and grows, but since what we want is a sequence that repeats after $$3$$ values, we'll use `% 3`.
+Podemos simplesmente criar uma variável que conta o número de cliques e usar o operador módulo (`%`) para calcular qual cor mostrar. Neste caso, a variável `clickCount` é a sequência que só cresce e cresce e cresce, mas como o que queremos é uma sequência que se repita depois de $$3$$ valores, vamos usar `% 3`.
 
 {% include p5-editor.html id="ZK24vFjmJ" %}
 
-And what if we want the background color to change automatically every second?
+E se quisermos que a cor de fundo mude automaticamente a cada segundo?
 
-There is a function in p5.js called [`second()`](https://p5js.org/reference/#/p5/second) that gives us the number of seconds from our computer's clock. This number itself repeats after $$60$$ values, but since we still only have $$3$$ options for colors, we'll still use `% 3`.
+Existe uma função no p5.js chamada [`second()`](https://p5js.org/reference/#/p5/second) que nos dá o número de segundos do relógio do nosso computador. Esse número em si se repete depois de $$60$$ valores, mas como ainda temos apenas $$3$$ opções de cores, vamos continuar usando `% 3`.
 
 {% include p5-editor.html id="0-XZ391uE" %}
 
-This is an example of converting an *input* signal that we don't control into an *output* parameter to control our animation.
+Este é um exemplo de conversão de um sinal de *entrada* que não controlamos em um parâmetro de *saída* para controlar nossa animação.
 
-Let's look at this in more detail.
+Vamos ver isso com mais detalhes.
 
-## Tying Variables Together
+## Ligando Variáveis
 
-It's not uncommon to want to use a value read or generated in one part of your program to control the physical properties of objects in other parts of your program. This is how we can create drawings that are reactive to user input, or animations that vary according to data that comes from a sensor or from a database somewhere on the internet.
+Não é incomum querer usar um valor lido ou gerado em uma parte do seu programa para controlar as propriedades físicas de objetos em outras partes do programa. É assim que podemos criar desenhos que reagem à entrada do usuário, ou animações que variam de acordo com dados que vêm de um sensor ou de um banco de dados em algum lugar da internet.
 
-In these situations, we will have to define relationships between our *input* signals and the parameters we want to use for our *output*. And very often the input signals and output parameters don't even have the same ranges, units or data types. For example, we might want to convert temperatures measured in `Celsius` to circle diameters in `pixels`, or the passage of time measured in `seconds` to a fill color specified in `RGB`.
+Nessas situações, vamos ter que definir relações entre nossos sinais de *entrada* e os parâmetros que queremos usar para a nossa *saída*. E, muito frequentemente, os sinais de entrada e os parâmetros de saída nem têm os mesmos intervalos, unidades ou tipos de dados. Por exemplo, podemos querer converter temperaturas medidas em `Celsius` em diâmetros de círculo em `pixels`, ou a passagem do tempo medida em `segundos` em uma cor de preenchimento especificada em `RGB`.
 
-Let's look at an example.
+Vamos ver um exemplo.
 
-This is a sketch that draws a circle at `(mouseX, mouseY)` and sets the circle diameter to be equal to the `mouseY` value: the further down the canvas, the bigger the circle; the circle is almost not visible when the mouse is near the top of the canvas, and, likewise, it's kind of too big when it's at the very bottom.
+Este é um sketch que desenha um círculo em `(mouseX, mouseY)` e define o diâmetro do círculo como igual ao valor de `mouseY`: quanto mais embaixo no canvas, maior o círculo; o círculo quase não é visível quando o mouse está perto do topo do canvas e, da mesma forma, fica meio grande demais quando está bem embaixo.
 
 {% include p5-editor.html id="J9txjcvGj" %}
 
-One way to make this a bit more controllable is to set a `maxDiameter` variable and then calculate the actual diameter as a percentage of this value based on the mouse position:
+Uma forma de tornar isso um pouco mais controlável é definir uma variável `maxDiameter` e então calcular o diâmetro real como uma porcentagem desse valor com base na posição do mouse:
 
 $$diameter = \frac{mouseY}{height} \times maxDiameter$$
 
-The $$\frac{mouseY}{height}$$ term is the location of the mouse as a percentage of the canvas height: it goes from $$0\%$$ when `mouseY` is $$0$$, to $$100\%$$ when `mouseY` is equal to `height`.
+O termo $$\frac{mouseY}{height}$$ é a posição do mouse como uma porcentagem da altura do canvas: ele vai de $$0\%$$ quando `mouseY` é $$0$$, até $$100\%$$ quando `mouseY` é igual a `height`.
 
-We can now use this to set the diameter:
+Agora podemos usar isso para definir o diâmetro:
 
 {% include p5-editor.html id="PEHUu0w-y" %}
 
-And we can do something similar if we want to set a minimum value for the circle diameter:
+E podemos fazer algo parecido se quisermos definir um valor mínimo para o diâmetro do círculo:
 
 $$diameter = \frac{mouseY}{height} \times (maxDiameter - minDiameter) + minDiameter$$
 
-The $$(maxDiameter - minDiameter)$$ term is the magnitude of our output (how much it's allowed to vary), and multiplying it by $$\frac{mouseY}{height}$$ gives us how far along this magnitude our output should be. We still have to add the $$minDiameter$$ term to make sure our output is in the range $$[minDiameter, maxDiameter]$$:
+O termo $$(maxDiameter - minDiameter)$$ é a magnitude da nossa saída (o quanto ela pode variar), e multiplicá-lo por $$\frac{mouseY}{height}$$ nos dá o quanto devemos avançar ao longo dessa magnitude. Ainda temos que somar o termo $$minDiameter$$ para garantir que nossa saída esteja no intervalo $$[minDiameter, maxDiameter]$$:
 
 {% include p5-editor.html id="t1C6SSfop" %}
 
-We have just created a very precise relationship that sets our circle's diameter based on an input signal.
+Acabamos de criar uma relação muito precisa que define o diâmetro do nosso círculo com base em um sinal de entrada.
 
 ## Map
 
-Let's say that now we want to have the logic reversed: larger circle at the top of the screen, and smaller circle at the bottom. We could use this logic:
+Digamos que agora queremos inverter a lógica: círculo maior no topo da tela e círculo menor embaixo. Poderíamos usar esta lógica:
 
 ```js
 let mDiamInv = (mouseY / height) * (maxDiam - minDiam) + minDiam;
@@ -123,11 +123,11 @@ let mDiam = maxDiam - mDiamInv + minDiam;
 
 {% include p5-editor.html id="6AdmlEjeR" %}
 
-The logic for calculating the circle diameter is getting a bit complicated...
+A lógica para calcular o diâmetro do círculo está ficando um pouco complicada...
 
-This is where [`map()`](https://p5js.org/reference/#/p5/map) comes in. It's a function that maps a value from one range to another.
+É aqui que entra o [`map()`](https://p5js.org/reference/#/p5/map). É uma função que mapeia um valor de um intervalo para outro.
 
-If we want to map the value of `mouseY` from `height` values to `diameter` values, $$[0, height] \rightarrow [40, 200]$$, we can just write:
+Se quisermos mapear o valor de `mouseY` de valores de `height` para valores de `diameter`, $$[0, height] \rightarrow [40, 200]$$, basta escrever:
 
 ```js
 let mDiam = map(mouseY, 0, height, minDiam, maxDiam);
@@ -135,7 +135,7 @@ let mDiam = map(mouseY, 0, height, minDiam, maxDiam);
 
 {% include p5-editor.html id="XJlqeKXnW" %}
 
-Likewise, if we want to reverse the logic and have larger circle at the top of the screen and smaller circle at the bottom, we just swap `minDiam` and `maxDiam`:
+Da mesma forma, se quisermos inverter a lógica e ter um círculo maior no topo da tela e um círculo menor embaixo, basta trocar `minDiam` e `maxDiam`:
 
 ```js
 let mDiam = map(mouseY, 0, height, maxDiam, minDiam);
@@ -143,36 +143,36 @@ let mDiam = map(mouseY, 0, height, maxDiam, minDiam);
 
 {% include p5-editor.html id="1xiOT--Ci" %}
 
-## Mapping Between Ranges
+## Mapeando Entre Intervalos
 
-[`map()`](https://p5js.org/reference/#/p5/map) is useful in other situations too. Let's say we want to draw evenly spaced vertical lines on our canvas.
+O [`map()`](https://p5js.org/reference/#/p5/map) também é útil em outras situações. Digamos que queremos desenhar linhas verticais igualmente espaçadas no nosso canvas.
 
-We have a `for()` loop that counts from $$0$$ to $$16$$ and with `map()` we can just transform the counter variable to the position we want because we know our counter has a range $$[0, 16]$$ and our line positions will have a range $$[0, width]$$:
+Temos um loop `for()` que conta de $$0$$ a $$16$$ e, com o `map()`, podemos simplesmente transformar a variável contadora na posição que queremos, porque sabemos que nosso contador tem um intervalo $$[0, 16]$$ e as posições das nossas linhas terão um intervalo $$[0, width]$$:
 
 {% include p5-editor.html id="NqqsgY5IA" %}
 
-We can map the same counter to two different output ranges: $$[0, 16] \rightarrow [0, width]$$ and $$[0, 16] \rightarrow [width, 0]$$. The first going from left to right and the other from right to left, as the counter increases:
+Podemos mapear o mesmo contador para dois intervalos de saída diferentes: $$[0, 16] \rightarrow [0, width]$$ e $$[0, 16] \rightarrow [width, 0]$$. O primeiro vai da esquerda para a direita e o outro da direita para a esquerda, conforme o contador aumenta:
 
 {% include p5-editor.html id="2CbfzdpbU" %}
 
-Using the same counter we can map $$[0, 16] \rightarrow [0, width]$$ and $$[0, 16] \rightarrow [0, \frac{width}{10}]$$:
+Usando o mesmo contador podemos mapear $$[0, 16] \rightarrow [0, width]$$ e $$[0, 16] \rightarrow [0, \frac{width}{10}]$$:
 
 {% include p5-editor.html id="zJ9WBx5Mz" %}
 
-Or, with an offset for one of the output ranges, map $$[0, 16] \rightarrow [0, width]$$ and $$[0, 16] \rightarrow [\frac{width}{4}, \frac{width}{3}]$$:
+Ou, com um deslocamento em um dos intervalos de saída, mapear $$[0, 16] \rightarrow [0, width]$$ e $$[0, 16] \rightarrow [\frac{width}{4}, \frac{width}{3}]$$:
 
 {% include p5-editor.html id="xoCvCTcuz" %}
 
-We can even do something where our counter $$[0, 16]$$ gets mapped to *three* different output ranges:
+Podemos até fazer algo em que nosso contador $$[0, 16]$$ é mapeado para *três* intervalos de saída diferentes:
 
 {% include p5-editor.html id="xwmzj1UIx" %}
 
-## Mapping Between Units
+## Mapeando Entre Unidades
 
-It's also very useful to use the `map()` function if we want to draw time.
+Também é muito útil usar a função `map()` se quisermos desenhar o tempo.
 
-In this example we map the seconds value from our computer's clock to the diameter of a circle. We know seconds has a range $$[0, 59]$$, so it's just a matter of choosing the smallest and largest values we want for our diameter.
+Neste exemplo mapeamos o valor dos segundos do relógio do nosso computador para o diâmetro de um círculo. Sabemos que os segundos têm um intervalo $$[0, 59]$$, então é só escolher os menores e maiores valores que queremos para o nosso diâmetro.
 
-Let's map $$[0, 59] \rightarrow [20, width]$$ for the diameter, and while we're at it, let's also map the seconds value to the amount of green in our `fill()` color. We know each of the $$3$$ color parameters has a maximum value of $$255$$, and if we always want a bit of green in our color we can map $$[0, 59] \rightarrow [128, 255]$$.
+Vamos mapear $$[0, 59] \rightarrow [20, width]$$ para o diâmetro e, já que estamos nisso, vamos também mapear o valor dos segundos para a quantidade de verde na cor do nosso `fill()`. Sabemos que cada um dos $$3$$ parâmetros de cor tem um valor máximo de $$255$$, e se quisermos sempre um pouco de verde na nossa cor, podemos mapear $$[0, 59] \rightarrow [128, 255]$$.
 
 {% include p5-editor.html id="thbVYgT-l" %}

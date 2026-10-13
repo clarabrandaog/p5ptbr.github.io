@@ -1,60 +1,60 @@
 ---
-title: Sound Processing
+title: Processamento de Som
 ---
-## NOTE:
-To use the sound library, we have to include the [p5.sound library](https://p5js.org/reference/#/libraries/p5.sound) in our project's `index.html` file after the p5.js file, like this:
+## NOTA:
+Para usar a biblioteca de som, temos que incluir a [biblioteca p5.sound](https://p5js.org/reference/#/libraries/p5.sound) no arquivo `index.html` do nosso projeto, depois do arquivo do p5.js, assim:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/addons/p5.sound.js"></script>
 ```
 
-## Inputs & Outputs
+## Entradas & Saídas
 
-We've already looked at how to use the [p5.sound](https://p5js.org/reference/#/libraries/p5.sound) library to [play pre-recorded sounds](../sound-files/) from files, now, let's look at how to use other parts of the library to manipulate recorded or live audio.
+Já vimos como usar a biblioteca [p5.sound](https://p5js.org/reference/#/libraries/p5.sound) para [tocar sons pré-gravados](../sound-files/) de arquivos. Agora, vamos ver como usar outras partes da biblioteca para manipular áudio gravado ou ao vivo.
 
-The p5.sound library, along with many other creative coding audio processing toolkits, was designed to somewhat mimic a physical audio processing setup. Objects have input and output ports that receive/send the same kind of information (digital audio samples); each module does some kind of processing or manipulation on its inputs before sending them to its outputs; and modules can easily be chained together to create more complex sound effects.
+A biblioteca p5.sound, junto com muitos outros toolkits de processamento de áudio para creative coding, foi projetada para imitar de certa forma uma configuração física de processamento de áudio. Os objetos têm portas de entrada e saída que recebem/enviam o mesmo tipo de informação (amostras de áudio digital); cada módulo faz algum tipo de processamento ou manipulação nas suas entradas antes de enviá-las às suas saídas; e os módulos podem ser facilmente encadeados para criar efeitos sonoros mais complexos.
 
-There are special objects that allow us to grab live audio from our computer's input ports (microphone, line-in), and other objects that allow us to send our processed audio to our computer's outputs (speakers, line-out).
+Existem objetos especiais que nos permitem capturar áudio ao vivo das portas de entrada do nosso computador (microfone, line-in), e outros objetos que nos permitem enviar nosso áudio processado para as saídas do computador (alto-falantes, line-out).
 
-There are also "_display_" objects that don't output any sound signal, but are used to obtain specific information about our audio signals, which we can then use to analyze our audio visually.
+Também existem objetos de "_exibição_" que não emitem nenhum sinal de som, mas são usados para obter informações específicas sobre nossos sinais de áudio, que podemos usar para analisar nosso áudio visualmente.
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-00.jpg' | relative_url }}"/>
 </div>
 
-The outputs from these objects/modules can be routed to many inputs, and some modules can receive multiple inputs:
+As saídas desses objetos/módulos podem ser roteadas para várias entradas, e alguns módulos podem receber várias entradas:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-01.jpg' | relative_url }}"/>
 </div>
 
-Let's start by looking at one of the simpler modules.
+Vamos começar olhando um dos módulos mais simples.
 
 ## Amplitude
 
-[Amplitude](https://p5js.org/reference/#/p5.Amplitude). is one of the "_display_" modules that don't output audio, but instead can be used to show information about our signal.
+[Amplitude](https://p5js.org/reference/#/p5.Amplitude) é um dos módulos de "_exibição_" que não emitem áudio, mas podem ser usados para mostrar informações sobre o nosso sinal.
 
-In this case, the Amplitude module will give us an audio signal's amplitude (how loud it is), as a number between $$0$$ and $$1$$:
+Neste caso, o módulo Amplitude vai nos dar a amplitude de um sinal de áudio (quão alto ele está), como um número entre $$0$$ e $$1$$:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-02.jpg' | relative_url }}"/>
 </div>
 
-By default, any [`p5.SoundFile`](https://p5js.org/reference/#/p5.SoundFile) object we create will send its output to the [`p5.soundOut`](https://p5js.org/reference/#/p5/soundOut) module/object, which is our final output: the signal that goes to our speaker.
+Por padrão, qualquer objeto [`p5.SoundFile`](https://p5js.org/reference/#/p5.SoundFile) que criamos envia sua saída para o módulo/objeto [`p5.soundOut`](https://p5js.org/reference/#/p5/soundOut), que é a nossa saída final: o sinal que vai para o nosso alto-falante.
 
-And, also by default, the Amplitude module gets its input from this same [`p5.soundOut`](https://p5js.org/reference/#/p5/soundOut) object.
+E, também por padrão, o módulo Amplitude recebe sua entrada desse mesmo objeto [`p5.soundOut`](https://p5js.org/reference/#/p5/soundOut).
 
-So, technically, instantiating these two objects like this, would be enough to have them connected properly:
+Então, tecnicamente, instanciar esses dois objetos assim já seria suficiente para tê-los conectados corretamente:
 
 ```js
 mSound = loadSound("./sound-file.mp3");
 mAmp = new p5.Amplitude();
 ```
 
-But, it's not a bad idea to practice how to make these connections ourselves. This will avoid unexpected behavior and unnecessary debugging once our audio processing pipelines start getting more complex.
+Mas não é má ideia praticar como fazer essas conexões nós mesmos. Isso evita comportamentos inesperados e depuração desnecessária quando nossos pipelines de processamento de áudio começarem a ficar mais complexos.
 
-We can use the following code to manually re-route the signal from our `p5.SoundFile` object to both the `p5.soundOut` object and a `p5.Amplitude` module:
+Podemos usar o código a seguir para rerrotear manualmente o sinal do nosso objeto `p5.SoundFile` tanto para o objeto `p5.soundOut` quanto para um módulo `p5.Amplitude`:
 
 ```js
 mSound.disconnect();
@@ -62,52 +62,52 @@ mSound.connect(p5.soundOut);
 mSound.connect(mAmp);
 ```
 
-These are the exact connections shown in the diagram above.
+Essas são exatamente as conexões mostradas no diagrama acima.
 
-Our `p5.Amplitude` object can now be used at every iteration of our `draw()` function to get the sound's amplitude and display it visually using ellipses:
+Nosso objeto `p5.Amplitude` agora pode ser usado a cada iteração da nossa função `draw()` para obter a amplitude do som e exibi-la visualmente usando elipses:
 
 {% include p5-editor.html id="-DxgXbZeG" %}
 
-## Filters
+## Filtros
 
-Now that we can visualize our sound, let's add an actual processing module to manipulate the quality and characteristics of our audio:
+Agora que podemos visualizar nosso som, vamos adicionar um módulo de processamento de verdade para manipular a qualidade e as características do nosso áudio:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-03.jpg' | relative_url }}"/>
 </div>
 
-The [`p5.Filter`](https://p5js.org/reference/#/p5.Filter) module allows us to filter our audio signals based on frequencies.
+O módulo [`p5.Filter`](https://p5js.org/reference/#/p5.Filter) nos permite filtrar nossos sinais de áudio com base em frequências.
 
-Some common types of filter that we can implement with this module are: `lowpass`, `highpass`, `bandpass` and `notch`.
+Alguns tipos comuns de filtro que podemos implementar com esse módulo são: `lowpass`, `highpass`, `bandpass` e `notch`.
 
-Like the name suggests, the `lowpass` filter lets low frequencies (bass) through while blocking high frequencies:
+Como o nome sugere, o filtro `lowpass` deixa passar as frequências baixas (graves) enquanto bloqueia as frequências altas:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-04.jpg' | relative_url }}"/>
 </div>
 
-The `highpass` acts in the opposite manner, filtering out low-frequency components of the sound, while letting high frequencies pass to the output:
+O `highpass` age de forma oposta, filtrando os componentes de baixa frequência do som e deixando as frequências altas passarem para a saída:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-05.jpg' | relative_url }}"/>
 </div>
 
-The `notch` filter is used to attenuate a specific range of frequencies from the audio signal, while the `bandpass` does the opposite and only lets a specific range of frequencies pass to its output:
+O filtro `notch` é usado para atenuar uma faixa específica de frequências do sinal de áudio, enquanto o `bandpass` faz o oposto e só deixa uma faixa específica de frequências passar para a sua saída:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-06.jpg' | relative_url }}"/>
   <img src="{{ '/assets/images/creative-coding/sound-processing-07.jpg' | relative_url }}"/>
 </div>
 
-The frequency $$f$$, sometimes called the cutoff frequency, corner frequency or break frequency, is a parameter to the filter object and will determine which frequencies pass and which will be filtered out. The `bandpass` and `notch` filters also have another parameter to control their bandwidth, or how wide their cutoff or pass bands are.
+A frequência $$f$$, às vezes chamada de frequência de corte, frequência de canto ou frequência de quebra, é um parâmetro do objeto de filtro e determina quais frequências passam e quais são filtradas. Os filtros `bandpass` e `notch` também têm outro parâmetro para controlar sua largura de banda, ou o quão largas são suas faixas de corte ou de passagem.
 
-With this in mind, we can instantiate a filter and implement the following system:
+Com isso em mente, podemos instanciar um filtro e implementar o seguinte sistema:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-03.jpg' | relative_url }}"/>
 </div>
 
-With something like this:
+Com algo assim:
 
 ```js
 mSound = loadSound("./sound-file.mp3");
@@ -122,68 +122,68 @@ mFilter.connect(p5.soundOut);
 mFilter.connect(mAmp);
 ```
 
-And use `mouseX` to pick the filter's center frequency $$f$$:
+E usar `mouseX` para escolher a frequência central $$f$$ do filtro:
 
 {% include p5-editor.html id="iM1QxgAch" %}
 
 ## FFT
 
-We can definitely hear the differences in the sound as we move the mouse around and change the filter's cutoff frequency, but let's look at a module that will let us visualize the filter's effect as well.
+Com certeza conseguimos ouvir as diferenças no som conforme movemos o mouse e mudamos a frequência de corte do filtro, mas vamos ver um módulo que também nos permitirá visualizar o efeito do filtro.
 
-The [`p5.FFT`](https://p5js.org/reference/#/p5.FFT) class implements the Fast Fourier Transform algorithm, which can be used to separate our audio signal into individual frequency components.
+A classe [`p5.FFT`](https://p5js.org/reference/#/p5.FFT) implementa o algoritmo da Transformada Rápida de Fourier (Fast Fourier Transform), que pode ser usado para separar nosso sinal de áudio em componentes individuais de frequência.
 
-We can replace the `Amplitude` module in the last example with the `FFT` module:
+Podemos substituir o módulo `Amplitude` do último exemplo pelo módulo `FFT`:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-08.jpg' | relative_url }}"/>
 </div>
 
-And now, when we call [`FFT.analyze()`](https://p5js.org/reference/#/p5.FFT/analyze), this module calculates an array of $$1024$$ values, where each value corresponds to how much of a particular audible frequency was present in the original audio signal.
+E agora, quando chamamos [`FFT.analyze()`](https://p5js.org/reference/#/p5.FFT/analyze), esse módulo calcula um array de $$1024$$ valores, onde cada valor corresponde a quanto de uma determinada frequência audível estava presente no sinal de áudio original.
 
-So, the first value of the array corresponds to frequencies between $$0$$ and $$20$$ Hz, the second value is for frequencies between $$20$$ and $$40$$ Hz, and so on, all the way to the 1024th value that corresponds to frequencies greater than $$22,000$$ Hz or $$22$$ kHz.
+Então, o primeiro valor do array corresponde a frequências entre $$0$$ e $$20$$ Hz, o segundo valor é para frequências entre $$20$$ e $$40$$ Hz, e assim por diante, até o 1024º valor, que corresponde a frequências maiores que $$22,000$$ Hz ou $$22$$ kHz.
 
-If the value in a particular position is $$0$$, that means the original audio signal had no sound in that frequency. On the other hand, if it's $$255$$, it means that the original signal had a very strong sound with that frequency.
+Se o valor em uma determinada posição for $$0$$, significa que o sinal de áudio original não tinha som naquela frequência. Por outro lado, se for $$255$$, significa que o sinal original tinha um som muito forte com aquela frequência.
 
-The `p5.FFT` object also has a [`getEnergy()`](https://p5js.org/reference/#/p5.FFT/getEnergy) function that returns the amount of a specific frequency or frequency range present in the audio signal. It can also be called with one of five pre-defined range strings, to get the amount of energy in the `bass`, `lowMid`, `mid`, `highMid` and  `treble` frequency ranges.
+O objeto `p5.FFT` também tem uma função [`getEnergy()`](https://p5js.org/reference/#/p5.FFT/getEnergy) que retorna a quantidade de uma frequência específica ou de uma faixa de frequências presente no sinal de áudio. Ela também pode ser chamada com uma de cinco strings de faixa predefinidas, para obter a quantidade de energia nas faixas de frequência `bass`, `lowMid`, `mid`, `highMid` e `treble`.
 
-Knowing this, we can use the `p5.FFT` object and the `FFT.analyze()` and `getEnergy()` functions to visualize the effects of the filter from the previous example:
+Sabendo disso, podemos usar o objeto `p5.FFT` e as funções `FFT.analyze()` e `getEnergy()` para visualizar os efeitos do filtro do exemplo anterior:
 
 {% include p5-editor.html id="5qBkXuygI" %}
 
-Instead of just drawing one circle, we now draw five, one for each of the predefined frequency ranges, and as we move the mouse from the left to the right we will see movement go from the bottom circles to the top, which correspond to the higher frequency ranges.
+Em vez de desenhar apenas um círculo, agora desenhamos cinco, um para cada uma das faixas de frequência predefinidas, e conforme movemos o mouse da esquerda para a direita vamos ver o movimento ir dos círculos de baixo para os de cima, que correspondem às faixas de frequência mais altas.
 
-Let's experiment with another effect module/object
+Vamos experimentar outro módulo/objeto de efeito
 
 ## Delay
 
-The [`p5.Delay`](https://p5js.org/reference/#/p5.Delay) module adds a kind of echo effect to any sound by replaying the audio signal again after a couple of milliseconds and then replaying again delayed by a couple more milliseconds, and so on and so on... to create a trail of sound, where each delayed copy is also attenuated (lower volume) by some amount.
+O módulo [`p5.Delay`](https://p5js.org/reference/#/p5.Delay) adiciona uma espécie de efeito de eco a qualquer som, reproduzindo o sinal de áudio novamente depois de alguns milissegundos e depois reproduzindo de novo, atrasado por mais alguns milissegundos, e assim por diante... para criar um rastro de som, em que cada cópia atrasada também é atenuada (volume mais baixo) em uma certa quantidade.
 
-We can just replace the `p5.Filter` module in the examples above with a `p5.Delay` object like this:
+Podemos simplesmente substituir o módulo `p5.Filter` dos exemplos acima por um objeto `p5.Delay` assim:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-09.jpg' | relative_url }}"/>
 </div>
 
-And initialize the object with a proper [`delayTime()`](https://p5js.org/reference/#/p5.Delay/delayTime):
+E inicializar o objeto com um [`delayTime()`](https://p5js.org/reference/#/p5.Delay/delayTime) apropriado:
 
 ```js
 mDelay = new p5.Delay();
 mDelay.delayTime(0.15);
 ```
 
-But, no matter how we adjust this parameter, the resulting signal just won't sound like a _natural_ echo. Try it :
+Mas, não importa como ajustemos esse parâmetro, o sinal resultante simplesmente não vai soar como um eco _natural_. Experimente:
 
 {% include p5-editor.html id="564xTeOZl" %}
 
-This is because all we are hearing is the "wet" sound, the sound with the delay, where in a real-world situation any kind of echo is a combination of the delayed sound ("wet" signal) with the original sound ("dry" signal).
+Isso acontece porque tudo o que estamos ouvindo é o som "molhado" (wet), o som com o delay, enquanto em uma situação do mundo real qualquer tipo de eco é uma combinação do som atrasado (sinal "wet") com o som original (sinal "dry", ou seco).
 
-To simulate this, we have to wire up our sound processing modules like this:
+Para simular isso, temos que conectar nossos módulos de processamento de som assim:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-10.jpg' | relative_url }}"/>
 </div>
 
-Where the output gets a mix of the original sound plus the delayed sound:
+Onde a saída recebe uma mistura do som original mais o som atrasado:
 
 ```js
 mSound.amp(0.7);
@@ -196,103 +196,103 @@ mDelay.connect(p5.soundOut);
 
 {% include p5-editor.html id="F6AAOMTLS" %}
 
-Now we can play with the parameters to adjust the delay and we'll have a little bit more control of how the overall final signal will sound.
+Agora podemos brincar com os parâmetros para ajustar o delay e vamos ter um pouco mais de controle sobre como o sinal final vai soar.
 
 ## Reverb
 
-Another module that is very similar to the [`p5.Delay`](https://p5js.org/reference/#/p5.Delay), gets connected the same way, and is used in a similar manner, is the [`p5.Reverb`](https://p5js.org/reference/#/p5.Reverb) effect.
+Outro módulo muito parecido com o [`p5.Delay`](https://p5js.org/reference/#/p5.Delay), que é conectado da mesma forma e usado de maneira semelhante, é o efeito [`p5.Reverb`](https://p5js.org/reference/#/p5.Reverb).
 
-Reverb also adds echo to a sound, but instead of adding one delayed version of the signal, as if it was coming from the same location as the original source, reverb is like adding a bunch of delayed versions of the original source, but all coming from different locations. This has the overall effect of making the sound feel like it is occurring in a physical space with particular audio characteristics.
+O reverb também adiciona eco a um som, mas em vez de adicionar uma versão atrasada do sinal, como se viesse do mesmo local da fonte original, o reverb é como adicionar um monte de versões atrasadas da fonte original, todas vindo de locais diferentes. Isso tem o efeito geral de fazer o som parecer que está ocorrendo em um espaço físico com características acústicas particulares.
 
-This video explains and shows the difference between delay and reverb on vocal and instrumental sounds:
+Este vídeo explica e mostra a diferença entre delay e reverb em sons vocais e instrumentais:
 
 <div class="youtube-container s16x9">
   <iframe width="800" height="450" src="https://www.youtube.com/embed/-jPPJEHMepA?si=uLK5BJ-KszAwW8G_" frameborder="0" allowfullscreen></iframe>
 </div>
 
-In p5js, if we wire it up to hear just the reverb, like this:
+No p5js, se conectarmos para ouvir apenas o reverb, assim:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-11.jpg' | relative_url }}"/>
 </div>
 
-the _wet_ signal will sound like this:
+o sinal _wet_ vai soar assim:
 
 {% include p5-editor.html id="ojgRZ3kNN" %}
 
-But, like the delay, if we wire it up like this, mixing the _wet_ and _dry_ signals:
+Mas, como no delay, se conectarmos assim, misturando os sinais _wet_ e _dry_:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-12.jpg' | relative_url }}"/>
 </div>
 
-and adjust some of the parameters, we can get it to make the original signals sound like it's coming from a large empty room:
+e ajustarmos alguns dos parâmetros, podemos fazer os sinais originais soarem como se viessem de uma sala grande e vazia:
 
 {% include p5-editor.html id="NQ1N_LQCO" %}
 
-## Pushing Delay
+## Forçando o Delay
 
-Now that we know how the [`p5.Delay`](https://p5js.org/reference/#/p5.Delay) and [`p5.Reverb`](https://p5js.org/reference/#/p5.Reverb) modules work, maybe we can start using them in non-expected ways.
+Agora que sabemos como os módulos [`p5.Delay`](https://p5js.org/reference/#/p5.Delay) e [`p5.Reverb`](https://p5js.org/reference/#/p5.Reverb) funcionam, talvez possamos começar a usá-los de maneiras inesperadas.
 
-What happens if we chain a bunch of delay modules in a row? Or mix delays and reverbs?
+O que acontece se encadearmos vários módulos de delay em sequência? Ou misturarmos delays e reverbs?
 
-Let's start by building the following processing pipeline:
+Vamos começar construindo o seguinte pipeline de processamento:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-13.jpg' | relative_url }}"/>
 </div>
 
-We'll use a for loop to create the modules and push them onto an array, and then we can wire up the edge cases:
+Vamos usar um loop for para criar os módulos e colocá-los em um array, e depois podemos conectar os casos extremos:
 
 ```js
 for (let i = 0; i < NUM_DELAYS; i++) {
   let mDelay = new p5.Delay();
   mDelay.delayTime(DELAY_TIME);
 
-  // connect output of previous delay to input
+  // conecta a saída do delay anterior à entrada
   mDelays[i - 1].connect(mDelay);
 
   mDelays.push(mDelay);
 }
 
-// connect audio file module to first delay
+// conecta o módulo do arquivo de áudio ao primeiro delay
 mSound.connect(mDelays[0]);
 
-// connect last delay to output
+// conecta o último delay à saída
 mDelays[mDelays.length - 1].connect(p5.soundOut);
 ```
 
-And the full sketch, with some adjustable parameters:
+E o sketch completo, com alguns parâmetros ajustáveis:
 
 {% include p5-editor.html id="Sn5kPD97Y" %}
 
-## Audio Input
+## Entrada de Áudio
 
-We can easily change the above sketch to use a microphone instead of a pre-recorded file if we want to add the effect to our own voice in real time:
+Podemos facilmente mudar o sketch acima para usar um microfone em vez de um arquivo pré-gravado, se quisermos aplicar o efeito à nossa própria voz em tempo real:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-14.jpg' | relative_url }}"/>
 </div>
 
-We just add a [`p5.AudioIn`](https://p5js.org/reference/#/p5.AudioIn) object to get the sound from the microphone and a boolean variable `isMicOn` to toggle the microphone on and off:
+Basta adicionar um objeto [`p5.AudioIn`](https://p5js.org/reference/#/p5.AudioIn) para obter o som do microfone e uma variável booleana `isMicOn` para ligar e desligar o microfone:
 
-### NOTE: sketches that use the microphone won't work here. They have to be opened in a new window directly from their [LINK](https://editor.p5js.org/thiagohersan/sketches/94vJFO1dT_).
+### NOTA: sketches que usam o microfone não vão funcionar aqui. Eles têm que ser abertos em uma nova janela diretamente pelo seu [LINK](https://editor.p5js.org/thiagohersan/sketches/94vJFO1dT_).
 
 {% include p5-editor.html id="8Ic-7bIUq" %}
 
-## Full Effect
+## Efeito Completo
 
-The final example includes putting something together that combines a lot of what we looked at so far.
+O exemplo final consiste em montar algo que combina muito do que vimos até agora.
 
-The idea is to add a noticeable delay on the lower frequencies, to artificially add more bass drum hits, and at the same time add some reverb effects to the hi-hat, so it sounds like an extra instrument.
+A ideia é adicionar um delay perceptível nas frequências mais baixas, para adicionar artificialmente mais batidas de bumbo, e ao mesmo tempo adicionar alguns efeitos de reverb ao chimbal (hi-hat), para que soe como um instrumento extra.
 
-We will work towards this pipeline, one effect at a time:
+Vamos trabalhar em direção a este pipeline, um efeito por vez:
 
 <div class="scaled-images left">
   <img src="{{ '/assets/images/creative-coding/sound-processing-15.jpg' | relative_url }}"/>
 </div>
 
-First, the low-frequency path:
+Primeiro, o caminho das baixas frequências:
 
 ```js
 mSound.connect(mFilterLow);
@@ -300,11 +300,11 @@ mFilterLow.connect(mDelay);
 mDelay.connect(p5.soundOut);
 ```
 
-With a toggle, to check the effect:
+Com um botão de alternância, para verificar o efeito:
 
 {% include p5-editor.html id="JLZd2lAgV" %}
 
-Now, the high-frequency path:
+Agora, o caminho das altas frequências:
 
 ```js
 mSound.connect(mFilterHigh);
@@ -312,8 +312,8 @@ mFilterHigh.connect(mReverb);
 mReverb.connect(p5.soundOut);
 ```
 
-With a toggle:
+Com um botão de alternância:
 {% include p5-editor.html id="7he8PvvNq" %}
 
-And, putting it all together, with a toggle:
+E, juntando tudo, com um botão de alternância:
 {% include p5-editor.html id="azmXfYrYo" %}

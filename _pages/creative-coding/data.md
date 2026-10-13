@@ -1,14 +1,14 @@
 ---
-title: Loading Data (JSON/CSV)
+title: Carregando Dados (JSON/CSV)
 ---
 
-We've seen how [arrays](../../coding/arrays/) and [objects](../../coding/objects/) can be used for organizing our data, and also how to use `for()` loops to create, store and process values in those structures. We've also seen how the [`map()`](../maths/) function can be used to transform input values in different ranges and units into parameters for visualizations.
+Vimos como [arrays](../../coding/arrays/) e [objetos](../../coding/objects/) podem ser usados para organizar nossos dados, e também como usar loops `for()` para criar, armazenar e processar valores nessas estruturas. Também vimos como a função [`map()`](../maths/) pode ser usada para transformar valores de entrada, em diferentes intervalos e unidades, em parâmetros para visualizações.
 
-We can now look at ways of acquiring, processing and visualizing data that has been previously created and stored in files locally or online.
+Agora podemos olhar maneiras de obter, processar e visualizar dados que foram criados e armazenados anteriormente em arquivos locais ou online.
 
 ## JSON
 
-In order to do that we'll make use of a file format called [JSON](https://en.wikipedia.org/wiki/JSON), or, JavaScript Object Notation. *JSON is an open standard file format and data interchange format that uses human-readable text to store and transmit data objects*. If we take a look at a JSON file we'll see that it's structured exactly like a JavaScript object, with data organized into key-value pairs:
+Para fazer isso vamos usar um formato de arquivo chamado [JSON](https://en.wikipedia.org/wiki/JSON), ou JavaScript Object Notation (Notação de Objetos JavaScript). *JSON é um formato de arquivo aberto e padrão de troca de dados que usa texto legível por humanos para armazenar e transmitir objetos de dados*. Se olharmos para um arquivo JSON, vamos ver que ele é estruturado exatamente como um objeto JavaScript, com dados organizados em pares chave-valor:
 ```json
 [
 	{ "zip": 10001, "rent": 4230, "bedrooms": 2 },
@@ -19,15 +19,15 @@ In order to do that we'll make use of a file format called [JSON](https://en.wik
 ]
 ```
 
-In this case we have an array of objects, each of which has $$3$$ key-value pairs. The syntax is almost exactly like in JavaScript, with the only exception being that the keys in a JSON file have to have the quote symbols (" ") around their names. It's no surprise that we can almost just read a JSON file directly into a JavaScript variable, and even less surprising that p5.js has some functions that will help us do just that.
+Neste caso temos um array de objetos, cada um com $$3$$ pares chave-valor. A sintaxe é quase exatamente como no JavaScript, com a única exceção de que as chaves em um arquivo JSON precisam ter aspas (" ") ao redor dos seus nomes. Não é surpresa que possamos quase ler um arquivo JSON diretamente para dentro de uma variável JavaScript, e menos surpreendente ainda que o p5.js tenha algumas funções que nos ajudam a fazer exatamente isso.
 
-The [`loadJSON()`](https://p5js.org/reference/#/p5/loadJSON) function takes the location of a JSON file (stored locally or online), and returns a JavaScript object with the data from the file. Since the file could be large, or be coming from somewhere else on the internet, it could take a long time to download and cause our sketch to freeze and become unresponsive.
+A função [`loadJSON()`](https://p5js.org/reference/#/p5/loadJSON) recebe a localização de um arquivo JSON (armazenado localmente ou online) e retorna um objeto JavaScript com os dados do arquivo. Como o arquivo pode ser grande, ou vir de algum outro lugar da internet, pode levar muito tempo para baixar e fazer nosso sketch travar e ficar sem resposta.
 
-One way to avoid this situation is to define a special functions (like `setup()` and `draw()`) that p5.js will use to fetch and load any data before it starts running any other part of our code.
+Uma forma de evitar essa situação é definir uma função especial (como `setup()` e `draw()`) que o p5.js vai usar para buscar e carregar quaisquer dados antes de começar a executar qualquer outra parte do nosso código.
 
-If we look at the documentation for the [`preload()`](https://p5js.org/reference/#/p5/preload) function, it says that it's a function that is called once, immediately before `setup()`, that guarantees that any data loading happens before we start the sketch. It's also important to note that, according to the documentation, *Nothing besides load calls (`loadImage()`, `loadJSON()`, `loadFont()`, etc.) should be inside the preload function*.
+Se olharmos a documentação da função [`preload()`](https://p5js.org/reference/#/p5/preload), ela diz que é uma função chamada uma vez, imediatamente antes do `setup()`, que garante que qualquer carregamento de dados aconteça antes de começarmos o sketch. Também é importante notar que, segundo a documentação, *nada além de chamadas de carregamento (`loadImage()`, `loadJSON()`, `loadFont()`, etc.) deve ficar dentro da função preload*.
 
-This is how we define our `preload()` to load a JSON file from the internet:
+É assim que definimos nosso `preload()` para carregar um arquivo JSON da internet:
 ```js
 let data;
 
@@ -37,29 +37,29 @@ function preload() {
 }
 ```
 
-The `url` variable could also specify a local file, but regardless, by the time the `setup()` function runs, our `data` variable will already have all of the information that is inside the `rent.json` file, and we can then use `for()` loops to process it however we want:
+A variável `url` também poderia especificar um arquivo local, mas, de qualquer forma, quando a função `setup()` rodar, nossa variável `data` já terá todas as informações que estão dentro do arquivo `rent.json`, e então podemos usar loops `for()` para processá-las como quisermos:
 
 {% include p5-editor.html id="HxGSOzMFS" %}
 
-Some things to note about the above sketch:
+Algumas coisas a notar sobre o sketch acima:
 
-1. We are loading a local file, so the location that we pass to the `loadJSON()` function specifies a file called `Winemag_100.json` that is located in the same folder as our `sketch.js` file.
+1. Estamos carregando um arquivo local, então o endereço que passamos para a função `loadJSON()` especifica um arquivo chamado `Winemag_100.json` que está na mesma pasta do nosso arquivo `sketch.js`.
 
-2. We first load the JSON into a variable called `dataObject` and then in `setup()` use that variable and some JavaScript functions to actually put the contents of the file into an array that we can iterate. This is not necessary all the time, only when our file specifies an array and we want to work with an array. If we look at the p5.js documentation for [`loadJSON()`](https://p5js.org/reference/#/p5/loadJSON), it says: *Note that even if the JSON file contains an Array, an Object will be returned*. We use: `Object.values(dataObject)` to turn the Object into an array.
+2. Primeiro carregamos o JSON em uma variável chamada `dataObject` e depois, no `setup()`, usamos essa variável e algumas funções do JavaScript para colocar o conteúdo do arquivo em um array que possamos iterar. Isso nem sempre é necessário, apenas quando nosso arquivo especifica um array e queremos trabalhar com um array. Se olharmos a documentação do p5.js para [`loadJSON()`](https://p5js.org/reference/#/p5/loadJSON), ela diz: *Note que mesmo que o arquivo JSON contenha um Array, um Objeto será retornado*. Usamos `Object.values(dataObject)` para transformar o Objeto em um array.
 
-3. During `setup()` we are iterating through all of the data points in our dataset to determine the minimum and maximum values for $$2$$ properties (`price` and `points`). This is needed so we can use [`map()`](https://p5js.org/reference/#/p5/map) later in `draw()` to scale these values and use the whole canvas to visualize the data (a detailed explanation of `map()` can be found [here](../maths/)).
+3. Durante o `setup()` estamos iterando por todos os pontos de dados do nosso conjunto de dados para determinar os valores mínimo e máximo de $$2$$ propriedades (`price` e `points`). Isso é necessário para podermos usar [`map()`](https://p5js.org/reference/#/p5/map) mais tarde no `draw()` para escalar esses valores e usar o canvas inteiro para visualizar os dados (uma explicação detalhada do `map()` pode ser encontrada [aqui](../maths/)).
 
-One more thing about parameters/fields from a JSON: sometimes the field names will have spaces ("final price", "CRASH TIME") or special characters ("pm2.5", "U$D") and accessing them with just the dot notation won't work:
+Mais uma coisa sobre parâmetros/campos de um JSON: às vezes os nomes dos campos têm espaços ("final price", "CRASH TIME") ou caracteres especiais ("pm2.5", "U$D"), e acessá-los apenas com a notação de ponto não funciona:
 ```js
-data[i].pm2.5; // error
-data[i].U$D; // error
-data[i].final price; // error
-data[i].CRASH TIME; // error
+data[i].pm2.5; // erro
+data[i].U$D; // erro
+data[i].final price; // erro
+data[i].CRASH TIME; // erro
 ```
 
-In these cases, we have to use brackets, just like when accessing an array, except instead of a number for the index we pass the data field name in quotes (" "):
+Nesses casos, temos que usar colchetes, assim como ao acessar um array, só que em vez de um número como índice passamos o nome do campo de dados entre aspas (" "):
 ```js
-// these work
+// estes funcionam
 data[i]["pm2.5"];
 data[i]["U$D"];
 data[i]["final price"];
@@ -67,9 +67,9 @@ data[i]["CRASH TIME"];
 ```
 
 ## CSV
-In addition to JSON, there's another file format that is used often for storing and transmitting structured data: Comma-Separated Values, or, CSV. In some ways this format is a little bit easier to read, because it is less redundant and is very much like a spreadsheet, since it organizes data into rows and columns.
+Além do JSON, existe outro formato de arquivo usado com frequência para armazenar e transmitir dados estruturados: Comma-Separated Values (Valores Separados por Vírgula), ou CSV. De certa forma, esse formato é um pouco mais fácil de ler, porque é menos redundante e se parece muito com uma planilha, já que organiza os dados em linhas e colunas.
 
-An example CSV file, with the same data as our JSON file above, could look like:
+Um exemplo de arquivo CSV, com os mesmos dados do nosso arquivo JSON acima, poderia ser assim:
 
 ```csv
 zip,rent,bedrooms
@@ -80,13 +80,13 @@ zip,rent,bedrooms
 11238,2690,2
 ```
 
-The name of the parameters (sometimes called *features* or *fields*) are specified in the first row of the file, and after that, each row represents one data point, with their feature values separated by commas (,).
+O nome dos parâmetros (às vezes chamados de *features* ou *campos*) é especificado na primeira linha do arquivo e, depois disso, cada linha representa um ponto de dados, com os valores de suas features separados por vírgulas (,).
 
-It's good to know about both JSON and CSV because sometimes the data we want to use is only available in one of the two formats.
+É bom conhecer tanto o JSON quanto o CSV, porque às vezes os dados que queremos usar só estão disponíveis em um dos dois formatos.
 
-Luckily, p5.js also has functions to help us load, process and use tabular data in CSV files. The [`loadTable()`](https://p5js.org/reference/#/p5/loadTable) function is very similar to `loadJSON()`, because it downloads the file, reads it, and organizes the data in a way that is easier to access in the rest of our sketch.
+Felizmente, o p5.js também tem funções para nos ajudar a carregar, processar e usar dados tabulares em arquivos CSV. A função [`loadTable()`](https://p5js.org/reference/#/p5/loadTable) é muito parecida com o `loadJSON()`, porque ela baixa o arquivo, lê e organiza os dados de uma forma que é mais fácil de acessar no resto do nosso sketch.
 
-Just like `loadJSON()`, `loadTable()` should also be placed inside our `preload()` function.
+Assim como o `loadJSON()`, o `loadTable()` também deve ser colocado dentro da nossa função `preload()`.
 ```js
 let data;
 
@@ -96,12 +96,12 @@ function preload() {
 }
 ```
 
-After this, the data will be available in the `data` variable, but unlike the case with a JSON file, the data is not in a JavaScript object or array, but in a [`Table`](https://p5js.org/reference/#/p5.Table) object. This object has some special functions that we have to use in order to iterate over its contents.
+Depois disso, os dados estarão disponíveis na variável `data`, mas, diferente do caso do arquivo JSON, os dados não estão em um objeto ou array JavaScript e sim em um objeto [`Table`](https://p5js.org/reference/#/p5.Table). Esse objeto tem algumas funções especiais que precisamos usar para iterar sobre o seu conteúdo.
 
-Instead of using `data.length` to know how many data points are in our dataset, we now have to use `data.getRowCount()`. And instead of accessing the data using array and object indexing like `data[i].price`, we have to use `data.getNum(i, "price")`. We can see how those are similar, in both cases we are specifying which data point we want using a number index $$i$$, and then which of its fields we want using a string name, like "price".
+Em vez de usar `data.length` para saber quantos pontos de dados há no nosso conjunto de dados, agora temos que usar `data.getRowCount()`. E em vez de acessar os dados usando indexação de array e objeto, como `data[i].price`, temos que usar `data.getNum(i, "price")`. Podemos ver como são parecidos: em ambos os casos estamos especificando qual ponto de dados queremos usando um índice numérico $$i$$, e depois qual de seus campos queremos usando um nome em texto, como "price".
 
-Let's take a look at a full example that does the same thing as the JSON example above:
+Vamos ver um exemplo completo que faz a mesma coisa que o exemplo JSON acima:
 
 {% include p5-editor.html id="DUn4Pd1-a" %}
 
-Just like in the JSON example, we first calculate the minimum and maximum values in the `price` and `points` fields, so we can later scale the values in those fields and use the whole canvas when drawing our visualization.
+Assim como no exemplo JSON, primeiro calculamos os valores mínimo e máximo nos campos `price` e `points`, para podermos depois escalar os valores desses campos e usar o canvas inteiro ao desenhar nossa visualização.

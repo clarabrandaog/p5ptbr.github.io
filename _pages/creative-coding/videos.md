@@ -1,23 +1,23 @@
 ---
-title: Videos
+title: Vídeos
 ---
-## Video as Images
+## Vídeo como Imagens
 
-Now that we know everything we need to know about [images](../images/), what about videos?
+Agora que sabemos tudo o que precisamos saber sobre [imagens](../images/), e os vídeos?
 
-Well, a video is just a bunch of images, one after the other, so it should be pretty similar to load and process videos.
+Bem, um vídeo é só um monte de imagens, uma depois da outra, então carregar e processar vídeos deve ser bem parecido.
 
-In this example we load a video from a specific URL (our sketch's directory) by first creating a `<video>` html element, and then hiding it. This is the easiest way to load video files into p5.js and have access to its frames. We just have to remember to hide the video element once we've loaded the file:
+Neste exemplo carregamos um vídeo de uma URL específica (o diretório do nosso sketch) criando primeiro um elemento html `<video>` e depois escondendo-o. Essa é a forma mais fácil de carregar arquivos de vídeo no p5.js e ter acesso aos seus frames. Só precisamos lembrar de esconder o elemento de vídeo depois de carregarmos o arquivo:
 
-### NOTE: sketches that load the camera won't work here. They have to be opened in a new window directly from their [LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/6tdhpcMEH).
+### NOTA: sketches que carregam a câmera não vão funcionar aqui. Eles têm que ser abertos em uma nova janela diretamente pelo seu [LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/6tdhpcMEH).
 
 {% include p5-editor.html id="6tdhpcMEH" %}
 
-Now, accessing and manipulating the video frame pixel data can be done using the exact same logic we used to manipulate image pixels.
+Agora, acessar e manipular os dados de pixel dos frames do vídeo pode ser feito usando exatamente a mesma lógica que usamos para manipular pixels de imagens.
 
-Let's detect black pixels and make them red. Since we are treating all the pixels the same way, we don't have to worry about their $$(x, y)$$ locations and we can just use one `for()` loop.
+Vamos detectar pixels pretos e torná-los vermelhos. Como estamos tratando todos os pixels da mesma forma, não precisamos nos preocupar com suas posições $$(x, y)$$ e podemos usar apenas um loop `for()`.
 
-This gets the R, G and B color values for each pixel within out `for()` loop:
+Isto obtém os valores de cor R, G e B de cada pixel dentro do nosso loop `for()`:
 
 ```js
 let r = mVideo.pixels[i + 0];
@@ -25,7 +25,7 @@ let g = mVideo.pixels[i + 1];
 let b = mVideo.pixels[i + 2];
 ```
 
-And if all $$3$$ of those values are close to $$0$$, we'll exaggerate the red channel:
+E se todos esses $$3$$ valores estiverem próximos de $$0$$, vamos exagerar o canal vermelho:
 
 ```js
 if(r < 64 && g < 64 && b < 64) {
@@ -35,29 +35,29 @@ if(r < 64 && g < 64 && b < 64) {
 
 {% include p5-editor.html id="JhwwmKyeN" %}
 
-## Video From Camera
+## Vídeo da Câmera
 
-We can also get a video stream from our camera. The process is very similar. We use a `<capture>` html element that we can access with p5.js code, and then hide the actual html element:
+Também podemos obter um stream de vídeo da nossa câmera. O processo é muito parecido. Usamos um elemento html `<capture>` que podemos acessar com código p5.js e depois escondemos o elemento html de fato:
 
-### NOTE: sketches that use the camera won't work here. They have to be opened in a new window directly from their [LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/5kRthltqb).
+### NOTA: sketches que usam a câmera não vão funcionar aqui. Eles têm que ser abertos em uma nova janela diretamente pelo seu [LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/5kRthltqb).
 
 {% include p5-editor.html id="5kRthltqb" %}
 
-Once we have a capture object, we just call `image()` with it to draw one frame of video per frame of our sketch.
+Depois que temos um objeto capture, basta chamar `image()` com ele para desenhar um frame de vídeo por frame do nosso sketch.
 
-Easy.
+Fácil.
 
-## Processing Videos
+## Processando Vídeos
 
-And, just like images, the capture object has a pixel array and similar member functions and variables, so we can just copy and paste some of the code from one of the previous sketches into this sketch:
+E, assim como as imagens, o objeto capture tem um array de pixels e funções e variáveis membros semelhantes, então podemos simplesmente copiar e colar parte do código de um dos sketches anteriores neste sketch:
 
-### NOTE: sketches has to be opened in a new window using its [SKETCH LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/weGX7Zf4h)
+### NOTA: sketches têm que ser abertos em uma nova janela usando seu [LINK DO SKETCH](https://editor.p5js.org/tgh-p5-tutorials/sketches/weGX7Zf4h)
 
 {% include p5-editor.html id="weGX7Zf4h" %}
 
-And we have a color exaggerator.
+E temos um exagerador de cores.
 
-It's a little bit harder to figure out the dominant color channel in a video or picture, compared to an image of a painting. There's a lot of noise, but when we hold up red, green or blue markers against a black background, we can see it's working:
+É um pouco mais difícil descobrir o canal de cor dominante em um vídeo ou foto, comparado a uma imagem de uma pintura. Há muito ruído, mas quando seguramos marcadores vermelhos, verdes ou azuis contra um fundo preto, podemos ver que está funcionando:
 
 <div class="image-row">
   <div class="img-wrapper">
@@ -71,9 +71,9 @@ It's a little bit harder to figure out the dominant color channel in a video or 
   </div>
 </div>
 
-## Processing Video Pixels
+## Processando Pixels de Vídeo
 
-And, now, finally, let's copy our circle pattern code from the [images tutorial](../images/), but use pixel color values that are coming from the camera to draw our circles:
+E, agora, finalmente, vamos copiar nosso código do padrão de círculos do [tutorial de imagens](../images/), mas usar valores de cor de pixel que vêm da câmera para desenhar nossos círculos:
 
-### NOTE: sketches has to be opened in a new window using its [SKETCH LINK](https://editor.p5js.org/tgh-p5-tutorials/sketches/XJclc3KE0)
+### NOTA: sketches têm que ser abertos em uma nova janela usando seu [LINK DO SKETCH](https://editor.p5js.org/tgh-p5-tutorials/sketches/XJclc3KE0)
 {% include p5-editor.html id="XJclc3KE0" %}

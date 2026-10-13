@@ -1,42 +1,42 @@
 ---
-title: Interactions
+title: Interações
 ---
 
-We've seen and used the p5.js special variables [`mouseX`](https://p5js.org/reference/#/p5/mouseX) and [`mouseY`](https://p5js.org/reference/#/p5/mouseY) when we looked at [variables](../../coding/variables/), [conditionals](../../coding/conditionals/), [functions](../../coding/functions/) and [classes](../../coding/classes/).
+Já vimos e usamos as variáveis especiais do p5.js [`mouseX`](https://p5js.org/reference/#/p5/mouseX) e [`mouseY`](https://p5js.org/reference/#/p5/mouseY) quando olhamos [variáveis](../../coding/variables/), [condicionais](../../coding/conditionals/), [funções](../../coding/functions/) e [classes](../../coding/classes/).
 
-These variables always give us the current `x` and `y` coordinates of our mouse, relative to the $$(0, 0)$$ origin of our canvas.
+Essas variáveis sempre nos dão as coordenadas `x` e `y` atuais do nosso mouse, relativas à origem $$(0, 0)$$ do nosso canvas.
 
 {% include p5-editor.html id="F3XVsdlkv" %}
 
-Now, we are going to see some other special variables and functions that will help us add interactivity to our sketches using the mouse and the keyboard.
+Agora vamos ver algumas outras variáveis e funções especiais que vão nos ajudar a adicionar interatividade aos nossos sketches usando o mouse e o teclado.
 
-## Mouse Variables
+## Variáveis do Mouse
 
-Another pair of special variables available to us in p5.js are the [`pmouseX`](https://p5js.org/reference/#/p5/pmouseX) and [`pmouseY`](https://p5js.org/reference/#/p5/pmouseY) variables. They are like the `mouseX` and `mouseY` variables, but they hold the *previous* position of our mouse.
+Outro par de variáveis especiais disponíveis no p5.js são as variáveis [`pmouseX`](https://p5js.org/reference/#/p5/pmouseX) e [`pmouseY`](https://p5js.org/reference/#/p5/pmouseY). Elas são como as variáveis `mouseX` e `mouseY`, mas guardam a posição *anterior* do nosso mouse.
 
-By comparing the current and previous positions of our mouse we can draw lines or shapes that are based on the speed in which a user moves the mouse.
+Comparando as posições atual e anterior do mouse, podemos desenhar linhas ou formas baseadas na velocidade com que a pessoa move o mouse.
 
 {% include p5-editor.html id="41CirwIOB" %}
 
-Another mouse-related special variable in p5.js is the [`mouseIsPressed`](https://p5js.org/reference/#/p5/mouseIsPressed) variable. This variable returns a *boolean* value that tells us whether any of the mouse buttons are currently pressed.
+Outra variável especial do p5.js relacionada ao mouse é a variável [`mouseIsPressed`](https://p5js.org/reference/#/p5/mouseIsPressed). Essa variável retorna um valor *booleano* que nos diz se algum dos botões do mouse está pressionado no momento.
 
-If we query this variable using an `if` statement inside our `draw()` function it will return `true` if the user is holding down any of the mouse buttons, or a `false` otherwise. We can then use this simple interaction pattern to change something about our sketch, like the background color or even the fill color of our shapes.
+Se consultarmos essa variável usando uma instrução `if` dentro da nossa função `draw()`, ela retorna `true` se a pessoa estiver segurando qualquer um dos botões do mouse, ou `false` caso contrário. Podemos então usar esse padrão simples de interação para mudar algo no nosso sketch, como a cor de fundo ou até a cor de preenchimento das nossas formas.
 
 ```js
 if(mouseIsPressed) {
-  // a mouse button is being pressed
+  // um botão do mouse está sendo pressionado
   fill(255);
 } else {
-  // no button is being pressed
+  // nenhum botão está sendo pressionado
   fill(0);
 }
 ```
 
 {% include p5-editor.html id="XPa-IjLtt" %}
 
-## Mouse Functions
+## Funções do Mouse
 
-Let's say we want to count the number of times an user has clicked the mouse. We could try to just add an `if()` statement to our `draw()` function like this and increment a variable every time `mouseIsPressed` is `true`:
+Digamos que queremos contar o número de vezes que uma pessoa clicou o mouse. Poderíamos tentar simplesmente adicionar uma instrução `if()` à nossa função `draw()` assim e incrementar uma variável toda vez que `mouseIsPressed` for `true`:
 
 ```js
 function draw() {
@@ -48,17 +48,17 @@ function draw() {
 
 {% include p5-editor.html id="2qicG7dPq" %}
 
-This doesn't seem correct...
+Isso não parece correto...
 
-What's happening is that our `draw()` function executes faster than our clicks, so the `if()` statement and the increment command execute multiple times while we're holding down the mouse button even if we're really quick.
+O que está acontecendo é que nossa função `draw()` executa mais rápido que nossos cliques, então a instrução `if()` e o comando de incremento executam várias vezes enquanto seguramos o botão do mouse, mesmo que sejamos bem rápidos.
 
-If we want to be a little more precise when detecting mouse actions, we can use a couple of special functions available in p5.js.
+Se quisermos ser um pouco mais precisos ao detectar ações do mouse, podemos usar algumas funções especiais disponíveis no p5.js.
 
-The way we use these functions is a little different from how we use most of the p5.js functions that we've seen so far.
+A forma de usar essas funções é um pouco diferente da forma como usamos a maioria das funções do p5.js que vimos até agora.
 
-Usually, a function like `rect()` or `fill()` has been defined by the p5.js library and we call them in our code. These new mouse event functions are almost the opposite: p5.js knows when to call them, but we have to define them.
+Normalmente, uma função como `rect()` ou `fill()` foi definida pela biblioteca p5.js e nós a chamamos no nosso código. Essas novas funções de evento do mouse são quase o oposto: o p5.js sabe quando chamá-las, mas nós é que temos que defini-las.
 
-For example, if we want to count the number of times the mouse is clicked we define a function called `mouseClicked()` like this and p5.js will call it just once per click:
+Por exemplo, se queremos contar o número de vezes que o mouse é clicado, definimos uma função chamada `mouseClicked()` assim, e o p5.js vai chamá-la uma única vez por clique:
 
 ```js
 function mouseClicked() {
@@ -68,7 +68,7 @@ function mouseClicked() {
 
 {% include p5-editor.html id="Xo6XxohE_" %}
 
-And now we can use the `clickCount` variable to change some parameters in our sketch. In this case we'll use the  number of clicks to compute the diameter for an ellipse. To make the changes more apparent, we'll give the ellipse a starting diameter of $$20$$ and we'll increment it by $$4$$ pixels per click:
+E agora podemos usar a variável `clickCount` para mudar alguns parâmetros no nosso sketch. Neste caso vamos usar o número de cliques para calcular o diâmetro de uma elipse. Para tornar as mudanças mais evidentes, vamos dar à elipse um diâmetro inicial de $$20$$ e incrementá-lo de $$4$$ pixels por clique:
 
 ```js
 let mDiam = 20 + 4 * clickCount;
@@ -76,25 +76,25 @@ let mDiam = 20 + 4 * clickCount;
 
 {% include p5-editor.html id="CPZLTJ2JP" %}
 
-## Functions and Variables
+## Funções e Variáveis
 
-Since the `mouseX` and `mouseY` variables are always available to us, we can use them inside the `mouseClicked()` function to get the location of a mouse click. In addition to increasing our ellipse size, we can now use clicks to move it.
+Como as variáveis `mouseX` e `mouseY` estão sempre disponíveis, podemos usá-las dentro da função `mouseClicked()` para obter a posição de um clique do mouse. Além de aumentar o tamanho da nossa elipse, agora podemos usar os cliques para movê-la.
 
 {% include p5-editor.html id="kP0syTm_8" %}
 
-## More Events
+## Mais Eventos
 
-These *event* functions provide better granularity for the actual mouse actions.
+Essas funções de *evento* dão uma granularidade melhor para as ações reais do mouse.
 
-There are separate functions that are called when a mouse button is [pressed](https://p5js.org/reference/#/p5/mousePressed), [released](https://p5js.org/reference/#/p5/mouseReleased), [clicked](https://p5js.org/reference/#/p5/mouseClicked) or [double clicked](https://p5js.org/reference/#/p5/doubleClicked).
+Existem funções separadas que são chamadas quando um botão do mouse é [pressionado](https://p5js.org/reference/#/p5/mousePressed), [solto](https://p5js.org/reference/#/p5/mouseReleased), [clicado](https://p5js.org/reference/#/p5/mouseClicked) ou [clicado duas vezes](https://p5js.org/reference/#/p5/doubleClicked).
 
-There are also functions that are called when the mouse is [moved](https://p5js.org/reference/#/p5/mouseMoved) or [dragged](https://p5js.org/reference/#/p5/mouseDragged) (pressed + moved).
+Também existem funções que são chamadas quando o mouse é [movido](https://p5js.org/reference/#/p5/mouseMoved) ou [arrastado](https://p5js.org/reference/#/p5/mouseDragged) (pressionado + movido).
 
-We just have to define them in our code!
+Só precisamos defini-las no nosso código!
 
-Let's add to the previous example.
+Vamos incrementar o exemplo anterior.
 
-We'll still move the ellipse on every click, and we'll increase its diameter by $$4$$ pixels per click, but now we'll also increase the diameter by $$12$$ on double-clicks, so we'll need a counter for those, and a way to detect them.
+Ainda vamos mover a elipse a cada clique e aumentar seu diâmetro em $$4$$ pixels por clique, mas agora também vamos aumentar o diâmetro em $$12$$ nos cliques duplos, então vamos precisar de um contador para eles e de uma maneira de detectá-los.
 
 ```js
 function doubleClicked() {
@@ -102,15 +102,15 @@ function doubleClicked() {
 }
 ```
 
-Done!!
+Pronto!!
 
 {% include p5-editor.html id="hPBEKfhH5" %}
 
-But, it gets kind of boring to click so many times to get our ellipse to a certain size. Let's say we just want to be able to stretch it out temporarily by dragging the mouse.
+Mas fica meio chato clicar tantas vezes para chegar a um certo tamanho da elipse. Digamos que queremos poder esticá-la temporariamente arrastando o mouse.
 
-This requires a couple of extra variables and a bit of extra logic.
+Isso exige algumas variáveis extras e um pouco de lógica adicional.
 
-First, we need to detect when the mouse is pressed (button is down), which is different than a click when the button goes down and then up. When we detect a press, we'll record the `mouseX` and `mouseY` position not only so we can move our ellipse later, but also so we can calculate the distance of our drag action.
+Primeiro, precisamos detectar quando o mouse é pressionado (o botão desce), que é diferente de um clique, em que o botão desce e depois sobe. Quando detectarmos um pressionamento, vamos registrar a posição `mouseX` e `mouseY`, para podermos mover nossa elipse depois e também calcular a distância da nossa ação de arrastar.
 
 ```js
 function mousePressed() {
@@ -119,7 +119,7 @@ function mousePressed() {
 }
 ```
 
-While the mouse is being dragged, we will calculate and store the sum of how far it has moved from the press location in the `x` and `y` directions. The `mouseX` and `mouseY` variables are the current coordinates of our mouse, and `mX` and `mY` are the coordinates of where the mouse was when we pressed the button.
+Enquanto o mouse está sendo arrastado, vamos calcular e armazenar a soma de quanto ele se moveu a partir do local do pressionamento nas direções `x` e `y`. As variáveis `mouseX` e `mouseY` são as coordenadas atuais do nosso mouse, e `mX` e `mY` são as coordenadas de onde o mouse estava quando pressionamos o botão.
 
 ```js
 function mouseDragged() {
@@ -127,12 +127,12 @@ function mouseDragged() {
 }
 ```
 
-Now in our `draw()` function we can just combine all of these contributions to the ellipse's diameter:
+Agora, na nossa função `draw()`, podemos simplesmente combinar todas essas contribuições para o diâmetro da elipse:
 ```js
 let mDiam = 20 + 4 * clickCount + 12 * doubleClickCount + dragDistance;
 ```
 
-We just have to remember to clear the `dragDistance` variable when the mouse is released because there is no more drag happening:
+Só precisamos lembrar de zerar a variável `dragDistance` quando o mouse é solto, porque não há mais arrasto acontecendo:
 
 ```js
 function mouseReleased() {
@@ -142,13 +142,13 @@ function mouseReleased() {
 
 {% include p5-editor.html id="lJKgp2IIY" %}
 
-## Keyboard Events
+## Eventos do Teclado
 
-Just like with the mouse, p5.js also has event functions that get called when an user interacts with the keyboard.
+Assim como com o mouse, o p5.js também tem funções de evento que são chamadas quando uma pessoa interage com o teclado.
 
-The [`keyPressed()`](https://p5js.org/reference/#/p5/keyPressed) and [`keyReleased()`](https://p5js.org/reference/#/p5/keyReleased) functions can be defined to specify behavior and actions that we want our sketch to take when keys are pressed or released.
+As funções [`keyPressed()`](https://p5js.org/reference/#/p5/keyPressed) e [`keyReleased()`](https://p5js.org/reference/#/p5/keyReleased) podem ser definidas para especificar o comportamento e as ações que queremos que nosso sketch execute quando teclas são pressionadas ou soltas.
 
-If we want to pick a random grey value for our ellipse every time a key is pressed, we just have to define a `keyPressed()` function in our sketch:
+Se quisermos escolher um valor de cinza aleatório para a nossa elipse toda vez que uma tecla for pressionada, basta definir uma função `keyPressed()` no nosso sketch:
 
 ```js
 function keyPressed() {
@@ -158,35 +158,35 @@ function keyPressed() {
 
 {% include p5-editor.html id="UdSwBaV9L" %}
 
-Similar to the `mouseX` and `mouseY` variables, we can query the special p5.js [`key`](https://p5js.org/reference/#/p5/key) and [`keyCode`](https://p5js.org/reference/#/p5/keyCode) variables anywhere in our code to determine which keys are being pressed.
+Assim como as variáveis `mouseX` e `mouseY`, podemos consultar as variáveis especiais do p5.js [`key`](https://p5js.org/reference/#/p5/key) e [`keyCode`](https://p5js.org/reference/#/p5/keyCode) em qualquer lugar do nosso código para determinar quais teclas estão sendo pressionadas.
 
-The difference between `key` and `keyCode` is that `key` holds the letter associated with a key on the keyboard, while `keyCode` has a numerical value associated with that key. The `keyCode` variable is useful when we want to detect non-letter keys, like the left-, right-, up- and down- arrows, the delete and escape keys, etc.
+A diferença entre `key` e `keyCode` é que `key` guarda a letra associada a uma tecla do teclado, enquanto `keyCode` tem um valor numérico associado a essa tecla. A variável `keyCode` é útil quando queremos detectar teclas que não são letras, como as setas esquerda, direita, para cima e para baixo, as teclas delete e escape, etc.
 
-We can use key codes to move an ellipse around the screen and the `key` variable to reset its position:
+Podemos usar códigos de tecla para mover uma elipse pela tela e a variável `key` para redefinir sua posição:
 
 {% include p5-editor.html id="SNBPBinYR" %}
 
-We can almost program a simple video-game now!
+Já quase conseguimos programar um videogame simples!
 
-## Interactions wih Time
+## Interações com o Tempo
 
-The p5.js library also gives us variables and functions that allow us to interact with time.
+A biblioteca p5.js também nos dá variáveis e funções que nos permitem interagir com o tempo.
 
-*WHAT?!?!*
+*O QUÊ?!?!*
 
-Yeah. Let's say we want something to happen at a specific time of day, or based on the current hour, or after a certain number of seconds has passed... that's how we interact with time. We'll soon see how to use these functions and variables to create [animations](../animations/), but for now, let's just see what they are and how to use them.
+Sim. Digamos que queremos que algo aconteça em um horário específico do dia, ou com base na hora atual, ou depois de um certo número de segundos... é assim que interagimos com o tempo. Em breve vamos ver como usar essas funções e variáveis para criar [animações](../animations/), mas por enquanto vamos apenas ver o que são e como usá-las.
 
-Let's say we want our background to change color periodically. In order to do that we'll need a variable that records the last time time there was a background change, and then, once $$1$$ seconds has passed, change the color and update the variable.
+Digamos que queremos que nosso fundo mude de cor periodicamente. Para isso vamos precisar de uma variável que registre a última vez que houve uma mudança de fundo e, depois que $$1$$ segundo tiver passado, mudar a cor e atualizar a variável.
 
-We'll use the p5.js [`millis()`](https://p5js.org/reference/#/p5/millis) function to get the number of milliseconds (thousandths of a second) that have elapsed since the start of our sketch (since the `setup()` function was first called).
+Vamos usar a função [`millis()`](https://p5js.org/reference/#/p5/millis) do p5.js para obter o número de milissegundos (milésimos de segundo) que se passaram desde o início do nosso sketch (desde que a função `setup()` foi chamada pela primeira vez).
 
 {% include p5-editor.html id="ilyYXfwfS" %}
 
-We can also use the current time to change parameters of our sketch.
+Também podemos usar a hora atual para mudar parâmetros do nosso sketch.
 
-Let's say we want our background to be black at midnight, white at noon and then black again at midnight.
+Digamos que queremos que nosso fundo seja preto à meia-noite, branco ao meio-dia e depois preto de novo à meia-noite.
 
-We can use the [`hour()`](https://p5js.org/reference/#/p5/hour) function to get a value between $$0$$ and $$23$$ and then use it to calculate the background color. We have to do some math to change the afternoon hours in the range $$[13, 23]$$ into values in $$[11, 1]$$ in order to get the colors to go back to black after noon.
+Podemos usar a função [`hour()`](https://p5js.org/reference/#/p5/hour) para obter um valor entre $$0$$ e $$23$$ e então usá-lo para calcular a cor de fundo. Temos que fazer alguma matemática para transformar as horas da tarde no intervalo $$[13, 23]$$ em valores em $$[11, 1]$$, para que as cores voltem ao preto depois do meio-dia.
 
 ```js
 if (currentHour > 12) {
@@ -196,13 +196,13 @@ if (currentHour > 12) {
 
 {% include p5-editor.html id="GIkBvs3q4" %}
 
-We'll see more about these functions when we look at animations.
+Vamos ver mais sobre essas funções quando olharmos as animações.
 
-## Mouse Fun
+## Diversão com o Mouse
 
-Let's put some of these concepts together and create some more interesting sketches.
+Vamos juntar alguns desses conceitos e criar alguns sketches mais interessantes.
 
-Instead of just drawing an ellipse where our mouse is with `mouseX` and `mouseY`, we can use an array to keep track of our mouse position history and draw lines connecting every location it has been.
+Em vez de apenas desenhar uma elipse onde nosso mouse está com `mouseX` e `mouseY`, podemos usar um array para registrar o histórico das posições do mouse e desenhar linhas conectando cada local por onde ele passou.
 
 ```js
 function mouseMoved() {
@@ -210,13 +210,13 @@ function mouseMoved() {
 }
 ```
 
-Now our `mouseMoved()` function is responsible for adding points to the `mPos` array, and in `draw()` we go through every object in the array and draw lines connecting them.
+Agora nossa função `mouseMoved()` é responsável por adicionar pontos ao array `mPos`, e no `draw()` percorremos cada objeto do array e desenhamos linhas conectando-os.
 
 {% include p5-editor.html id="l7XSgtlFw" %}
 
-This is cool, but let's add a time component to this to make older positions disappear.
+Isso é legal, mas vamos adicionar um componente de tempo para fazer as posições mais antigas desaparecerem.
 
-When we push our coordinates into the array, we'll also include a number for the line segment weight:
+Quando colocarmos nossas coordenadas no array, também vamos incluir um número para a espessura do segmento de linha:
 
 ```js
 function mouseMoved() {
@@ -224,15 +224,15 @@ function mouseMoved() {
 }
 ```
 
-Now, in our `draw()` function we'll have two steps: first, we'll decrease the `w` value of every position we've saved and remove positions whose `w` value has become smaller than $$0.5$$. Then, in the second step, we'll draw line segments using the remaining positions in the array, using the `w` parameter in the `strokeWeight()` function.
+Agora, na nossa função `draw()` teremos dois passos: primeiro, vamos diminuir o valor `w` de cada posição que salvamos e remover as posições cujo valor `w` ficou menor que $$0.5$$. Depois, no segundo passo, vamos desenhar segmentos de linha usando as posições restantes no array, usando o parâmetro `w` na função `strokeWeight()`.
 
-This gives a cool trail effect to our mouse movements.
+Isso dá um efeito legal de rastro aos movimentos do nosso mouse.
 
 {% include p5-editor.html id="w3nfyQ553" %}
 
-We can change this slightly to have it only add points when the mouse is dragged, and only update the weights if the mouse is not pressed.
+Podemos mudar isso um pouco para que só adicione pontos quando o mouse é arrastado, e só atualize as espessuras se o mouse não estiver pressionado.
 
-In order to avoid unwanted interactions between new lines and old lines, we'll have to clear the `mPos` array whenever a new line is started:
+Para evitar interações indesejadas entre linhas novas e linhas antigas, vamos ter que limpar o array `mPos` sempre que uma nova linha for iniciada:
 
 ```js
 function mousePressed() {
@@ -240,7 +240,7 @@ function mousePressed() {
 }
 ```
 
-And we'll change our `w` update logic a little bit to make older lines fade faster once the mouse is released:
+E vamos mudar um pouco a nossa lógica de atualização de `w` para fazer as linhas mais antigas desaparecerem mais rápido depois que o mouse é solto:
 ```js
 let updateCount = mPos.length - i + 2;
 mPos[i].w *= 0.99 ** updateCount;

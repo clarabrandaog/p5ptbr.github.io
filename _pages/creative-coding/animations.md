@@ -1,107 +1,107 @@
 ---
-title: Animations
+title: Animações
 ---
 ## Frames
 
-We've seen this basic p5.js structure many times now:
+Já vimos essa estrutura básica do p5.js muitas vezes:
 ```js
 function setup() {
-  // run this once
+  // executa uma vez
 }
 
 function draw() {
-  // run this over and over and over
+  // executa de novo e de novo e de novo
 }
 ```
 
-Just to reiterate what p5.js does with this code: all of the commands inside the `setup()` function run just once. This is where we setup the canvas size, maybe set initial values to some variables, draw the background for the first time, set up any of the drawing modes, like [`rectMode`](https://p5js.org/reference/#/p5/rectMode), [`colorMode`](https://p5js.org/reference/#/p5/colorMode), etc.
+Só para reforçar o que o p5.js faz com esse código: todos os comandos dentro da função `setup()` rodam apenas uma vez. É aqui que definimos o tamanho do canvas, talvez atribuímos valores iniciais a algumas variáveis, desenhamos o fundo pela primeira vez e configuramos os modos de desenho, como [`rectMode`](https://p5js.org/reference/#/p5/rectMode), [`colorMode`](https://p5js.org/reference/#/p5/colorMode), etc.
 
-After the `setup()` function runs, p5.js takes our `draw()` function and runs all the commands that are inside of it over and over and over again, at a specific rate. For most of the code we have run so far we haven't noticed this re-draw because we draw the same shapes every time the `draw()` function runs.
+Depois que a função `setup()` roda, o p5.js pega nossa função `draw()` e executa todos os comandos que estão dentro dela de novo e de novo e de novo, a uma taxa específica. Na maior parte do código que executamos até agora, não percebemos esse redesenho porque desenhamos as mesmas formas toda vez que a função `draw()` roda.
 
-How often the `draw()` function runs will depend on many things, but for most browsers and displays it will be either $$30$$ times per second or $$60$$ times per second. This is referred to as the frame rate and sometimes these values are given as $$30$$ *fps* or $$60$$ *fps*, where *fps* stands for *frames per second*. $$30$$ and $$60$$ *fps* are common refresh rates on monitors and they are fast enough that we can use consecutive re-draws to draw animations without our eyes noticing jumps or discontinuities.
+Com que frequência a função `draw()` roda depende de muitas coisas, mas para a maioria dos navegadores e telas será $$30$$ vezes por segundo ou $$60$$ vezes por segundo. Isso é chamado de taxa de quadros (frame rate), e às vezes esses valores são dados como $$30$$ *fps* ou $$60$$ *fps*, onde *fps* significa *frames per second* (quadros por segundo). $$30$$ e $$60$$ *fps* são taxas de atualização comuns em monitores e são rápidas o bastante para que possamos usar redesenhos consecutivos para criar animações sem que nossos olhos percebam saltos ou descontinuidades.
 
-We can call each execution of `draw()` a frame, and by varying positions, sizes and colors slightly between frames we can create animations.
+Podemos chamar cada execução do `draw()` de um frame, e variando levemente posições, tamanhos e cores entre os frames podemos criar animações.
 
-*Animations?* Yeah!
+*Animações?* Sim!
 
-If, instead of drawing a circle at the exact same location every time `draw()` executes, we use a variable to change its position, we can make it move!
+Se, em vez de desenhar um círculo exatamente no mesmo lugar toda vez que o `draw()` executa, usarmos uma variável para mudar sua posição, podemos fazê-lo se mover!
 
 {% include p5-editor.html id="txJBbZKnX" %}
 
-Let's play around a little bit with this concept... what if we only draw the background once, but keep drawing ellipses every frame ?
+Vamos brincar um pouco com esse conceito... e se desenharmos o fundo só uma vez, mas continuarmos desenhando elipses a cada frame?
 
 {% include p5-editor.html id="C0SDPIm2f" %}
 
-Or, what if instead of drawing a fully opaque background, we add a little alpha to our color?
+Ou, e se em vez de desenhar um fundo totalmente opaco, adicionarmos um pouco de alpha à nossa cor?
 
 {% include p5-editor.html id="anLS0_0Rx" %}
 
-Cooool !!!
+Massaaa !!!
 
-## Frame Count
+## Contagem de Frames
 
-Instead of using a variable called `xPos` we could have called the p5.js variable [`frameCount`](https://p5js.org/reference/#/p5/frameCount). This variable keeps track of how many times the `draw()` function has executed and can be easily used for creating animations:
+Em vez de usar uma variável chamada `xPos`, poderíamos ter usado a variável do p5.js [`frameCount`](https://p5js.org/reference/#/p5/frameCount). Essa variável registra quantas vezes a função `draw()` foi executada e pode ser facilmente usada para criar animações:
 
 {% include p5-editor.html id="L9FIYPY2_" %}
 
-At each frame we are redrawing the ellipse, but before redrawing we are rotating our canvas by `frameCount` degrees: the first frame it rotates by $$0^\circ$$, the second time by $$1^\circ$$, then $$2^\circ$$, then $$3^\circ$$, etc, and when we see all these frames one after the other we perceive it as an animated ellipse rotating.
+A cada frame estamos redesenhando a elipse, mas antes de redesenhar estamos rotacionando nosso canvas em `frameCount` graus: no primeiro frame ele rotaciona $$0^\circ$$, na segunda vez $$1^\circ$$, depois $$2^\circ$$, depois $$3^\circ$$, etc, e quando vemos todos esses frames um após o outro percebemos uma elipse animada girando.
 
-Since the `frameCount` variable just keeps growing and growing it's very easy to use it for something like this because rotations are "cyclic", they repeat after $$360^\circ$$. Also note that we are using the `radians()` function because `rotate()` expects angles in radians and if we just gave `rotate()` our `frameCount` it would rotate really fast. Try it!!
+Como a variável `frameCount` só cresce e cresce, é muito fácil usá-la para algo assim, porque rotações são "cíclicas", elas se repetem depois de $$360^\circ$$. Note também que estamos usando a função `radians()` porque `rotate()` espera ângulos em radianos, e se simplesmente passássemos nosso `frameCount` para o `rotate()` ele giraria muito rápido. Experimente!!
 
-Let's go back to our circle example:
+Vamos voltar ao nosso exemplo do círculo:
 
 {% include p5-editor.html id="txJBbZKnX" %}
 
-Play with the value that determines the speed of the circle in the sketch above ☝️ and figure out how to make it move faster. As it moves faster, do we lose the impression of an animation at any point?
+Brinque com o valor que determina a velocidade do círculo no sketch acima ☝️ e descubra como fazê-lo se mover mais rápido. À medida que ele fica mais rápido, perdemos a impressão de animação em algum momento?
 
-## Setting Boundaries
+## Definindo Limites
 
-Now, what if we don't want it to go away, and instead have it bounce back once it hits the edge of our canvas?
+Agora, e se não quisermos que ele vá embora e queiramos que ele volte quando atingir a borda do nosso canvas?
 
-We'll add a variable to keep track of our position and direction, and every frame, after we increment the position of our circle, we could check if its position has gotten bigger than the canvas `width` and if necessary, change its direction:
+Vamos adicionar uma variável para registrar nossa posição e direção, e a cada frame, depois de incrementarmos a posição do nosso círculo, podemos verificar se sua posição ficou maior que a largura (`width`) do canvas e, se necessário, mudar sua direção:
 
 {% include p5-editor.html id="mH4M23PZV" %}
 
-Our circle is disappearing on the left side of the screen now. We can fix that the same way we fixed the right side:
+Agora nosso círculo está desaparecendo no lado esquerdo da tela. Podemos corrigir isso da mesma forma que corrigimos o lado direito:
 
 {% include p5-editor.html id="V_d91eHez" %}
 
-Let's just clean this up a little bit, and refactor the `xDir` variable to actually hold our velocity. The code stays the same, because the logic is the same, but the variable name is just a little more meaningful and we now know we can use it to control the velocity of our ellipse: a positive velocity means its moving to the right and a negative velocity means its moving to the left.
+Vamos limpar isso um pouco e refatorar a variável `xDir` para que ela guarde de fato a nossa velocidade. O código continua o mesmo, porque a lógica é a mesma, mas o nome da variável fica um pouco mais significativo e agora sabemos que podemos usá-la para controlar a velocidade da nossa elipse: uma velocidade positiva significa que ela está se movendo para a direita e uma velocidade negativa significa que está se movendo para a esquerda.
 
 {% include p5-editor.html id="v6y32pYHP" %}
 
-Looking at the logic, we can actually simplify it by just detecting when it gets to either edge, and flipping the `xVel`:
+Olhando a lógica, podemos simplificá-la apenas detectando quando ele chega a qualquer uma das bordas e invertendo o `xVel`:
 
 {% include p5-editor.html id="u28VL-98_" %}
 
-Almost perfect. The circle only changes direction when its center goes beyond the canvas, not its edge. Let's put the circle radius in a variable and use that to detect when the circle hits the end of the canvas:
+Quase perfeito. O círculo só muda de direção quando seu centro passa do canvas, e não quando sua borda chega ao limite. Vamos colocar o raio do círculo em uma variável e usá-la para detectar quando o círculo atinge o fim do canvas:
 
 {% include p5-editor.html id="HR0Adpc-8" %}
 
-We now have a simple, infinite, animation using our `draw()` loop.
+Agora temos uma animação simples e infinita usando nosso loop `draw()`.
 
-## More Animation Dimensions
+## Mais Dimensões de Animação
 
-Both the `mod(%)` operator and `map()` function that we looked at [here](../maths/) can be really useful when doing animation.
+Tanto o operador `mod(%)` quanto a função `map()` que vimos [aqui](../maths/) podem ser muito úteis ao fazer animação.
 
-We can use the `map()` function to create an animation based on time. In this example we map the seconds that have passed in the current minute of time to the diameter of a circle. We know seconds has a range $$[0, 59]$$, so it's just a matter of choosing the smallest and largest values for the diameter.
+Podemos usar a função `map()` para criar uma animação baseada no tempo. Neste exemplo mapeamos os segundos que passaram no minuto atual para o diâmetro de um círculo. Sabemos que os segundos têm um intervalo $$[0, 59]$$, então basta escolher os menores e maiores valores para o diâmetro.
 
-In addition to mapping $$[0, 59] \rightarrow [20, width]$$ for the diameter, we can also map the seconds value to the amount of green in our `fill()` color. We know each of the $$3$$ color parameters has a maximum value of $$255$$, and if we always want a bit of green in our color we can map $$[0, 59] \rightarrow [128, 255]$$:
+Além de mapear $$[0, 59] \rightarrow [20, width]$$ para o diâmetro, também podemos mapear o valor dos segundos para a quantidade de verde na cor do nosso `fill()`. Sabemos que cada um dos $$3$$ parâmetros de cor tem um valor máximo de $$255$$, e se quisermos sempre um pouco de verde na nossa cor, podemos mapear $$[0, 59] \rightarrow [128, 255]$$:
 
 {% include p5-editor.html id="thbVYgT-l" %}
 
-We can add other elements to this by also mapping the milliseconds amount to a different ellipse's diameter. We unfortunately don't have a function that gives us the current time's milliseconds, but [`millis()`](https://p5js.org/reference/#/p5/millis) gives us the number of milliseconds that have elapsed since we started our sketch. It keeps growing, so we'll use `mod(%)` to keep it between $$[0, 999]$$.
+Podemos adicionar outros elementos a isso mapeando também a quantidade de milissegundos para o diâmetro de uma elipse diferente. Infelizmente não temos uma função que nos dê os milissegundos do horário atual, mas [`millis()`](https://p5js.org/reference/#/p5/millis) nos dá o número de milissegundos que se passaram desde que iniciamos nosso sketch. Esse valor só cresce, então vamos usar `mod(%)` para mantê-lo entre $$[0, 999]$$.
 
-Then, instead of mapping $$[0, 999] \rightarrow [20, width]$$, we'll map this value to be between the other ellipse's diameter and `width`, so $$[0, 999] \rightarrow [secondDiam, width]$$.
+Então, em vez de mapear $$[0, 999] \rightarrow [20, width]$$, vamos mapear esse valor para ficar entre o diâmetro da outra elipse e `width`, ou seja, $$[0, 999] \rightarrow [secondDiam, width]$$.
 
-This should give us an interesting effect:
+Isso deve nos dar um efeito interessante:
 
 {% include p5-editor.html id="620VoCQoG" %}
 
-We can also use [`for()` loops](../../coding/counters/), [arrays](../../coding/arrays/) and [objects](../../coding/objects/) to create some pretty abstract animations.
+Também podemos usar [loops `for()`](../../coding/counters/), [arrays](../../coding/arrays/) e [objetos](../../coding/objects/) para criar algumas animações bem abstratas.
 
-We'll create an array of line objects. Each line has an `x` location, a length `l` and a velocity `v`.
+Vamos criar um array de objetos linha. Cada linha tem uma posição `x`, um comprimento `l` e uma velocidade `v`.
 
-At each frame we update every line's length using its velocity, and make sure to wrap back to $$0$$ when it grows bigger than the canvas `height`.
+A cada frame atualizamos o comprimento de cada linha usando sua velocidade, e garantimos que ele volte a $$0$$ quando crescer além da altura (`height`) do canvas.
 
 {% include p5-editor.html id="5HEH8eW-r" %}
