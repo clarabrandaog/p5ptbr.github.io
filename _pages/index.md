@@ -2,7 +2,7 @@
 permalink: /
 ---
 <!-- Intro -->
-{% assign title = "Intro:Some basic concepts related to programming" %}
+{% assign title = "Intro:Alguns conceitos básicos relacionados à programação" %}
 {% capture topics %}
   programming
   javascript
@@ -12,7 +12,7 @@ permalink: /
 {% include home-section.html section="intro" title=title topics=topics %}
 
 <!-- P5 -->
-{% assign title = "Ready to p5:The basics of p5.js" %}
+{% assign title = "Pronto para o p5:O básico do p5.js" %}
 {% capture topics %}
   p5-setup
   p5-intro
@@ -21,7 +21,7 @@ permalink: /
 {% include home-section.html section="p5" title=title topics=topics %}
 
 <!-- Coding -->
-{% assign title = "Coding:The basics of programming using p5.js and JavaScript" %}
+{% assign title = "Coding:O básico de programação usando p5.js e JavaScript" %}
 {% capture topics %}
   variables
   conditionals
@@ -38,7 +38,7 @@ permalink: /
 {% include home-section.html section="coding" title=title topics=topics %}
 
 <!-- Creative Coding -->
-{% assign title = "Creative Coding:The browser as a canvas" %}
+{% assign title = "Creative Coding:O navegador como canvas" %}
 {% capture topics %}
   transformations
   interactions
@@ -61,7 +61,7 @@ permalink: /
 {% include home-section.html section="creative-coding" title=title topics=topics %}
 
 <!-- AI -->
-{% assign title = "AI:Machine Learning and AI Models" %}
+{% assign title = "IA:Machine Learning e Modelos de IA" %}
 {% capture topics %}
   neural-nets
   concurrency
