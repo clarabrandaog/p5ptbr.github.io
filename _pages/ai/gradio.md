@@ -1,77 +1,77 @@
 ---
-title: Gradio Models
+title: Modelos Gradio
 ---
 
-We can't really talk about AI without talking about LLMs and diffusion models.
+Não dá para falar de IA sem falar de LLMs e modelos de difusão.
 
-One step up in complexity from the models [we just saw](../transformers/), these generative models usually require more resources to run. It doesn't mean that we can't use them in our sketches, but we have to offload their processing and execution to computers with large amounts of memory, faster processors and usually some GPUs.
+Um passo acima em complexidade dos modelos [que acabamos de ver](../transformers/), esses modelos generativos geralmente exigem mais recursos para rodar. Isso não quer dizer que não possamos usá-los nos nossos sketches, mas temos que transferir o processamento e a execução deles para computadores com grandes quantidades de memória, processadores mais rápidos e, normalmente, algumas GPUs.
 
-We'll do this by making _API_ calls to servers or services that run these bigger models:
+Vamos fazer isso chamando _APIs_ de servidores ou serviços que rodam esses modelos maiores:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/gradio-server-00.jpg' |relative_url }}">
 </div>
 
-Let's take a look at a few examples.
+Vamos ver alguns exemplos.
 
 ## Hugging Face / Gradio
 
-Besides being the GitHub of open source models, Hugging Face also hosts models that we can interact with through code and APIs. 
+Além de ser o GitHub dos modelos de código aberto, o Hugging Face também hospeda modelos com os quais podemos interagir por meio de código e APIs. 
 
-This mostly happens through a library called [`Gradio`](https://www.gradio.app/). This library was developed to facilitate the creation of simple web interfaces for complex models, but when deployed to Hugging Face, `Gradio` apps also expose API _endpoints_ that allow us to run models remotely.
+Isso acontece principalmente através de uma biblioteca chamada [`Gradio`](https://www.gradio.app/). Essa biblioteca foi desenvolvida para facilitar a criação de interfaces web simples para modelos complexos, mas, quando publicados no Hugging Face, os apps `Gradio` também expõem _endpoints_ de API que nos permitem rodar modelos remotamente.
 
-We can start by looking [here](https://huggingface.co/spaces) for different models that people have set up to run on the Hugging Face servers, and then figure out how to connect and interact with them from our sketches.
+Podemos começar olhando [aqui](https://huggingface.co/spaces) para ver diferentes modelos que as pessoas configuraram para rodar nos servidores do Hugging Face, e depois descobrir como nos conectar e interagir com eles a partir dos nossos sketches.
 
-Let's revisit our image description example:
+Vamos revisitar o nosso exemplo de descrição de imagens:
 
 {% include p5-editor.html id="ZuwaVgRID" %}
 
-In this example, not only did running the model on the browser freeze our sketch, the results were also not very accurate because it's an older model.
+Neste exemplo, rodar o modelo no navegador não só congelou o nosso sketch, como os resultados também não foram muito precisos, porque é um modelo mais antigo.
 
-We'll use the same structure for our new sketch, so we can reuse a good portion of the code from above:
+Vamos usar a mesma estrutura para o nosso novo sketch, para podermos reaproveitar uma boa parte do código acima:
 
 {% include p5-editor.html id="7Dp5UhgtS" %}
 
-But this time let's try the image description model hosted [here](https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt).
+Mas, desta vez, vamos testar o modelo de descrição de imagens hospedado [aqui](https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt).
 
-The first thing we do is visit the model's [interface page](https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt) and scroll down to the bottom until we see the _Use via API_ button. Clicking on that button and then selecting the `JavaScript` option, we get something like this:
+A primeira coisa a fazer é visitar a [página de interface](https://huggingface.co/spaces/aifeifei798/Image-To-Flux-Prompt) do modelo e rolar até o final, até vermos o botão _Use via API_. Clicando nesse botão e depois selecionando a opção `JavaScript`, vemos algo assim:
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/gradio-api-00.jpg' |relative_url }}">
 </div>
 
-Again, we can't import the `Gradio` library using the code they have there, but we can load it during `preload()` using:
+De novo, não conseguimos importar a biblioteca `Gradio` usando o código que eles mostram ali, mas podemos carregá-la durante o `preload()` usando:
 ```js
 let gUrl = "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 let module = await import(gUrl);
 ```
 
-Then, we can follow the rest of the code for setting up a client:
+Depois, podemos seguir o resto do código para configurar um cliente:
 ```js
 client = await module.Client.connect("aifeifei798/Image-To-Flux-Prompt");
 ```
 
-Again, lots of `await` function calls... (see the [concurrency tutorial](../concurrency/) for a refresher).
+De novo, muitas chamadas de função com `await`... (veja o [tutorial de concorrência](../concurrency/) para relembrar).
 
 {% include p5-editor.html id="5HjsmM_qP" %}
 
-We are all set to call inference on our image with:
+Estamos prontos para chamar a inferência na nossa imagem com:
 ```js
 result = await client.predict("/feifeichat", {
   image: exampleImage, 
 });
 ```
 
-But !! the model expects an image `blob` (_binary large object_), not a `p5.js` image, nor an image `dataURL` like before.
+Mas !! o modelo espera um `blob` de imagem (_binary large object_), e não uma imagem do `p5.js`, nem um `dataURL` de imagem como antes.
 
-In order to turn our camera frame into a `blob` we can call the `toBlob()` method of our frame, but since this is an operation that can take a while, we have to do this asynchronously with a _callback_ function:
+Para transformar o frame da nossa câmera em um `blob`, podemos chamar o método `toBlob()` do nosso frame, mas, como essa é uma operação que pode demorar, temos que fazer isso de forma assíncrona com uma função _callback_:
 ```js
 mCamera.canvas.toBlob(callModel);
 ```
 
-(see the [concurrency tutorial](../concurrency/) for more info about _callback_ functions)
+(veja o [tutorial de concorrência](../concurrency/) para mais informações sobre funções _callback_)
 
-Where `callModel()` is the function that will be called once the image `blob` is ready:
+Onde `callModel()` é a função que será chamada quando o `blob` da imagem estiver pronto:
 ```js
 async function callModel(imgBlob) {
   let result = await client.predict("/feifeichat", {
@@ -81,19 +81,19 @@ async function callModel(imgBlob) {
 }
 ```
 
-The actual caption is inside `result.data[0]`. And we can just assign that to the `caption` variable to see it on the canvas:
+A legenda de fato está dentro de `result.data[0]`. E podemos simplesmente atribuir isso à variável `caption` para vê-la no canvas:
 
 {% include p5-editor.html id="1JE1qkiWd" %}
 
-This model takes a bit longer to run, but it's way more accurate and descriptive.
+Este modelo demora um pouco mais para rodar, mas é muito mais preciso e descritivo.
 
-## More Models!!
+## Mais Modelos!!
 
-Since we have a good image description model for our camera, we can add an API call to another model to create an audio description of our camera frame.
+Já que temos um bom modelo de descrição de imagens para a nossa câmera, podemos adicionar uma chamada de API para outro modelo e criar uma descrição em áudio do frame da nossa câmera.
 
-Let's try the model hosted [here](https://huggingface.co/spaces/mrfakename/MeloTTS).
+Vamos testar o modelo hospedado [aqui](https://huggingface.co/spaces/mrfakename/MeloTTS).
 
-If we go to the _Use via API_ button, and then the `JavaScript` example, we will see how to use this model's API:
+Se formos ao botão _Use via API_ e depois ao exemplo em `JavaScript`, vamos ver como usar a API deste modelo:
 ```js
 const client = await Client.connect("mrfakename/MeloTTS");
 const result = await client.predict("/synthesize", {
@@ -105,9 +105,9 @@ const result = await client.predict("/synthesize", {
 print(result);
 ```
 
-Easy enough.
+Bem simples.
 
-First, we'll import the `Gradio` library exactly like we did before, but then, this time, we'll create two separate clients for our models:
+Primeiro, vamos importar a biblioteca `Gradio` exatamente como fizemos antes, mas, desta vez, vamos criar dois clientes separados para os nossos modelos:
 ```js
 let gUrl = "https://cdn.jsdelivr.net/npm/@gradio/client/dist/index.min.js";
 let module = await import(gUrl);
@@ -115,7 +115,7 @@ imgClient = await module.Client.connect("aifeifei798/Image-To-Flux-Prompt");
 ttsClient = await module.Client.connect("mrfakename/MeloTTS");
 ```
 
-We'll just call the text-to-speech model once we have our image description in `callImgModel()`:
+Vamos chamar o modelo de text-to-speech assim que tivermos a descrição da imagem em `callImgModel()`:
 ```js
 let imgResult = await imgClient.predict("/feifeichat", {
   image: imgBlob,
@@ -133,38 +133,38 @@ print(ttsResult);
 
 {% include p5-editor.html id="faeo3Hqs_" %}
 
-If we look at `ttsResult`, we'll see that inside `ttsResult.data[0]` we get an url for an audio file:
+Se olharmos para `ttsResult`, vamos ver que dentro de `ttsResult.data[0]` recebemos uma url para um arquivo de áudio:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/gradio-result-00.jpg' |relative_url }}">
 </div>
 
-Let's load this audio up into a player:
+Vamos carregar esse áudio em um player:
 ```js
 mPlayer = loadSound(ttsResult.data[0].url, playSound);
 ```
 
-The `playSound` parameter is a _callback_ function that will be called once the file is ready to play:
+O parâmetro `playSound` é uma função _callback_ que será chamada quando o arquivo estiver pronto para tocar:
 ```js
 function playSound() {
   mPlayer.play();
 }
 ```
 
-And that's it. We now have a real-time audio description tool:
+E é isso. Agora temos uma ferramenta de descrição em áudio em tempo real:
 
 {% include p5-editor.html id="bVZR4sZSr" %}
 
 
-## An Image Generation Example
+## Um Exemplo de Geração de Imagens
 
-Image generation models are quite resource intensive, so it's rare to find a very complete model that we can run for free.
+Os modelos de geração de imagens consomem muitos recursos, então é raro encontrar um modelo bem completo que possamos rodar de graça.
 
-There are some image generation models that run faster, but have less quality or variance in their output.
+Existem alguns modelos de geração de imagens que rodam mais rápido, mas têm menos qualidade ou variedade na saída.
 
-One of these _Turbo_ models is hosted on Hugging Face, [here](https://huggingface.co/spaces/diffusers/unofficial-SDXL-Turbo-i2i-t2i).
+Um desses modelos _Turbo_ está hospedado no Hugging Face, [aqui](https://huggingface.co/spaces/diffusers/unofficial-SDXL-Turbo-i2i-t2i).
 
-If we look at the API documentation, we'll see some familiar code:
+Se olharmos a documentação da API, vamos ver um código familiar:
 ```js
 const client = await Client.connect("diffusers/unofficial-SDXL-Turbo-i2i-t2i");
 const result = await client.predict("/predict", {
@@ -178,9 +178,9 @@ const result = await client.predict("/predict", {
 print(result);
 ```
 
-Let's add this to a sketch and see if we can force smiles into images we capture with the camera.
+Vamos adicionar isso a um sketch e ver se conseguimos forçar sorrisos nas imagens que capturamos com a câmera.
 
-We still have a `captureFrame()` function, that starts the process of turning our camera frame into a `blob`:
+Ainda temos uma função `captureFrame()`, que inicia o processo de transformar o frame da nossa câmera em um `blob`:
 ```js
 function captureFrame() {
   mFrame = loadImage(mCamera.canvas.toDataURL());
@@ -188,7 +188,7 @@ function captureFrame() {
 }
 ```
 
-And then the `callImgModel()` function actually calls the model once the `blob` is ready:
+E depois a função `callImgModel()` de fato chama o modelo quando o `blob` está pronto:
 ```js
 let imgResult = await imgClient.predict("/predict", {
   init_image: imgBlob,
@@ -202,24 +202,24 @@ print(imgResult);
 
 {% include p5-editor.html id="-L2D1wbdn" %}
 
-Again, the part of the result we are interested in is in `imgResult.data[0].url`, so let's just load that into our `mFrame` variable:
+De novo, a parte do resultado que nos interessa está em `imgResult.data[0].url`, então vamos carregá-la na nossa variável `mFrame`:
 ```js
 mFrame = loadImage(imgResult.data[0].url);
 ```
 
-And ...
+E ...
 
 {% include p5-editor.html id="mcFK8sjbm" %}
 
-Results may vary. This model is not super smart, or controllable, but it does tend to make people in the image sort of smile, even if it distorts their face a little bit. That's part of the tradeoff of these _Turbo_ models:
+Os resultados podem variar. Este modelo não é super inteligente, nem controlável, mas costuma fazer as pessoas na imagem meio que sorrirem, mesmo que distorça um pouco o rosto delas. Isso faz parte do custo-benefício desses modelos _Turbo_:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/gradio-diffusion-01.jpg' |relative_url }}">
 </div>
 
-Adapting some of the parameters might also help:
+Adaptar alguns dos parâmetros também pode ajudar:
 
-The `strength` determines how much of the prompt the image model takes into account, and the `steps` determine how many passes the model uses to generate the final image.
+O `strength` determina o quanto do prompt o modelo de imagem leva em conta, e os `steps` determinam quantas passadas o modelo usa para gerar a imagem final.
 
 ```js
 prompt: "Make the person smile really big",
@@ -227,7 +227,7 @@ strength: 0.5,
 steps: 3,
 ```
 
-or
+ou
 
 ```js
 prompt: "person smiling really happy",

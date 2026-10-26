@@ -1,20 +1,20 @@
 ---
 title: Strings
 ---
-## Introduction: Drawing Words
+## Introdução: Desenhando Palavras
 
-We've seen variables that hold *numbers*, *booleans*, *arrays* and *objects*. Now, let's take a look at a different JavaScript datatype: *strings*.
+Vimos variáveis que guardam *números*, *booleanos*, *arrays* e *objetos*. Agora vamos dar uma olhada em um tipo de dado diferente do JavaScript: as *strings*.
 
-A string holds text data. It is a list/array of characters, specified within single (' '), double (" ") or back (``` ` ` ```) quote symbols. And, just like other values, it can be assigned to variables:
+Uma string guarda dados de texto. É uma lista/array de caracteres, especificada entre aspas simples (' '), duplas (" ") ou crases (``` ` ` ```). E, assim como outros valores, pode ser atribuída a variáveis:
 ```js
 let s0 = "This is a string";
 let s1 = 'This is also a string!';
 let s2 = `Another string`;
 ```
 
-In p5.js we use the [`text()`](https://p5js.org/reference/#/p5/text) function to draw strings on the screen.
+No p5.js usamos a função [`text()`](https://p5js.org/reference/#/p5/text) para desenhar strings na tela.
 
-In addition to the string (or the variable that holds the string), we also have to give the `text()` function the `x` and `y` coordinates where the text is to be drawn:
+Além da string (ou da variável que guarda a string), também temos que dar à função `text()` as coordenadas `x` e `y` onde o texto deve ser desenhado:
 ```js
 let s0 = "This is a string";
 text(s0, 10, 10);
@@ -22,127 +22,127 @@ text(s0, 10, 10);
 
 {% include p5-editor.html id="N7dBcauPF" %}
 
-In addition to `text()`, p5.js also has a bunch of [functions](https://p5js.org/reference/#group-Typography) for controlling typography and text properties like font size, font type, alignments, etc:
+Além do `text()`, o p5.js também tem um monte de [funções](https://p5js.org/reference/#group-Typography) para controlar a tipografia e as propriedades do texto, como tamanho da fonte, tipo de fonte, alinhamentos, etc.:
 
 {% include p5-editor.html id="cy5No5rwW" %}
 
-Text [alignment](https://p5js.org/reference/#/p5/textAlign) is something worth reading about and experimenting with:
+O [alinhamento](https://p5js.org/reference/#/p5/textAlign) do texto é algo que vale a pena ler e experimentar:
 
 {% include p5-editor.html id="B7k5Ytn_v" %}
 
-In cases where our text is really long, we can have it wrap around and display in multiple lines by giving the `text()` function a couple of extra parameters:
+Nos casos em que o nosso texto é muito longo, podemos fazê-lo quebrar e ser exibido em várias linhas dando à função `text()` alguns parâmetros extras:
 
 {% include p5-editor.html id="dZpYMQAEJ" %}
 
-This is just like `rect()` where we specify `x`, `y` locations and `width`, `height`, except the width and height now are for a textbox.
+Isso é como o `rect()`, em que especificamos as posições `x`, `y` e a `width`, `height`, só que agora a largura e a altura são de uma caixa de texto.
 
-## Strings as Arrays
+## Strings como Arrays
 
-Since strings are arrays of characters, and used often, JavaScript also provides us with special functions and variables for manipulating them.
+Como as strings são arrays de caracteres, e são muito usadas, o JavaScript também nos oferece funções e variáveis especiais para manipulá-las.
 
-For example, the variable [`length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length) can be used to check how many characters are in the string:
+Por exemplo, a variável [`length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/length) pode ser usada para verificar quantos caracteres há na string:
 ```js
 let s0 = "This is a string";
-print(s0.length); // should print: 16
+print(s0.length); // deve imprimir: 16
 ```
 
-The function [`toUpperCase()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase), for example, can be used to turn every letter in a string into uppercase letters:
+A função [`toUpperCase()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/toUpperCase), por exemplo, pode ser usada para transformar cada letra de uma string em letra maiúscula:
 ```js
 let s0 = "This is a string";
-print(s0.toUpperCase()); // should print: THIS IS A STRING
+print(s0.toUpperCase()); // deve imprimir: THIS IS A STRING
 ```
 
-There are a whole bunch of [functions](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) for strings.
+Existe uma porção de [funções](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String) para strings.
 
-And just like with an array of numbers, we can iterate over a string and draw its characters one at a time:
+E, assim como com um array de números, podemos iterar sobre uma string e desenhar seus caracteres um de cada vez:
 
 {% include p5-editor.html id="ic4ok1ann" %}
 
-Independent of the size of the string, we can always iterate over it using `length` and accessing the letters using array index notation:
+Independente do tamanho da string, sempre podemos iterar sobre ela usando `length` e acessando as letras com a notação de índice de array:
 
 {% include p5-editor.html id="tVJ12ATX2" %}
 
-This is trying to fit all of the letters of a long sentence along the diagonal of our canvas, but instead we could first split the sentence into words, and then iterate over the array of words:
+Isso está tentando encaixar todas as letras de uma frase longa na diagonal do nosso canvas, mas, em vez disso, poderíamos primeiro dividir a frase em palavras e depois iterar sobre o array de palavras:
 
 {% include p5-editor.html id="2M95jO8ab" %}
 
-If we look at the documentation for the [`split()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split) function we'll see that it takes a string as its parameter, and that string is used to split the original string into many substrings. We used the space character (`" "`) to split the sentence into words, but we could've used any string as the split parameter.
+Se olharmos a documentação da função [`split()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/split), vamos ver que ela recebe uma string como parâmetro, e que essa string é usada para dividir a string original em várias substrings. Usamos o caractere de espaço (`" "`) para dividir a frase em palavras, mas poderíamos ter usado qualquer string como parâmetro de divisão.
 
-And if we want to avoid having words that go beyond the edge of our canvas, we use the p5.js function [`textWidth()`](https://p5js.org/reference/#/p5/textWidth) to calculate the width of each word, and use that to adjust the x-location of the word if it will overflow:
+E, se quisermos evitar que palavras ultrapassem a borda do nosso canvas, usamos a função do p5.js [`textWidth()`](https://p5js.org/reference/#/p5/textWidth) para calcular a largura de cada palavra e usamos isso para ajustar a posição x da palavra caso ela vá transbordar:
 
 {% include p5-editor.html id="JkBUZgdQr" %}
 
-## More Splitting
+## Mais Divisões
 
-Let's create a sketch that draws a random winner from a list of names.
+Vamos criar um sketch que sorteia um vencedor de uma lista de nomes.
 
-We first start by defining a string with all of the names:
+Primeiro, definimos uma string com todos os nomes:
 ```js
 let s0 = "thiago, alice, bob, chewbacca, dany, elisa";
 ```
 
-And splitting it into an array of names:
+E a dividimos em um array de nomes:
 ```js
 words = s0.split(", ");
 ```
 
-Now, every time we re-run the sketch, it will select the winner based on a random value that represents the index of that name in our array:
+Agora, toda vez que rodarmos o sketch de novo, ele vai selecionar o vencedor com base em um valor aleatório que representa o índice daquele nome no nosso array:
 ```js
 function mouseClicked() {
   chosenIndex = random(0, words.length);
 }
 ```
 
-The problem with the above code is that the numbers returned by `random()` can be fractional and have a decimal portion, like: $$1.3, 2.62, 0.78$$, etc. and those are not valid array indexes. In order to use values returned by the `random()` function as indexes to arrays, we first have to turn them into whole numbers (integers), by dropping the fractional part.
+O problema do código acima é que os números retornados pelo `random()` podem ser fracionários e ter uma parte decimal, como: $$1.3, 2.62, 0.78$$, etc., e esses não são índices de array válidos. Para usar valores retornados pela função `random()` como índices de arrays, primeiro temos que transformá-los em números inteiros, descartando a parte fracionária.
 
-One way to do that is by using the [`floor()`](https://p5js.org/reference/#/p5/floor) function, which calculates the closest whole integer value that is less than or equal to the number given as the parameter. Or, in other words, it just drops the fractional part, which is exactly what we want.
+Uma forma de fazer isso é usar a função [`floor()`](https://p5js.org/reference/#/p5/floor), que calcula o valor inteiro mais próximo que é menor ou igual ao número dado como parâmetro. Ou, em outras palavras, ela simplesmente descarta a parte fracionária, que é exatamente o que queremos.
 
-So, instead of:
+Então, em vez de:
 ```js
 chosenIndex = random(0, words.length);
 ```
 
-We'll use:
+Vamos usar:
 ```js
 chosenIndex = floor(random(0, words.length));
 ```
 
 {% include p5-editor.html id="4efFuRnvn" %}
 
-## Loading Fonts
+## Carregando Fontes
 
-We can specify the font to use by passing a string to `textFont()` with the font name, but this only works if that font is installed on the computer where the sketch is running, or if we use generic font family names (`serif`, `sans-serif`, `monospace`).
+Podemos especificar a fonte a ser usada passando uma string com o nome da fonte para o `textFont()`, mas isso só funciona se essa fonte estiver instalada no computador onde o sketch está rodando, ou se usarmos nomes genéricos de famílias de fontes (`serif`, `sans-serif`, `monospace`).
 
-If we want to use very special, custom fonts, we have to tell p5.js to load the font file first, and then pass it to `textFont()`.
+Se quisermos usar fontes personalizadas muito especiais, temos que dizer ao p5.js para carregar o arquivo da fonte primeiro e depois passá-lo para o `textFont()`.
 
-The first step is to find or create a font file. For free and open-source fonts, check out the [League of Moveable Type](https://www.theleagueofmoveabletype.com/) and [Open Font Library](https://fontlibrary.org/).
+O primeiro passo é encontrar ou criar um arquivo de fonte. Para fontes gratuitas e de código aberto, dê uma olhada no [League of Moveable Type](https://www.theleagueofmoveabletype.com/) e no [Open Font Library](https://fontlibrary.org/).
 
-Once we have a font file (.otf or .ttf), we can place it next to our `sketch.js` file and load it using [`loadFont()`](https://p5js.org/reference/#/p5/loadFont) in the `preload()` part of our sketch.
+Quando tivermos um arquivo de fonte (.otf ou .ttf), podemos colocá-lo ao lado do nosso arquivo `sketch.js` e carregá-lo usando [`loadFont()`](https://p5js.org/reference/#/p5/loadFont) na parte `preload()` do nosso sketch.
 
-Then we can use it to draw our texts:
+Depois podemos usá-lo para desenhar nossos textos:
 
 {% include p5-editor.html id="JW97r1_s4" %}
 
-So, in p5js, not only are our strings instances of a class, but we also have a [Font](https://p5js.org/reference/#/p5.Font) class with its own special functions for manipulating text. One of these functions, [`textBounds()`](https://p5js.org/reference/#/p5.Font/textBounds) returns a bounding box for the given text.
+Então, no p5js, não só as nossas strings são instâncias de uma classe, como também temos uma classe [Font](https://p5js.org/reference/#/p5.Font) com suas próprias funções especiais para manipular texto. Uma dessas funções, [`textBounds()`](https://p5js.org/reference/#/p5.Font/textBounds), retorna uma caixa delimitadora (bounding box) para o texto dado.
 
-The box that is returned is an object with $$4$$ parameters: $$x$$, $$y$$, $$w$$, $$h$$ for the `x` and `y` location, `width` and `height` of the text.
+A caixa que é retornada é um objeto com $$4$$ parâmetros: $$x$$, $$y$$, $$w$$, $$h$$ para a posição `x` e `y`, a `width` e a `height` do texto.
 
-We can use this information to draw rectangles around our text:
+Podemos usar essa informação para desenhar retângulos ao redor do nosso texto:
 
 {% include p5-editor.html id="TA1GRq1Dw" %}
 
-Another special function in the Font class is [`textToPoints()`](https://p5js.org/reference/#/p5.Font/textToPoints). This function returns an array of points that follow the specified text. Once we have those points, we can make small modifications to their values before using them to create a shape.
+Outra função especial da classe Font é [`textToPoints()`](https://p5js.org/reference/#/p5.Font/textToPoints). Essa função retorna um array de pontos que seguem o texto especificado. Quando temos esses pontos, podemos fazer pequenas modificações nos seus valores antes de usá-los para criar uma forma.
 
-In this sketch we are adding a small random number to each point's `x` and `y` locations before drawing them:
+Neste sketch estamos adicionando um pequeno número aleatório às posições `x` e `y` de cada ponto antes de desenhá-los:
 
 {% include p5-editor.html id="z3QI6kJyQ" %}
 
-## Loading Text Files
+## Carregando Arquivos de Texto
 
-One last thing about working with texts and strings.
+Mais uma última coisa sobre trabalhar com textos e strings.
 
-Just like there are `loadJSON()` and `loadTable()` functions, p5.js also has a [`loadStrings()`](https://p5js.org/reference/#/p5/loadStrings) function that can be used to read a text file (from our computer or the internet).
+Assim como existem as funções `loadJSON()` e `loadTable()`, o p5.js também tem uma função [`loadStrings()`](https://p5js.org/reference/#/p5/loadStrings) que pode ser usada para ler um arquivo de texto (do nosso computador ou da internet).
 
-The result of calling the `loadStrings()` function is an array with the lines of the text file, so, if we use a `for()` loop we can iterate through the resulting array and draw one line of the text file at a time:
+O resultado de chamar a função `loadStrings()` é um array com as linhas do arquivo de texto, então, se usarmos um loop `for()`, podemos iterar pelo array resultante e desenhar uma linha do arquivo de texto de cada vez:
 
 {% include p5-editor.html id="O-q2k8pNX" %}

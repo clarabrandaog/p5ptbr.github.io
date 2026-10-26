@@ -2,57 +2,57 @@
 title: Classes
 ---
 
-We’ve been learning about [arrays](../arrays/) and [objects](../objects/), and those structures work really well to organize data: values that are related to each other can be grouped and accessed in different ways.
+Temos aprendido sobre [arrays](../arrays/) e [objetos](../objects/), e essas estruturas funcionam muito bem para organizar dados: valores que se relacionam entre si podem ser agrupados e acessados de diferentes formas.
 
-Let's review our object exercise. We have an array of obstacles, and each obstacle is an object that keeps track of its `x` and `y` positions, `diameter`, `fill color` and `overlap color`.
+Vamos revisar o nosso exercício com objetos. Temos um array de obstáculos, e cada obstáculo é um objeto que guarda suas posições `x` e `y`, `diameter`, `fill color` e `overlap color`.
 
 {% include p5-editor.html id="X7DALVA_q" %}
 
-## Classy Code
+## Código com Classe
 
-What if we also want to group behavior and functionality along with these values? So, not only do we want to store the `diameter` and the `x` and `y` positions of an obstacle, but we also want to define *how* they behave and what happens when they collide with each other or the mouse.
+E se também quisermos agrupar comportamento e funcionalidade junto com esses valores? Ou seja, não queremos apenas guardar o `diameter` e as posições `x` e `y` de um obstáculo, mas também definir *como* eles se comportam e o que acontece quando colidem entre si ou com o mouse.
 
-Right now the `draw()` function is responsible for checking for overlap. This can get really messy if we keep adding functionality or complexity to our obstacles, like, drawing multiple shapes upon overlap.
+Agora, a função `draw()` é a responsável por verificar a sobreposição. Isso pode ficar muito bagunçado se continuarmos adicionando funcionalidade ou complexidade aos nossos obstáculos, como desenhar várias formas quando há sobreposição.
 
-This is a perfect case for using classes. We can think of classes as being super objects: objects store values indexed by names; classes do that too, but they also store their own functions for manipulating those values.
+Este é um caso perfeito para usar classes. Podemos pensar nas classes como super objetos: objetos guardam valores indexados por nomes; as classes também fazem isso, mas também guardam suas próprias funções para manipular esses valores.
 
-The overall structure for defining a class looks something like this:
+A estrutura geral para definir uma classe é mais ou menos assim:
 
 ```js
 class ClassName {
   constructor(param0, param1) {
-    // initialize some internal values and properties
+    // inicializa alguns valores e propriedades internos
   }
 
   functionName() {
-    // do stuff with the internal values and properties
+    // faz coisas com os valores e propriedades internos
   }
 }
 ```
 
-Class definitions have a special function called `constructor()` that is used to initialize *instances* of our class and define internal variables. Class definitions also contain other functions that are specific to the class and are used to manipulate the internal values and parameters of class *instances*.
+As definições de classe têm uma função especial chamada `constructor()` que é usada para inicializar *instâncias* da nossa classe e definir variáveis internas. As definições de classe também contêm outras funções específicas da classe, usadas para manipular os valores e parâmetros internos das *instâncias* da classe.
 
-What are *instances*?
+O que são *instâncias*?
 
-Let’s look at an example. We’ll redefine our obstacles from the example above to use an `Obstacle` class. We don't need to define any behavior for these objects, so our class will only have a `constructor()` for now.
+Vamos ver um exemplo. Vamos redefinir os nossos obstáculos do exemplo acima para usar uma classe `Obstacle`. Não precisamos definir nenhum comportamento para esses objetos, então a nossa classe terá apenas um `constructor()` por enquanto.
 
-In the constructor, when we want to assign values for an instance's `x`, `y`, `diameter` and `color` parameters, we prepend those variable names with the word `this`, to make it explicit that those values belong to one *instance* of the class `Obstacle`, more specifically, these values belong to the new obstacle that we’re creating with the `constructor()` function.
+No construtor, quando queremos atribuir valores aos parâmetros `x`, `y`, `diameter` e `color` de uma instância, colocamos a palavra `this` antes desses nomes de variáveis, para deixar explícito que esses valores pertencem a uma *instância* da classe `Obstacle`, mais especificamente, que esses valores pertencem ao novo obstáculo que estamos criando com a função `constructor()`.
 
-And, since the obstacles are in a class now, the way we create a new obstacle based on our `Obstacle` class definition, is using the word `new`. This line of code will run the `constructor()` function in our `Obstacle` class definition and return a new *instance* of an `Obstacle`, with its own values for `x`, `y`, `diameter` and color parameters:
+E, como os obstáculos agora estão em uma classe, a forma de criar um novo obstáculo com base na definição da nossa classe `Obstacle` é usando a palavra `new`. Essa linha de código vai executar a função `constructor()` da definição da nossa classe `Obstacle` e retornar uma nova *instância* de um `Obstacle`, com seus próprios valores para os parâmetros `x`, `y`, `diameter` e color:
 ```js
 let anObstacle = new Obstacle();
 ```
 
-We can even put that inside a loop to create multiple *instances* of `Obstacle` objects, each with their own parameters. The way we access a class instance parameters is exactly like how we access a plain JavaScript object's parameters: using *dot notation*.
+Podemos até colocar isso dentro de um loop para criar várias *instâncias* de objetos `Obstacle`, cada uma com seus próprios parâmetros. A forma de acessar os parâmetros de uma instância de classe é exatamente como acessamos os parâmetros de um objeto JavaScript simples: usando a *notação de ponto*.
 
-If we have this in the constructor:
+Se tivermos isto no construtor:
 ```js
 this.x = 10;
 this.y = 100;
 this.r = 24;
 ```
 
-We can instantiate an object and access its *member* variables like this:
+Podemos instanciar um objeto e acessar suas variáveis *membro* assim:
 ```js
 let mObs = new Obstacle();
 print("x is: ", mObs.x, " y is: ", mObs.y);
@@ -60,25 +60,25 @@ print("x is: ", mObs.x, " y is: ", mObs.y);
 
 {% include p5-editor.html id="zspwKXIMx" %}
 
-## Classy Behavior
+## Comportamento com Classe
 
-So, other than the class definition and how we instantiate our obstacles in `setup()`, not much has changed: the rest of the code, specially the code in `draw()`, has stayed exactly the same. The only difference is that now the parameters for each obstacle have been put inside a class object. The `draw()` function is still doing all of the work of checking for overlap with the mouse ellipse, but now each obstacle's parameters come from a class object, not a plain JavaScript object. Let’s move that logic to functions inside our class.
+Então, além da definição da classe e de como instanciamos nossos obstáculos no `setup()`, não mudou muita coisa: o resto do código, especialmente o código do `draw()`, permaneceu exatamente o mesmo. A única diferença é que agora os parâmetros de cada obstáculo foram colocados dentro de um objeto de classe. A função `draw()` ainda faz todo o trabalho de verificar a sobreposição com a elipse do mouse, mas agora os parâmetros de cada obstáculo vêm de um objeto de classe, e não de um objeto JavaScript simples. Vamos mover essa lógica para funções dentro da nossa classe.
 
-Since we only care about overlap with the mouse ellipse, let's call that function `hovered()` and only check for overlap with the mouse ellipse. Since all of the information about the obstacle is available within itself using the `this` operator, the `hovered()` function doesn't need any input parameters.
+Como só nos importa a sobreposição com a elipse do mouse, vamos chamar essa função de `hovered()` e verificar apenas a sobreposição com a elipse do mouse. Como todas as informações sobre o obstáculo estão disponíveis dentro dele mesmo através do operador `this`, a função `hovered()` não precisa de nenhum parâmetro de entrada.
 
 {% include p5-editor.html id="CmGNj7rt2" %}
 
-The resulting overall behavior is the same, but all of the logic necessary for defining the functionality of our obstacles is now inside our `Obstacle` class definition and that makes it easier for us to read and update our code and add new functionality and behavior to our obstacles.
+O comportamento geral resultante é o mesmo, mas toda a lógica necessária para definir a funcionalidade dos nossos obstáculos agora está dentro da definição da nossa classe `Obstacle`, e isso facilita ler e atualizar o nosso código e adicionar novas funcionalidades e comportamentos aos nossos obstáculos.
 
-## Classy Encapsulation
+## Encapsulamento com Classe
 
-Now that we have a way to *encapsulate* parameters, behavior and functionality for our obstacles inside a class, we can draw slightly more complex shapes when there's an overlap with the mouse ellipse.
+Agora que temos uma forma de *encapsular* parâmetros, comportamento e funcionalidade dos nossos obstáculos dentro de uma classe, podemos desenhar formas um pouco mais complexas quando há uma sobreposição com a elipse do mouse.
 
-In order to fully *encapsulate* this inside the class objects, let's create a function inside our class that will be responsible for checking for overlap and for drawing the shape based on the result of the check. The logic will be similar to what is implemented in `draw()`, but now it will be the object's responsibility to check for overlap and draw itself.
+Para *encapsular* isso por completo dentro dos objetos de classe, vamos criar uma função dentro da nossa classe que será responsável por verificar a sobreposição e por desenhar a forma com base no resultado da verificação. A lógica será parecida com a que está implementada no `draw()`, mas agora será responsabilidade do objeto verificar a sobreposição e se desenhar.
 
 {% include p5-editor.html id="FFQ9SNAk5" %}
 
-This is what *encapsulation* means: we've separated the internal logic of our obstacles from our main `setup()` and `draw()` functions. If we look at the loops in our `setup()` and `draw()` functions, they are very easy to read and understand. One creates new `Obstacle` objects, the other draws every `Obstacle` object.
+É isso que *encapsulamento* quer dizer: separamos a lógica interna dos nossos obstáculos das nossas funções principais `setup()` e `draw()`. Se olharmos os loops nas nossas funções `setup()` e `draw()`, eles são muito fáceis de ler e entender. Um cria novos objetos `Obstacle`, o outro desenha cada objeto `Obstacle`.
 
 ```js
 setup() {
@@ -98,28 +98,28 @@ draw() {
 }
 ```
 
-If we are interested in the details of what happens inside our `Obstacle` objects we can look at the class implementation separately.
+Se tivermos interesse nos detalhes do que acontece dentro dos nossos objetos `Obstacle`, podemos olhar a implementação da classe separadamente.
 
-## Classy Drawings
+## Desenhos com Classe
 
-Let's add fancier drawings to our obstacles when they are hovered over by the mouse ellipse.
+Vamos adicionar desenhos mais sofisticados aos nossos obstáculos quando o mouse passa por cima deles.
 
-We'll draw $$4$$ concentric ellipses instead of just one, with varying opacity and diameter values, where larger ellipses are more transparent and get drawn first.
+Vamos desenhar $$4$$ elipses concêntricas em vez de apenas uma, com valores variados de opacidade e diâmetro, em que as elipses maiores são mais transparentes e são desenhadas primeiro.
 
-This calculation turns the sequence $$(0, 1, 2, 3)$$ into the following transparency values $$(64, 128, 192, 256)$$:
+Este cálculo transforma a sequência $$(0, 1, 2, 3)$$ nos seguintes valores de transparência $$(64, 128, 192, 256)$$:
 ```js
 let mAlpha = ((i + 1) / 4) * 256;
 ```
 
-And this turns the sequence $$(0, 1, 2, 3)$$ into the following multipliers for the original diameter value $$(4, 3, 2, 1)$$:
+E este transforma a sequência $$(0, 1, 2, 3)$$ nos seguintes multiplicadores para o valor original do diâmetro $$(4, 3, 2, 1)$$:
 ```js
 let mDiameterMultiplier = 4 - i;
 ```
 
-Now when the mouse hovers over an obstacle, concentric circles get drawn, but all of the logic is implemented inside the `Obstacle` class: our main `setup()` and `draw()` functions stayed the same.
+Agora, quando o mouse passa por cima de um obstáculo, círculos concêntricos são desenhados, mas toda a lógica está implementada dentro da classe `Obstacle`: nossas funções principais `setup()` e `draw()` permaneceram iguais.
 
 {% include p5-editor.html id="gG464xVSH" %}
 
-Now it's easier to add even more obstacles to our sketch and have obstacles with different number of *rings*.
+Agora fica mais fácil adicionar ainda mais obstáculos ao nosso sketch e ter obstáculos com números diferentes de *anéis*.
 
 {% include p5-editor.html id="q565eCcti" %}

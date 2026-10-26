@@ -1,13 +1,13 @@
 ---
-title: Loops as Counters
+title: Loops como Contadores
 ---
-## Loop to Fill
+## Loop para Preencher
 
-We saw some examples of how to use `for()` loops to draw gridded patterns [here](../patterns).
+Vimos alguns exemplos de como usar loops `for()` para desenhar padrões em grade [aqui](../patterns).
 
-Now, we'll explore another way to think about loops that will allow us to do slightly different things.
+Agora vamos explorar outra forma de pensar sobre loops, que nos permitirá fazer coisas um pouco diferentes.
 
-We saw how to draw repeating shapes by using loops with a start position (or offset), an end position and a fixed spacing:
+Vimos como desenhar formas repetidas usando loops com uma posição inicial (ou deslocamento), uma posição final e um espaçamento fixo:
 
 ```js
 for(let x = startPosition; x < endPosition; x += spacing) {
@@ -17,125 +17,125 @@ for(let x = startPosition; x < endPosition; x += spacing) {
 
 {% include p5-editor.html id="KjD5w25YP" %}
 
-In this example we specify where on our canvas we want our drawing to begin and end. It's like we're specifying the area we want to fill with shapes.
+Neste exemplo especificamos onde no nosso canvas queremos que o desenho comece e termine. É como se estivéssemos especificando a área que queremos preencher com formas.
 
-What if instead we want to specify the number of shapes to **FIT** in a space?
+E se, em vez disso, quisermos especificar o número de formas que devem **CABER** em um espaço?
 
-## Loop to Count
+## Loop para Contar
 
-One way to think about this is that the `for()` command is a counter, counting from `startPosition` to `endPosition` in increments of `spacing`. Thinking about the `for()` command as a "counter" makes it easy to see how to use it in situations that aren't about the location of shapes.
+Uma forma de pensar nisso é que o comando `for()` é um contador, contando de `startPosition` até `endPosition` em incrementos de `spacing`. Pensar no comando `for()` como um "contador" facilita ver como usá-lo em situações que não têm a ver com a posição de formas.
 
-We can use it to repeat an action a set number of times:
+Podemos usá-lo para repetir uma ação um número determinado de vezes:
 
 {% include p5-editor.html id="JFR877sol" %}
 
-Or to do some math on sequences of numbers, like finding the sum of all numbers between $$N_{0}$$ and $$N_{1}$$;
+Ou para fazer contas com sequências de números, como encontrar a soma de todos os números entre $$N_{0}$$ e $$N_{1}$$;
 
 {% include p5-editor.html id="YBCKfi7Ct" %}
 
-Or, to iterate through a collection of items, in an [array](#):
+Ou para percorrer uma coleção de itens, em um [array](#):
 
 {% include p5-editor.html id="yqdys8Sff" %}
 
-Let's explore the situation where we want to repeat something a set number of times, and instead of drawing squares all the way across the canvas, we just want rows with $$5$$ squares:
+Vamos explorar a situação em que queremos repetir algo um número determinado de vezes e, em vez de desenhar quadrados por todo o canvas, queremos apenas linhas com $$5$$ quadrados:
 
 {% include p5-editor.html id="drA7SCEvq" %}
 
-This is different from before. We are not iterating through pixel values, and counting from a starting *position* to a final *position*, we are now counting the number of squares to draw, from $$0$$ to $$4$$.
+Isso é diferente de antes. Não estamos iterando por valores de pixel e contando de uma *posição* inicial até uma *posição* final; agora estamos contando o número de quadrados a desenhar, de $$0$$ a $$4$$.
 
-For each square that we want to draw we have to do a little math first to figure out where to place it: if the first one is at $$0$$, the next one should be at $$0 + spacing$$, and the one after that at $$0 + spacing + spacing$$... and so on, and so on... in other words, the $$i^{th}$$ square is at position $$i * spacing$$. If there's an offset for the first square, that can just get added to the equation, as is seen in the case of the second row of squares in the code above.
+Para cada quadrado que queremos desenhar, temos que fazer uma pequena conta antes para descobrir onde colocá-lo: se o primeiro está em $$0$$, o próximo deve estar em $$0 + spacing$$, e o seguinte em $$0 + spacing + spacing$$... e assim por diante... em outras palavras, o $$i$$-ésimo quadrado está na posição $$i * spacing$$. Se houver um deslocamento para o primeiro quadrado, ele pode simplesmente ser somado à equação, como se vê no caso da segunda linha de quadrados no código acima.
 
-## Loop to Fit
+## Loop para Encaixar
 
-If instead we want to draw a **FIXED** number of squares in a **FIXED** amount of space, we need to figure out how to space the squares. In other words, our counter goes from $$0$$ to $$10$$ and we want to place our squares between $$0$$ and `width` or between `offset` and `width`.
+Se, em vez disso, queremos desenhar um número **FIXO** de quadrados em uma quantidade **FIXA** de espaço, precisamos descobrir como espaçar os quadrados. Em outras palavras, o nosso contador vai de $$0$$ a $$10$$ e queremos posicionar nossos quadrados entre $$0$$ e `width` ou entre `offset` e `width`.
 
-We could do the math by hand. In the simplest case the $$x$$ position of our squares is given by:
+Poderíamos fazer a conta à mão. No caso mais simples, a posição $$x$$ dos nossos quadrados é dada por:
 
 $$x = \frac{i}{10} \times width$$.
 
-In the more complex case, with the offset, it becomes:
+No caso mais complexo, com o deslocamento, fica:
 
 $$x = \frac{i}{10} \times (width - offset) + offset$$.
 
-But, we can also use the p5.js [`map()`](https://p5js.org/reference/#/p5/map) function to do this math for us and keep our code easier to read and maintain (a detailed explanation of `map()` can be found [here](../../creative-coding/maths/)).
+Mas também podemos usar a função [`map()`](https://p5js.org/reference/#/p5/map) do p5.js para fazer essa conta por nós e manter o nosso código mais fácil de ler e manter (uma explicação detalhada do `map()` pode ser encontrada [aqui](../../creative-coding/maths/)).
 
 {% include p5-editor.html id="sbt2pVmzK" %}
 
-Now, what if we want to draw $$15$$ squares instead of $$10$$?
+Agora, e se quisermos desenhar $$15$$ quadrados em vez de $$10$$?
 
 {% include p5-editor.html id="23jR5o-ij" %}
 
-Just using `map()` is not enough; we see there are gaps in the top row and overlap in the bottom.
+Usar apenas o `map()` não é suficiente; vemos que há espaços vazios na linha de cima e sobreposição na de baixo.
 
-To fix this, before we loop we have to calculate a new width for each of the two cases, based on the number of squares we want and the space we have to fill:
+Para consertar isso, antes do loop temos que calcular uma nova largura para cada um dos dois casos, com base no número de quadrados que queremos e no espaço que temos para preencher:
 
 {% include p5-editor.html id="TKAcfArNy" %}
 
-## Review All the Possibilities
+## Revisão de Todas as Possibilidades
 
-In cases where we're drawing shapes between a pre-defined, specific, start position and end position, with a fixed spacing, we can just iterate over the pixel values and draw:
+Nos casos em que estamos desenhando formas entre uma posição inicial e uma posição final pré-definidas e específicas, com um espaçamento fixo, podemos simplesmente iterar sobre os valores de pixel e desenhar:
 
 ```js
 for(let pos = start; pos < end; pos += spacing) {
-  // draw
+  // desenha
 }
 ```
 
-When we want to draw a specific number of shapes, with a *given* spacing, and we don't care how much space it might take, we can use a `for()` loop as a counter and calculate the position from the spacing:
+Quando queremos desenhar um número específico de formas, com um espaçamento *dado*, e não nos importamos com quanto espaço isso pode ocupar, podemos usar um loop `for()` como contador e calcular a posição a partir do espaçamento:
 
 ```js
 for(let count = 0; count < maxCount; count += 1) {
   let pos = offset + count * spacing;
-  // draw
+  // desenha
 }
 ```
 
-When we want to draw a specific number of shapes, within a *fixed* amount of space, without knowing the spacing beforehand, we can use a `for()` loop as a counter and use `map()` to calculate the position of each shape:
+Quando queremos desenhar um número específico de formas, dentro de uma quantidade *fixa* de espaço, sem saber o espaçamento de antemão, podemos usar um loop `for()` como contador e usar o `map()` para calcular a posição de cada forma:
 
 ```js
 for(let count = 0; count < maxCount; count += 1) {
   let pos = map(count, 0, maxCount, minPos, maxPos);
-  // draw
+  // desenha
 }
 ```
 
-If we want to draw a specific number of shapes, within a *fixed* amount of space, without knowing the spacing beforehand, and avoid overlaps or gaps, we have to calculate the spacing based on available width and number of shapes, then we can use a `for()` loop as a counter, and do a little math to calculate the position from the spacing:
+Se queremos desenhar um número específico de formas, dentro de uma quantidade *fixa* de espaço, sem saber o espaçamento de antemão, e evitar sobreposições ou espaços vazios, temos que calcular o espaçamento com base na largura disponível e no número de formas; então podemos usar um loop `for()` como contador e fazer uma pequena conta para calcular a posição a partir do espaçamento:
 
 ```js
 let spacing = availableWidth / maxCount;
 for(let count = 0; count < maxCount; count += 1) {
   let pos = offset + count * spacing;
-  // draw
+  // desenha
 }
 ```
 
-## Chessboard
+## Tabuleiro de Xadrez
 
-Let's practice some of this and draw a chessboard, centered on our canvas, with some margin around it.
+Vamos praticar um pouco disso e desenhar um tabuleiro de xadrez, centralizado no nosso canvas, com alguma margem ao redor.
 
-We'll start by drawing one row of our board. Since the number of squares is fixed ($$8$$), the amount of space they'll take is also fixed ($$width - 2 * margin$$) and we want to avoid overlaps, we'll use the last method:
+Vamos começar desenhando uma linha do nosso tabuleiro. Como o número de quadrados é fixo ($$8$$), a quantidade de espaço que eles ocupam também é fixa ($$width - 2 * margin$$) e queremos evitar sobreposições, vamos usar o último método:
 
 ```js
 let spacing = availableWidth / maxCount;
 for(let count = 0; count < maxCount; count += 1) {
   let pos = offset + count * spacing;
-  // draw
+  // desenha
 }
 ```
 
 {% include p5-editor.html id="y-LqGkGbt" %}
 
-The spacing and sizing looks good. We just have to fix the color. We want black and white squares to alternate, which means painting the even numbered squares black and the odd numbered squares white. Since we have a variable that keeps track of which square we are drawing (`col`), we can just check if that's an even number (`col % 2 == 0`) and select the color accordingly:
+O espaçamento e o tamanho estão bons. Só precisamos consertar a cor. Queremos que os quadrados pretos e brancos se alternem, o que significa pintar os quadrados de número par de preto e os de número ímpar de branco. Como temos uma variável que registra qual quadrado estamos desenhando (`col`), podemos simplesmente verificar se ela é um número par (`col % 2 == 0`) e selecionar a cor de acordo:
 
 {% include p5-editor.html id="syltJiw2g" %}
 
-Now we just have to nest some `for()` loops to get all of our rows, and we'll be done:
+Agora só precisamos aninhar alguns loops `for()` para obter todas as nossas linhas, e terminamos:
 
 {% include p5-editor.html id="mIbZgIy0y" %}
 
-The square colors are alternating in the horizontal direction because we are checking if `col` is even, but to get the correct pattern we should also alternate the pattern by row.
+As cores dos quadrados estão se alternando na direção horizontal porque estamos verificando se `col` é par, mas, para obter o padrão correto, também devemos alternar o padrão por linha.
 
-If we enumerate all the possible combinations of column and row even/odd pairings, the pseudo-code for the logic could be something like:
+Se enumerarmos todas as combinações possíveis de pares entre par/ímpar da coluna e da linha, o pseudocódigo da lógica poderia ser algo como:
 
 ```js
 if (col is even && row is even) {
@@ -149,9 +149,9 @@ if (col is even && row is even) {
 }
 ```
 
-So, if the row and column index are both even, or are both odd, we paint black. If one is odd and the other is even, we paint white.
+Então, se o índice da linha e o da coluna são ambos pares, ou ambos ímpares, pintamos de preto. Se um é ímpar e o outro é par, pintamos de branco.
 
-The above pseudo-code can be simplified to:
+O pseudocódigo acima pode ser simplificado para:
 
 ```js
 if (col evenness == row evenness) {
@@ -161,8 +161,8 @@ if (col evenness == row evenness) {
 }
 ```
 
-And in JavaScript `if(col % 2 == row % 2)` will check if the *evenness* of the values is the same:
+E em JavaScript `if(col % 2 == row % 2)` vai verificar se a *paridade* dos valores é a mesma:
 
 {% include p5-editor.html id="rbQjyjGJf" %}
 
-Try changing the size of the canvas in the sketch above. As long as the canvas is a square, our code should work as expected.
+Tente mudar o tamanho do canvas no sketch acima. Desde que o canvas seja um quadrado, o nosso código deve funcionar como esperado.

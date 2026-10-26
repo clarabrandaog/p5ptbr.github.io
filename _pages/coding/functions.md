@@ -1,15 +1,15 @@
 ---
-title: Functions
+title: Funções
 ---
-## Organize and Repeat
+## Organizar e Repetir
 
-We saw how to use [`for()`](../patterns/) loops to run the same code over and over and create patterns.
+Vimos como usar loops [`for()`](../patterns/) para executar o mesmo código várias vezes e criar padrões.
 
-There's another method we can use to repeat actions in our code: functions.
+Existe outro método que podemos usar para repetir ações no nosso código: funções.
 
-Functions are predefined, named, sequences of commands that can be easily re-executed. In addition to this *encapsulation* that facilitates repeating sequences of commands, functions are also *parameterizable*, which allows them to have similar but different behavior, depending on information that gets sent to them during their execution. More about this in a bit.
+Funções são sequências de comandos pré-definidas e nomeadas que podem ser facilmente reexecutadas. Além desse *encapsulamento* que facilita repetir sequências de comandos, as funções também são *parametrizáveis*, o que permite que tenham comportamentos parecidos, mas diferentes, dependendo das informações que são enviadas a elas durante a execução. Mais sobre isso daqui a pouco.
 
-This is how we define a function in JavaScript:
+É assim que definimos uma função em JavaScript:
 ```js
 function functionName(param0, param1, ...) {
   command0;
@@ -18,49 +18,49 @@ function functionName(param0, param1, ...) {
 }
 ```
 
-We've already seen many predefined p5.js functions, like `rect()`, `ellipse()`, `line()`, etc. They all take parameters that affect how and where the shapes get drawn, like the x and y positions, shape width and height. But now we will see how to define our own functions.
+Já vimos muitas funções pré-definidas do p5.js, como `rect()`, `ellipse()`, `line()`, etc. Todas elas recebem parâmetros que afetam como e onde as formas são desenhadas, como as posições x e y e a largura e altura da forma. Mas agora vamos ver como definir nossas próprias funções.
 
-Let's see one case where defining a function can simplify the code we write and decrease the number of variable we have to keep around.
+Vamos ver um caso em que definir uma função pode simplificar o código que escrevemos e diminuir o número de variáveis que precisamos manter.
 
-We've seen how to draw simple shapes like squares, rectangles and ellipses, but what if we wanted to draw a heart?
+Vimos como desenhar formas simples como quadrados, retângulos e elipses, mas e se quiséssemos desenhar um coração?
 
-We can start by trying to piece together some simple shapes like triangles and ellipses or arcs:
+Podemos começar tentando montar algumas formas simples como triângulos e elipses ou arcos:
 
 {% include p5-editor.html id="VLcKw3Lu1" %}
 
-Doesn't look so bad if we turn off the shape strokes:
+Não fica tão mal se desligarmos os contornos das formas:
 
 {% include p5-editor.html id="d0RXiJS3K" %}
 
-And what if now we want to draw many hearts, of potentially different sizes, in different locations?
+E se agora quisermos desenhar muitos corações, possivelmente de tamanhos diferentes, em lugares diferentes?
 
-We could try to come up with the specific pixel locations for all of our hearts like this:
+Poderíamos tentar descobrir as posições exatas em pixels de todos os nossos corações assim:
 
 {% include p5-editor.html id="0Ma3DR5HQ" %}
 
-But this is tedious and prone to mistakes.
+Mas isso é tedioso e propenso a erros.
 
-It would be a better idea to come up with a generic way of describing the heart shapes and then just repeat those steps in different locations of our canvas.
+Seria uma ideia melhor encontrar uma forma genérica de descrever as formas do coração e depois repetir esses passos em diferentes lugares do nosso canvas.
 
-One possible way to do this is to pick a point sort of in the center of our heart shape, and then define all the other points in terms of the location of this point. For example, in the drawing below, the black point is our reference point ($$x_0$$, $$y_0$$), and we'll describe all of the red points relative to it:
+Uma maneira possível de fazer isso é escolher um ponto mais ou menos no centro da forma do nosso coração e depois definir todos os outros pontos em termos da posição desse ponto. Por exemplo, no desenho abaixo, o ponto preto é o nosso ponto de referência ($$x_0$$, $$y_0$$), e vamos descrever todos os pontos vermelhos em relação a ele:
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/heart-00.jpg' | relative_url }}">
 </div>
 
-For our heart, let's set $$x_0 = 200$$ and $$y_0 = 150$$ and express all of the `x` and `y` parameters of our shapes in terms of these two variables:
+Para o nosso coração, vamos definir $$x_0 = 200$$ e $$y_0 = 150$$ e expressar todos os parâmetros `x` e `y` das nossas formas em termos dessas duas variáveis:
 
 {% include p5-editor.html id="fWqOx2u9U" %}
 
-Now, we could copy-paste the lines that draws the shapes and just change the values of $$x_0$$ and $$y_0$$ before calling them:
+Agora poderíamos copiar e colar as linhas que desenham as formas e apenas mudar os valores de $$x_0$$ e $$y_0$$ antes de chamá-las:
 
 {% include p5-editor.html id="8UQDXlWOb" %}
 
-This is already easier to read and modify, but let's say that now we want to parameterize the size of our heart shape. We would have to very carefully find all places in our sketch where we are drawing hearts in order to update the correct lines of code with the changes.
+Isso já é mais fácil de ler e modificar, mas digamos que agora queremos parametrizar o tamanho da nossa forma de coração. Teríamos que encontrar com muito cuidado todos os lugares do nosso sketch onde estamos desenhando corações para atualizar as linhas de código corretas com as mudanças.
 
-Functions can help here. We'll use a function to *encapsulate* all the commands and values that are used when drawing a heart and that way when we need to update how we draw the heart later, we'll only have to change our code in one place.
+As funções podem ajudar aqui. Vamos usar uma função para *encapsular* todos os comandos e valores usados ao desenhar um coração e, assim, quando precisarmos atualizar como desenhamos o coração mais tarde, só teremos que mudar o nosso código em um único lugar.
 
-Let's wrap our current heart-drawing commands inside a `heart()` function that takes two parameters, x and y locations, and draws a heart:
+Vamos envolver os nossos comandos atuais de desenho do coração dentro de uma função `heart()` que recebe dois parâmetros, as posições x e y, e desenha um coração:
 
 ```js
 function heart(x0, y0) {
@@ -70,37 +70,37 @@ function heart(x0, y0) {
 }
 ```
 
-We just copied the code from before, but now that these lines are inside a function, the `x0` and `y0` parameters reference specific x and y locations that get passes to the function each time it is *called*. Drawing the heart in different locations is as easy as this now:
+Apenas copiamos o código de antes, mas agora que essas linhas estão dentro de uma função, os parâmetros `x0` e `y0` referenciam posições x e y específicas que são passadas para a função cada vez que ela é *chamada*. Desenhar o coração em lugares diferentes agora é tão fácil quanto isto:
 
 {% include p5-editor.html id="qBPTEhE6I" %}
 
-And now we can invest in adding a size parameter to our heart shape:
+E agora podemos investir em adicionar um parâmetro de tamanho à forma do nosso coração:
 
 {% include p5-editor.html id="xTVlTFlBH" %}
 
-The math is not very intuitive, but it only had to be figured out once, and now we can call our `heart()` function repeatedly at different locations and with different sizes:
+A matemática não é muito intuitiva, mas só precisou ser descoberta uma vez, e agora podemos chamar a nossa função `heart()` repetidamente em lugares diferentes e com tamanhos diferentes:
 
 {% include p5-editor.html id="VUMYTzsIT" %}
 
-Or use [`for()`](../patterns/) loops to create patterns on our canvas:
+Ou usar loops [`for()`](../patterns/) para criar padrões no nosso canvas:
 
 {% include p5-editor.html id="v096x_jMT" %}
 
-That vary in size based on the distance from the center of the canvas:
+Que variam de tamanho com base na distância ao centro do canvas:
 
 {% include p5-editor.html id="pVStO6jxX" %}
 
-## Compute and Return
+## Calcular e Retornar
 
-We just saw how to define a function to *capture* a procedure (a list of commands), that can later be recalled.
+Acabamos de ver como definir uma função para *capturar* um procedimento (uma lista de comandos), que pode ser chamado de novo mais tarde.
 
-Functions can also be defined to act a little bit more like the [mathematical functions](https://en.wikipedia.org/wiki/Function_(mathematics)) that we might have learned about in algebra class: a set of operations that maps a list of inputs to output values.
+As funções também podem ser definidas para agir um pouco mais como as [funções matemáticas](https://en.wikipedia.org/wiki/Function_(mathematics)) que talvez tenhamos aprendido nas aulas de álgebra: um conjunto de operações que mapeia uma lista de entradas para valores de saída.
 
-Let's see what that means by revisiting a collision detection situation:
+Vamos ver o que isso significa revisitando uma situação de detecção de colisão:
 
 {% include p5-editor.html id="UB-XWHKuP" %}
 
-If we want to detect when the mouse circle is overlapping with the larger circle, we can first calculate the distance between the center of the two circles and see if that value is smaller than the sum of their radii:
+Se quisermos detectar quando o círculo do mouse está se sobrepondo ao círculo maior, podemos primeiro calcular a distância entre o centro dos dois círculos e ver se esse valor é menor que a soma dos seus raios:
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/overlap-02.jpg' | relative_url }}">
@@ -110,38 +110,38 @@ If we want to detect when the mouse circle is overlapping with the larger circle
   <img src="{{ '/assets/images/p5/overlap-03.jpg' | relative_url }}">
 </div>
 
-We can calculate the [*Euclidean* distance](https://en.wikipedia.org/wiki/Euclidean_distance#Two_dimensions) between the two circles using this formula, where $$x_0$$ and $$y_0$$ are the locations of the big circle and $$x_m$$ and $$y_m$$ are the locations of the mouse circle:
+Podemos calcular a [distância *euclidiana*](https://en.wikipedia.org/wiki/Euclidean_distance#Two_dimensions) entre os dois círculos usando esta fórmula, onde $$x_0$$ e $$y_0$$ são as posições do círculo grande e $$x_m$$ e $$y_m$$ são as posições do círculo do mouse:
 
 $$\displaystyle distance = \sqrt{(x_m - x_0)^2 + (y_m - y_0)^2} $$
 
-It's kind of a mouthful, but it's not that hard to implement in JavaScript. There's a built in `sqrt()` function, and we can raise numbers to a power using a double-asterisk `**`, so $$3^{12}$$, for example, becomes `3 ** 12`:
+É meio complicada, mas não é tão difícil de implementar em JavaScript. Existe uma função nativa `sqrt()`, e podemos elevar números a uma potência usando um asterisco duplo `**`, então $$3^{12}$$, por exemplo, vira `3 ** 12`:
 ```js
 let d = sqrt((mouseX - x0) ** 2 + (mouseY - y0) ** 2);
 ```
 
-Finally, we can check for overlap by comparing this distance with the sum of the circles' *radii*, which is half of their diameters:
+Por fim, podemos verificar a sobreposição comparando essa distância com a soma dos *raios* dos círculos, que é metade dos seus diâmetros:
 ```js
 if(d < oDiam / 2 + mDiam / 2){
-  // overlap !
+  // sobreposição !
 }
 ```
 
 {% include p5-editor.html id="8ZRnyGWwr" %}
 
 
-It works, but ... what if we have more than just one obstacle circle?
+Funciona, mas... e se tivermos mais de um círculo de obstáculo?
 
 {% include p5-editor.html id="444Zq22any" %}
 
-We could put a bunch of `sqrt((mouseX - xi)**2 + (mouseY - yi)**2)` expressions all over our code, but this quickly becomes hard to read and adjust:
+Poderíamos colocar um monte de expressões `sqrt((mouseX - xi)**2 + (mouseY - yi)**2)` espalhadas pelo nosso código, mas isso rapidamente fica difícil de ler e ajustar:
 
 {% include p5-editor.html id="iKnvWbH94" %}
 
-As it is, it wouldn't be very simple to update this code to also change the color of the obstacle circles upon collision.
+Do jeito que está, não seria muito simples atualizar esse código para também mudar a cor dos círculos de obstáculo durante a colisão.
 
-Let's use functions to simplify it.
+Vamos usar funções para simplificá-lo.
 
-The first function we'll declare is a function that receives two pairs of ($$x$$, $$y$$) coordinates, and calculates the Euclidean distance between them:
+A primeira função que vamos declarar é uma função que recebe dois pares de coordenadas ($$x$$, $$y$$) e calcula a distância euclidiana entre eles:
 ```js
 function euclidean(x0, y0, x1, y1) {
   let d = sqrt((x1 - x0) ** 2 + (y1 - y0) ** 2);
@@ -149,19 +149,19 @@ function euclidean(x0, y0, x1, y1) {
 }
 ```
 
-This does the exact same calculation as we were doing above, except now the values for the second circle come from the function parameters `x1` and `y1`, and not the [*hardcoded*](https://en.wikipedia.org/wiki/Hard_coding) values `mouseX` and `mouseY`. This way we can reuse this function for computing any distance between any pair of points in our canvas.
+Isso faz exatamente o mesmo cálculo que fazíamos acima, só que agora os valores do segundo círculo vêm dos parâmetros da função `x1` e `y1`, e não dos valores [*fixos no código* (hardcoded)](https://en.wikipedia.org/wiki/Hard_coding) `mouseX` e `mouseY`. Assim podemos reutilizar essa função para calcular qualquer distância entre qualquer par de pontos do nosso canvas.
 
-The other thing to note is the last line of the function: `return d;`. This tells the function that the value in the `d` variable is to be used somewhere else, so after doing the calculation, it should make this value available to whatever part of the code invoked (or, called) the function. So, if we call the function like this: `let mDist = euclidean(3, 6, 6, 2)`, the variable `mDist` would have the value `5`;
+A outra coisa a notar é a última linha da função: `return d;`. Ela diz à função que o valor da variável `d` deve ser usado em outro lugar, então, depois de fazer o cálculo, ela deve disponibilizar esse valor para qualquer parte do código que invocou (ou chamou) a função. Então, se chamarmos a função assim: `let mDist = euclidean(3, 6, 6, 2)`, a variável `mDist` teria o valor `5`;
 
-Putting this in our code:
+Colocando isso no nosso código:
 
 {% include p5-editor.html id="dZFmGMkbe" %}
 
-This is already better, but we still have some repeated code.
+Isso já é melhor, mas ainda temos algum código repetido.
 
-Maybe we can simplify this even further by creating a function that receives *six* values, for the locations and diameters of two circles, and returns a boolean that tells whether the two circles are overlapping or not.
+Talvez possamos simplificar ainda mais criando uma função que recebe *seis* valores, as posições e os diâmetros de dois círculos, e retorna um booleano que diz se os dois círculos estão se sobrepondo ou não.
 
-We can reuse the `euclidean()` function that we already have and write an overlap function like this:
+Podemos reutilizar a função `euclidean()` que já temos e escrever uma função de sobreposição assim:
 ```js
 function ellipseOverlap(x0, y0, diam0, x1, y1, diam1) {
   let d = euclidean(x0, y0, x1, y1);
@@ -169,48 +169,48 @@ function ellipseOverlap(x0, y0, diam0, x1, y1, diam1) {
 }
 ```
 
-This time the `return` statement will compute and return the boolean value of the expression `(d < diam0 / 2 + diam1 / 2)`. It will be `true` if the circles overlap, or `false` otherwise.
+Desta vez a instrução `return` vai calcular e retornar o valor booleano da expressão `(d < diam0 / 2 + diam1 / 2)`. Ele será `true` se os círculos se sobrepõem, ou `false` caso contrário.
 
 {% include p5-editor.html id="Z4nagBNTZ" %}
 
-Now that we have separate variables that tell us whether our mouse circle is overlapping with any of the obstacle circles, we can more easily change the color of the obstacle circles and add some other visual indications to our sketch:
+Agora que temos variáveis separadas que nos dizem se o nosso círculo do mouse está se sobrepondo a algum dos círculos de obstáculo, fica mais fácil mudar a cor dos círculos de obstáculo e adicionar outras indicações visuais ao nosso sketch:
 
 {% include p5-editor.html id="cJ8ryLXID" %}
 
-The `||` in the statement `if (o0 || o1 || o2 || o3 || o4)` is the logical *OR* operator. An expression built with the `||`  operator evaluates to `true` if any one of its conditions is true. In our case, we're asking if there is overlap on *any* of the obstacles, and if so, to change the color of the mouse circle.
+O `||` na instrução `if (o0 || o1 || o2 || o3 || o4)` é o operador lógico *OU*. Uma expressão construída com o operador `||` resulta em `true` se qualquer uma de suas condições for verdadeira. No nosso caso, estamos perguntando se há sobreposição com *qualquer* um dos obstáculos e, se houver, para mudar a cor do círculo do mouse.
 
-We can now refactor the drawing of the obstacles into another function that doesn't have to return anything, but will draw the obstacle with the right color depending on whether there is an overlap or not:
+Agora podemos refatorar o desenho dos obstáculos em outra função que não precisa retornar nada, mas vai desenhar o obstáculo com a cor certa dependendo de haver ou não sobreposição:
 ```js
 function obstacle(x, y, overlap) {
   if (overlap) {
-    // draw with overlap colors and styles
+    // desenha com as cores e estilos de sobreposição
   } else {
-    // draw white circle
+    // desenha um círculo branco
   }
 }
 ```
 
-And it's easy to add more obstacles now:
+E agora é fácil adicionar mais obstáculos:
 
 {% include p5-editor.html id="Z7H4RJXv4" %}
 
-And, looking at the code, we can actually put the `ellipseOverlap()` function call inside the `obstacle()` function, as long as the new function returns whether there is an overlap or not:
+E, olhando o código, podemos até colocar a chamada à função `ellipseOverlap()` dentro da função `obstacle()`, desde que a nova função retorne se há ou não sobreposição:
 ```js
 function obstacle(x, y) {
   let overlap = ellipseOverlap(mouseX, mouseY, mDiam, x, y, oDiam);
 
   if (overlap) {
-    // draw with overlap colors and styles
+    // desenha com as cores e estilos de sobreposição
   } else {
-    // draw white circle
+    // desenha um círculo branco
   }
 
   return overlap;
 }
 ```
 
-The code for the overlap function became a little more complicated, but we only have to write it once. The benefit is that our main code becomes even easier to read and maintain, add and remove obstacles, etc:
+O código da função de sobreposição ficou um pouco mais complicado, mas só precisamos escrevê-lo uma vez. O benefício é que o nosso código principal fica ainda mais fácil de ler e manter, e de adicionar e remover obstáculos, etc.:
 
 {% include p5-editor.html id="2A9QJrOcR" %}
 
-We'll see how [arrays](../arrays/) that keep track of lists of numbers could help us add more obstacles to a sketch like this without having to enumerate their values individually like we're doing here with `x0`, `x1`, `x2`, etc.
+Vamos ver como [arrays](../arrays/) que guardam listas de números podem nos ajudar a adicionar mais obstáculos a um sketch como este, sem precisar enumerar seus valores individualmente como estamos fazendo aqui com `x0`, `x1`, `x2`, etc.

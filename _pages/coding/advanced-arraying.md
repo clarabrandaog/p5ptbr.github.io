@@ -1,101 +1,101 @@
 ---
-title: Advanced Arrays
+title: Arrays Avançados
 ---
 
-Since arrays are so very often used in programming, and not only to store information, but also to manipulate and organize information, most programming languages will have not just a way to specify arrays, but lots of built in functions and variables that can be used when working with arrays.
+Como os arrays são usados com tanta frequência na programação, e não só para guardar informações, mas também para manipular e organizar informações, a maioria das linguagens de programação tem não apenas uma forma de especificar arrays, mas também muitas funções e variáveis nativas que podem ser usadas ao trabalhar com eles.
 
-We saw some of these in the previous [tutorial about arrays](../arrays/): `push()` and `length`. The [`push()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push) function is used when we want to add elements to the end of the array, and the [`length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) variable when we want to know the size of the array:
+Vimos algumas delas no [tutorial anterior sobre arrays](../arrays/): `push()` e `length`. A função [`push()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push) é usada quando queremos adicionar elementos ao final do array, e a variável [`length`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/length) quando queremos saber o tamanho do array:
 
 {% include p5-editor.html id="LASWmNjIj" %}
 
-In this sketch we are adding random diameter values to an array every time the mouse is clicked, and during `draw()` we draw ellipses based on those diameters. Since we can't tell beforehand how many times the mouse has been clicked, we can't foretell how many values we have in our array, so we rely on `length` to set the limit for the `for()` loop in `draw()`.
+Neste sketch estamos adicionando valores aleatórios de diâmetro a um array toda vez que o mouse é clicado, e durante o `draw()` desenhamos elipses com base nesses diâmetros. Como não temos como saber de antemão quantas vezes o mouse foi clicado, não sabemos quantos valores há no nosso array, então contamos com o `length` para definir o limite do loop `for()` no `draw()`.
 
-We are also limiting the maximum number of elements in our array to $$10$$. If during a click event we detect that we already have $$10$$ elements in the array with: `(myDiameters.length > 9)`, we remove the first element before adding a new $$10^{th}$$ element.
+Também estamos limitando o número máximo de elementos do nosso array a $$10$$. Se, durante um evento de clique, detectamos que já temos $$10$$ elementos no array com: `(myDiameters.length > 9)`, removemos o primeiro elemento antes de adicionar um novo $$10^{o}$$ elemento.
 
-## Manipulating Arrays
+## Manipulando Arrays
 
-The way to remove the first element of an array is using the special builtin function [`shift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift). If we keep clicking and adding new diameters we can see why (maybe?) the function is called shift: as we remove elements from the front of the array (index $$0$$), and add new elements to the back of the array (index $$9$$), our drawing seems to shift to the left.
+A forma de remover o primeiro elemento de um array é usando a função nativa especial [`shift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift). Se continuarmos clicando e adicionando novos diâmetros, podemos ver por que (talvez?) a função se chama shift (deslocar): conforme removemos elementos do início do array (índice $$0$$) e adicionamos novos elementos ao final do array (índice $$9$$), nosso desenho parece se deslocar para a esquerda.
 
-We can do the reverse: add elements to the front of the array and remove from the back with [`unshift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift) and [`pop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop), respectively:
+Podemos fazer o inverso: adicionar elementos ao início do array e remover do final com [`unshift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/unshift) e [`pop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop), respectivamente:
 
 {% include p5-editor.html id="-BVml9j5Z" %}
 
-Let's pretend that now, for aesthetic reasons, we want to draw our diameters in order from smallest to largest. We can make use of the special [`sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) function:
+Vamos fingir que agora, por razões estéticas, queremos desenhar nossos diâmetros em ordem, do menor para o maior. Podemos usar a função especial [`sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort):
 
 {% include p5-editor.html id="ekJDKCRmr" %}
 
-After we add a new element we sort the array of diameters from smallest to largest. As we keep clicking through this example we'll notice something strange: it seems like all the circles drawn just keep growing.
+Depois que adicionamos um novo elemento, ordenamos o array de diâmetros do menor para o maior. Conforme continuamos clicando neste exemplo, vamos notar algo estranho: parece que todos os círculos desenhados só vão crescendo.
 
-If we think about how we are adding and removing elements this will make sense. We are always removing the first element of the array, and since we are using a sorted array now, that element is always the smallest. As we click the mouse it's like we are filtering out the smallest element in our array and over time are left with only the larger ones.
+Se pensarmos em como estamos adicionando e removendo elementos, isso faz sentido. Estamos sempre removendo o primeiro elemento do array e, como agora usamos um array ordenado, esse elemento é sempre o menor. Conforme clicamos o mouse, é como se estivéssemos filtrando o menor elemento do nosso array e, com o tempo, ficamos apenas com os maiores.
 
-What if we don't want to remove the smallest element, but still want to draw the circles in order? In addition to our array with the elements in their original order, we could have a sorted copy of our array that we only use for drawing, but not for adding and removing elements.
+E se não quisermos remover o menor elemento, mas ainda quisermos desenhar os círculos em ordem? Além do nosso array com os elementos na ordem original, poderíamos ter uma cópia ordenada do array que só usamos para desenhar, mas não para adicionar e remover elementos.
 
-Luckily this is such a common case that JavaScript also has a function that does that for us:
+Por sorte, esse é um caso tão comum que o JavaScript também tem uma função que faz isso para nós:
 
 {% include p5-editor.html id="7ZmtXjOyM" %}
 
-The function is called [`toSorted()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted), and it's very similar to `sort()` except, where `sort()` does the sorting on the original array, `toSorted()` first makes a copy of the array and then returns the copy after sorting it.
+A função se chama [`toSorted()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted) e é muito parecida com o `sort()`, exceto que, enquanto o `sort()` faz a ordenação no array original, o `toSorted()` primeiro faz uma cópia do array e depois retorna a cópia ordenada.
 
-There are a couple of other special array functions that come in pairs like that: with an "*in place*" version that does something to the original array, and a "*copying*" version, that copies the array before processing it and returning the copy. For example, the "*in place*"[`reverse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse), and its "*copying*" version [`toReversed`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toReversed).
+Existem algumas outras funções especiais de array que vêm em pares assim: uma versão "*in place*" (no próprio array) que faz algo com o array original, e uma versão "*copying*" (com cópia), que copia o array antes de processá-lo e retorna a cópia. Por exemplo, o [`reverse`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) "*in place*" e sua versão "*copying*" [`toReversed`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toReversed).
 
-## Functions as Parameters to Functions
+## Funções como Parâmetros de Funções
 
-Now, let's say that instead of just the $$10$$ diameters we have an array that holds up to $$100$$ circle [objects](../objects/):
+Agora, digamos que em vez de apenas os $$10$$ diâmetros temos um array que guarda até $$100$$ [objetos](../objects/) círculo:
 
 {% include p5-editor.html id="cyYHQSaL5" %}
 
-Similar logic as before, but now with every click we add between $$8$$ and $$16$$ elements to our array, until we get to $$100$$ elements and clear the array to start over.
+A lógica é parecida com a anterior, mas agora, a cada clique, adicionamos entre $$8$$ e $$16$$ elementos ao nosso array, até chegarmos a $$100$$ elementos, quando limpamos o array para recomeçar.
 
-Another difference is that now our array holds full circle objects, with `x`, `y` and `d` parameters.
+Outra diferença é que agora o nosso array guarda objetos círculo completos, com os parâmetros `x`, `y` e `d`.
 
-The `for()` loop that draws our circles works. It's a good `for()` loop. But, if we look at what's happening inside the `for()` loop we'll notice that all of the parameters used by the `ellipse()` function are coming from the object `aCircle[i]`.
+O loop `for()` que desenha nossos círculos funciona. É um bom loop `for()`. Mas, se olharmos o que acontece dentro do loop `for()`, vamos notar que todos os parâmetros usados pela função `ellipse()` vêm do objeto `aCircle[i]`.
 
-When we have this situation, where we want to get every element of an array and do something with it, and don't have to update any other variables or objects, there's a different way to ask for the array to iterate over its elements:
+Quando temos essa situação, em que queremos pegar cada elemento de um array e fazer algo com ele, sem precisar atualizar nenhuma outra variável ou objeto, existe uma forma diferente de pedir ao array que itere sobre seus elementos:
 
 {% include p5-editor.html id="eMHwj8fqF" %}
 
-First, we define a function called `drawCircle()`. This function takes one argument, which will be one of our circle objects with `x`, `y` and `d` parameters, and draws an ellipse using those values. Easy. Then, in our `draw()` function, when we want to iterate over all of the elements of the array and draw our circles, we can use the special function [`forEach()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach).
+Primeiro, definimos uma função chamada `drawCircle()`. Essa função recebe um argumento, que será um dos nossos objetos círculo com os parâmetros `x`, `y` e `d`, e desenha uma elipse usando esses valores. Fácil. Depois, na nossa função `draw()`, quando queremos iterar sobre todos os elementos do array e desenhar nossos círculos, podemos usar a função especial [`forEach()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach).
 
-This function is special in many ways: first, it's one of those builtin functions that come with a JavaScript array. Besides that, it's also special because it's a function that takes a function as an argument 🤯. The way to think about this is to imagine we are asking our array to run this function on every one of its elements, using the elements as arguments.
+Essa função é especial em vários sentidos: primeiro, ela é uma das funções nativas que vêm com um array JavaScript. Além disso, ela também é especial porque é uma função que recebe uma função como argumento 🤯. A forma de pensar nisso é imaginar que estamos pedindo ao nosso array que execute essa função em cada um dos seus elementos, usando os elementos como argumentos.
 
-This is some really advanced array'ing ! And the code becomes a little more concise and arguably more "semantic" (the commands we are using describe the meaning of what we want the computer to do). Instead of a generic `for()` loop with a counter variable, a conditional statement and an update, we are now telling the array "for each one of your elements, do this: drawCircle()".
+Isso é manipulação de arrays bem avançada! E o código fica um pouco mais conciso e, possivelmente, mais "semântico" (os comandos que usamos descrevem o significado do que queremos que o computador faça). Em vez de um loop `for()` genérico com uma variável contadora, uma instrução condicional e uma atualização, agora estamos dizendo ao array "para cada um dos seus elementos, faça isto: drawCircle()".
 
-## Processing Arrays
+## Processando Arrays
 
-Once we know how to pass functions to functions we can really start doing some fancier processing of the data in our arrays, like filtering our array by values inside the elements:
+Depois que sabemos passar funções para funções, podemos começar a fazer um processamento mais sofisticado dos dados dos nossos arrays, como filtrar nosso array pelos valores dentro dos elementos:
 
 {% include p5-editor.html id="KBK3zfcnR" %}
 
-If we look at at the documentation for the [`filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter) function we'll see that it takes a function as its parameter and returns a copy of the array, but only with the elements that pass the filter function. What this means is that it runs the function on every element of the array and if the function returns true that element is copied into the new array, if not, it doesn't make it into the array.
+Se olharmos a documentação da função [`filter()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter), vamos ver que ela recebe uma função como parâmetro e retorna uma cópia do array, mas apenas com os elementos que passam pela função de filtro. Isso significa que ela executa a função em cada elemento do array e, se a função retorna verdadeiro, aquele elemento é copiado para o novo array; se não, ele não entra no array.
 
-In the example above, there's a function called `fullyInside()` that returns `true` if a circle element is entirely within the canvas. When we pass that function to `filter()` it will call the function with each element of our array and only keep the circles whose shape is entirely visible in the canvas.
+No exemplo acima, há uma função chamada `fullyInside()` que retorna `true` se um elemento círculo está inteiramente dentro do canvas. Quando passamos essa função para o `filter()`, ele chama a função com cada elemento do nosso array e mantém apenas os círculos cuja forma está totalmente visível no canvas.
 
-In our code, we first call the `filter()` function on the original array, and since `filter()` returns a copy of the array, our original array (`myCircles`) still has circles that are slightly outside the canvas. And because `filter()` returns an array, that array has a `forEach()` special function that can be called with our previously defined `drawCircle()` function to draw all of the filtered circles:
+No nosso código, primeiro chamamos a função `filter()` no array original e, como o `filter()` retorna uma cópia do array, nosso array original (`myCircles`) ainda tem círculos que estão ligeiramente fora do canvas. E, como o `filter()` retorna um array, esse array tem uma função especial `forEach()` que pode ser chamada com a nossa função `drawCircle()` definida anteriormente para desenhar todos os círculos filtrados:
 
 ```js
 let filteredCircles = myCircles.filter(fullyInside);
 filteredCircles.forEach(drawCircle);
 ```
 
-Try to write your own filter function. Maybe it removes elements that are too close to the center of the canvas... or all the small circles...
+Tente escrever sua própria função de filtro. Talvez uma que remova elementos que estão muito perto do centro do canvas... ou todos os círculos pequenos...
 
-## Custom Sorting
+## Ordenação Personalizada
 
-We can also sort our array by one of the properties of the circles. This is similar to filtering, but a little more advanced, and since it's such a common operation it's worth to take a look at and even if it's not entirely clear now, we can always come back to this tutorial when we need to do something like this.
+Também podemos ordenar nosso array por uma das propriedades dos círculos. Isso é parecido com filtrar, mas um pouco mais avançado e, como é uma operação tão comum, vale a pena dar uma olhada e, mesmo que não fique totalmente claro agora, sempre podemos voltar a este tutorial quando precisarmos fazer algo assim.
 
-If our array elements are all numbers or words, `sort()` just works without any arguments, but since what we are trying to sort here are circle objects, JavaScript doesn't really know how to handle those (should it sort them by `x` values? by `y`? by `d`?).
+Se os elementos do nosso array são todos números ou palavras, o `sort()` simplesmente funciona sem nenhum argumento, mas como o que estamos tentando ordenar aqui são objetos círculo, o JavaScript não sabe muito bem como lidar com eles (deveria ordená-los pelos valores de `x`? de `y`? de `d`?).
 
-Let's first change our sketch a bit and draw our circles close to the center on our canvas:
+Primeiro, vamos mudar um pouco o nosso sketch e desenhar nossos círculos perto do centro do canvas:
 
 {% include p5-editor.html id="tW5TKn97o" %}
 
-So, now we are not storing absolute x and y positions anymore, but small random variations to add to $$\frac{width}{2}$$ and $$\frac{height}{2}$$.
+Então, agora não estamos mais guardando posições x e y absolutas, e sim pequenas variações aleatórias a serem somadas a $$\frac{width}{2}$$ e $$\frac{height}{2}$$.
 
-If you click through you'll see that most of the circles get covered by larger circles, sometimes we see lots of circles, other times very few, but we never see all of our circles (you can add `noFill()` to the draw function to see). That's why we want to sort them from largest to smallest before drawing.
+Se você clicar várias vezes, vai ver que a maioria dos círculos fica coberta por círculos maiores; às vezes vemos muitos círculos, outras vezes bem poucos, mas nunca vemos todos os nossos círculos (você pode adicionar `noFill()` à função draw para ver). É por isso que queremos ordená-los do maior para o menor antes de desenhar.
 
-If we look at the documentation for [`sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) it says we can pass a compare function to `sort()` that defines the sort order. This compare function takes $$2$$ arguments `A` and `B` and the return value should be a number whose sign indicates the relative order of the two elements: negative if `A` is less than `B`, positive if `A` is greater than `B` and zero if they are equal.
+Se olharmos a documentação do [`sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort), ela diz que podemos passar uma função de comparação para o `sort()` que define a ordem. Essa função de comparação recebe $$2$$ argumentos `A` e `B`, e o valor de retorno deve ser um número cujo sinal indica a ordem relativa dos dois elementos: negativo se `A` é menor que `B`, positivo se `A` é maior que `B` e zero se são iguais.
 
-So something like this should work to sort our objects using their diameters:
+Então algo assim deve funcionar para ordenar nossos objetos usando seus diâmetros:
 
 ```js
 function orderByDiameter(circleA, circleB) {
@@ -105,15 +105,15 @@ function orderByDiameter(circleA, circleB) {
 
 {% include p5-editor.html id="BPNIo4WX_" %}
 
-Hmmm.... oh. Right. Since we followed the documentation to create our `orderByDiameter()` function, we are actually telling `sort()` to order things from smallest to largest. There are two ways of fixing this. The first way, and perhaps simpler, is to just [`reverse()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) the array after it's been sorted:
+Hmmm.... ah. Certo. Como seguimos a documentação para criar nossa função `orderByDiameter()`, estamos na verdade dizendo ao `sort()` para ordenar do menor para o maior. Há duas formas de consertar isso. A primeira, e talvez a mais simples, é usar o [`reverse()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse) no array depois de ele ser ordenado:
 
 ```js
 myCircles.sort(orderByDiameter).reverse();
 ```
 
-This works, but we're processing the array twice, once to run  `sort()` and then again for `reverse()`. And without knowing how exactly JavaScript does those operations, it might be doing a lot of unnecessary work. It would be better to just sort it once, but in the reverse order.
+Isso funciona, mas estamos processando o array duas vezes, uma para executar o `sort()` e outra para o `reverse()`. E, sem saber exatamente como o JavaScript faz essas operações, ele pode estar fazendo muito trabalho desnecessário. Seria melhor ordenar apenas uma vez, mas na ordem inversa.
 
-To do that we can create a different sort function that returns the opposite of the previous one:
+Para isso, podemos criar uma função de ordenação diferente que retorna o oposto da anterior:
 
 ```js
 function orderByDiameterReverse(circleA, circleB) {
@@ -121,14 +121,14 @@ function orderByDiameterReverse(circleA, circleB) {
 }
 ```
 
-And here's the result, drawing the circles ordered from largest to smallest so we can see all of them:
+E aqui está o resultado, desenhando os círculos ordenados do maior para o menor para que possamos ver todos eles:
 
 {% include p5-editor.html id="tIIb9LqVZ" %}
 
-Both options are there in the sketch above, and we can turn them on and off with comments to see that they do the same thing.
+As duas opções estão no sketch acima, e podemos ligá-las e desligá-las com comentários para ver que fazem a mesma coisa.
 
-## Possibility
+## Possibilidades
 
-And now, we can add some new parameters to our circle object, like: color and rotation velocity, to create some kind of hypnotizing machine:
+E agora podemos adicionar alguns novos parâmetros ao nosso objeto círculo, como cor e velocidade de rotação, para criar uma espécie de máquina hipnotizante:
 
 {% include p5-editor.html id="IA_Vdmxm7" %}

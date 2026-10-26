@@ -1,12 +1,12 @@
 ---
-title: Gemini API
+title: API do Gemini
 ---
 
-Ok. Let's look at even bigger models!
+Ok. Vamos olhar para modelos ainda maiores!
 
-Hugging Face and `Gradio` apps are really good ways to experiment with open source models, but sometimes we might want to look at some of the commercial models, like `chatGPT` or `Gemini`.
+Os apps do Hugging Face e do `Gradio` são formas muito boas de experimentar com modelos de código aberto, mas às vezes podemos querer olhar para alguns dos modelos comerciais, como o `chatGPT` ou o `Gemini`.
 
-The process/code is similar to how we used models through `Gradio` because we'll need to make API requests to servers:
+O processo/código é parecido com o de quando usamos modelos através do `Gradio`, porque vamos precisar fazer requisições de API para servidores:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/gemini-server-00.jpg' |relative_url }}">
@@ -14,39 +14,39 @@ The process/code is similar to how we used models through `Gradio` because we'll
 
 ## Gemini
 
-Let's take a look at how to use Google's `Gemini` models to describe images.
+Vamos ver como usar os modelos `Gemini` do Google para descrever imagens.
 
-We'll start with the plain `Transformers.js` image description sketch we had a few tutorials back:
+Vamos começar com o sketch simples de descrição de imagens com `Transformers.js` que tínhamos alguns tutoriais atrás:
 
 {% include p5-editor.html id="ZuwaVgRID" %}
 
-Let's remove the `Transformers.js` code and get the sketch ready for a new model:
+Vamos remover o código do `Transformers.js` e deixar o sketch pronto para um novo modelo:
 
 {% include p5-editor.html id="5oLO0FGaq" %}
 
-We've also added a text input field for pasting a Gemini "_API key_".
+Também adicionamos um campo de texto para colar uma "_API key_" do Gemini.
 
-What's an _API key_ ? It's how companies keep track of who is using their APIs and services. In this case, it's how Google keeps track of how often we use Gemini and if we're not going over any of the limits of their free tier.
+O que é uma _API key_ ? É a forma como as empresas acompanham quem está usando suas APIs e serviços. Neste caso, é como o Google acompanha com que frequência usamos o Gemini e se não estamos passando de nenhum dos limites do plano gratuito.
 
-In order to get an _API key_ we have to be logged into a Google account and start an AI Studio project [here](https://aistudio.google.com/). Clicking on the _Get API key_ button and then the _+ Create API key_ button should be enough to start a project and get a key.
+Para conseguir uma _API key_, precisamos estar logados em uma conta Google e iniciar um projeto no AI Studio [aqui](https://aistudio.google.com/). Clicar no botão _Get API key_ e depois no botão _+ Create API key_ deve ser suficiente para começar um projeto e obter uma chave.
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/gemini-key-00.jpg' |relative_url }}">
 </div>
 
-We have to save this key somewhere safe. It's like a password for logging into the Gemini servers.
+Temos que guardar essa chave em algum lugar seguro. Ela é como uma senha para entrar nos servidores do Gemini.
 
-Now, we can head over to the Gemini API documentation [here](https://ai.google.dev/gemini-api/docs/text-generation#javascript), and see how to add a Gemini client to our `p5.js` sketch.
+Agora podemos ir até a documentação da API do Gemini [aqui](https://ai.google.dev/gemini-api/docs/text-generation#javascript) e ver como adicionar um cliente Gemini ao nosso sketch `p5.js`.
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/gemini-api-00.jpg' |relative_url }}">
 </div>
 
-Again, we'll have to adapt this to work in a `p5.js` sketch. It's not that bad.
+De novo, vamos ter que adaptar isso para funcionar em um sketch `p5.js`. Não é tão difícil.
 
-Because we need an API key when creating a `GoogleGenAI` object, we'll just put most of our model code inside the `describeFrame()` function. Even the code that sets up the model.
+Como precisamos de uma API key para criar um objeto `GoogleGenAI`, vamos colocar a maior parte do código do modelo dentro da função `describeFrame()`. Até o código que configura o modelo.
 
-This way, when we hit the _Describe_ button for the first time, our `gemini` variable will be un-instantiated, and we'll load the library, read the API key value from the text box, and create a `GoogleGenAI` object:
+Assim, quando apertarmos o botão _Describe_ pela primeira vez, a nossa variável `gemini` ainda não vai estar instanciada, e vamos carregar a biblioteca, ler o valor da API key da caixa de texto e criar um objeto `GoogleGenAI`:
 ```js
 if (!gemini){
   let module = await import(gUrl);
@@ -54,22 +54,22 @@ if (!gemini){
 }
 ```
 
-Here's the code so far. Same as before, but different:
+Aqui está o código até agora. Igual ao anterior, mas diferente:
 
 {% include p5-editor.html id="g_Z1QQ5yD" %}
 
-If we dig around the API documentation enough, eventually we'll find [this bit of code](https://ai.google.dev/gemini-api/docs/image-understanding#javascript_1) that describes how to send images to the model.
+Se procurarmos o suficiente na documentação da API, eventualmente vamos encontrar [este trecho de código](https://ai.google.dev/gemini-api/docs/image-understanding#javascript_1) que descreve como enviar imagens para o modelo.
 
-Again, we have to adapt this to `p5.js`.
+De novo, temos que adaptar isso para o `p5.js`.
 
-The first thing we have to do is make sure our image's `dataURL` is in `jpeg` format, and remove the header that specifies that it's in `jpeg` format:
+A primeira coisa que precisamos fazer é garantir que o `dataURL` da nossa imagem esteja em formato `jpeg` e remover o cabeçalho que especifica que ele está em formato `jpeg`:
 ```js
 let imgUrl = mCamera.canvas
   .toDataURL("image/jpeg")
   .replace("data:image/jpeg;base64,", "");
 ```
 
-Then we can create an image data object:
+Depois podemos criar um objeto de dados de imagem:
 ```js
 let imgData = {
   data: imgUrl,
@@ -77,7 +77,7 @@ let imgData = {
 };
 ```
 
-And, finally, call the model with the image data and a prompt asking it to describe the image:
+E, finalmente, chamar o modelo com os dados da imagem e um prompt pedindo que ele descreva a imagem:
 ```js
 let response = await gemini.models.generateContent({
   model: "gemini-2.0-flash",
@@ -88,15 +88,15 @@ let response = await gemini.models.generateContent({
 });
 ```
 
-The description will be in `response.text`.
+A descrição estará em `response.text`.
 
-Now we can run this sketch and get some descriptions from Gemini. We just have to make sure we have our API key in the text box:
+Agora podemos rodar este sketch e obter algumas descrições do Gemini. Só precisamos garantir que a nossa API key esteja na caixa de texto:
 
 {% include p5-editor.html id="D0EjbXv30" %}
 
-## Chatting with Gemini
+## Conversando com o Gemini
 
-Chatting with the model is even easier, in terms of the code. It can be exactly the same as above, but we don't need to encode an image:
+Conversar com o modelo é ainda mais fácil, em termos de código. Pode ser exatamente igual ao acima, mas não precisamos codificar uma imagem:
 ```js
 let response = await gemini.models.generateContent({
   model: "gemini-2.0-flash",
@@ -106,6 +106,6 @@ let response = await gemini.models.generateContent({
 });
 ```
 
-Here's a sketch with an extra text box for inputting questions to the model:
+Aqui está um sketch com uma caixa de texto extra para digitar perguntas para o modelo:
 
 {% include p5-editor.html id="FHMs5kya3" %}

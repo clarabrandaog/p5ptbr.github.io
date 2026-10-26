@@ -4,39 +4,39 @@ title: Promises, async, await
 
 ## Promises & async / await
 
-Some of the things we ask our programs to do take time. And not just a little bit of time: downloading a file from the internet can take several seconds. If our program waits for an image, sound or data file, everything halts: animations stop, buttons don't respond, our sketches freeze up. To get around this, we use JavaScript's built-in tools for handling things that take time: **Promises** and **async / await**.
+Algumas das coisas que pedimos aos nossos programas levam tempo. E não é só um pouquinho de tempo: baixar um arquivo da internet pode levar vários segundos. Se o nosso programa fica esperando por uma imagem, um som ou um arquivo de dados, tudo para: as animações congelam, os botões não respondem, nossos sketches travam. Para contornar isso, usamos as ferramentas nativas do JavaScript para lidar com o que demora: **Promises** e **async / await**.
 
-Take a look at this code:
+Dê uma olhada neste código:
 
 ```js
 let data = loadJSON("https://data.com/rent.json");
 ```
 
-Our intuition says that the variable `data` should now contain the data from the JSON file. But the file lives on a server somewhere on the internet. Downloading it takes time — many milliseconds at best, seconds at worst. JavaScript can't just stop everything to wait for it.
+Nossa intuição diz que a variável `data` agora deveria conter os dados do arquivo JSON. Mas o arquivo está em um servidor em algum lugar da internet. Baixá-lo leva tempo, muitos milissegundos na melhor das hipóteses, segundos na pior. O JavaScript não pode simplesmente parar tudo para esperar.
 
-`loadJSON()` gives us a **Promise** and later, the data.
+`loadJSON()` nos entrega uma **Promise** e, mais tarde, os dados.
 
 ## Promise
 
-A **Promise** is a JavaScript object that represents a value that doesn't exist yet, but will exist in the future. It's an IOU for something that's on its way.
+Uma **Promise** é um objeto JavaScript que representa um valor que ainda não existe, mas vai existir no futuro. É uma promissória de algo que está a caminho.
 
-Think about ordering food at a restaurant. You don't get the food right away. Instead, you get a number — a promise — that says "your dish will be ready soon". You can do other things while you wait: check your phone, talk to a friend, read a book, etc. When the food is ready, you hear your number called and you go pick it up.
+Pense em pedir comida em um restaurante. Você não recebe o prato na hora. Em vez disso, recebe um número (uma promessa) que diz "seu prato ficará pronto em breve". Você pode fazer outras coisas enquanto espera: olhar o celular, conversar com um amigo, ler um livro, etc. Quando a comida fica pronta, você ouve seu número ser chamado e vai buscá-la.
 
-A Promise works the same way. It can be in one of these states:
+Uma Promise funciona do mesmo jeito. Ela pode estar em um destes estados:
 
-- **pending** — the data is on its way (the file is being downloaded).
-- **fulfilled** — the data is ready (the file arrived and is stored).
-- **rejected** — something went wrong (the file doesn't exist, or the server didn't answer).
+- **pending** (pendente): os dados estão a caminho (o arquivo está sendo baixado).
+- **fulfilled** (cumprida): os dados estão prontos (o arquivo chegou e está armazenado).
+- **rejected** (rejeitada): algo deu errado (o arquivo não existe, ou o servidor não respondeu).
 
-Every p5.js function that loads something returns a Promise: `loadJSON()`, `loadImage()`, `loadTable()`, `loadStrings()`, `loadFont()`, and `loadSound()`. To get the actual value out of a Promise, we use a keyword called `await`.
+Toda função do p5.js que carrega alguma coisa retorna uma Promise: `loadJSON()`, `loadImage()`, `loadTable()`, `loadStrings()`, `loadFont()` e `loadSound()`. Para tirar o valor de verdade de dentro de uma Promise, usamos uma palavra-chave chamada `await`.
 
 ## await
 
-The `await` keyword does what it sounds like: it waits. When we write `await` before a Promise, our code pauses on that line until the Promise is fulfilled.
+A palavra-chave `await` faz o que o nome sugere: espera. Quando escrevemos `await` antes de uma Promise, nosso código pausa naquela linha até que a Promise seja cumprida.
 
-`await` can only be used inside functions marked with the `async` keyword. An `async` function is a function that is allowed to pause and wait: it tells JavaScript "this function may use `await`". It also means that the function itself returns a Promise — a value that will be ready later, once everything inside the function is done.
+O `await` só pode ser usado dentro de funções marcadas com a palavra-chave `async`. Uma função `async` é uma função que tem permissão para pausar e esperar: ela diz ao JavaScript "esta função pode usar `await`". Isso também significa que a própria função retorna uma Promise, um valor que estará pronto mais tarde, quando tudo o que está dentro da função terminar.
 
-In p5.js we can make our `setup()` function `async`. p5.js runs `setup()` and waits for it to finish — including all of its `await`s — before it starts calling `draw()`:
+No p5.js podemos tornar a nossa função `setup()` `async`. O p5.js executa o `setup()` e espera ele terminar, incluindo todos os seus `await`s, antes de começar a chamar o `draw()`:
 
 ```js
 let data;
@@ -44,22 +44,22 @@ let data;
 async function setup() {
   createCanvas(640, 480);
   data = await loadJSON("https://data.com/rent.json");
-  // code below this line will not run until the promise of loadJSON is fulfilled
+  // o código abaixo desta linha só roda quando a promise do loadJSON for cumprida
 }
 ```
 
-Let's break it down:
+Vamos por partes:
 
-1. The sketch starts and p5.js calls `setup()`.
-2. `loadJSON()` begins downloading the JSON file. Because of `await`, it pauses right there.
-3. When the file arrives, the Promise is fulfilled, and the downloaded data is assigned to `data`.
-4. `setup()` can now finish, running any code that follows `loadJSON()`.
+1. O sketch começa e o p5.js chama o `setup()`.
+2. O `loadJSON()` começa a baixar o arquivo JSON. Por causa do `await`, o código pausa ali mesmo.
+3. Quando o arquivo chega, a Promise é cumprida e os dados baixados são atribuídos a `data`.
+4. O `setup()` agora pode terminar, executando qualquer código que venha depois do `loadJSON()`.
 
-## Sounds great, what happens if a file isn't there?
+## Legal, e o que acontece se um arquivo não estiver lá?
 
-Files are not guaranteed to load. The file might not exist, the URL might be wrong, the network might fail, or the server might be down. When that happens, the Promise is **rejected** instead of fulfilled, and our `await` line throws an error.
+Não há garantia de que os arquivos carreguem. O arquivo pode não existir, a URL pode estar errada, a rede pode falhar ou o servidor pode estar fora do ar. Quando isso acontece, a Promise é **rejeitada** em vez de cumprida, e a nossa linha com `await` lança um erro.
 
-We can handle that with `try` / `catch`, which lets us specify what to do if a block of code fails:
+Podemos tratar isso com `try` / `catch`, que nos permite especificar o que fazer se um bloco de código falhar:
 
 ```js
 let data;
@@ -69,40 +69,40 @@ async function setup() {
   try {
     data = await loadJSON("https://data.com/rent.json");
   } catch (err) {
-    print("Could not load the data: " + err);
-    data = []; // use an empty array as a fallback, or better still, store some dummy data 
+    print("Não foi possível carregar os dados: " + err);
+    data = []; // use um array vazio como alternativa ou, melhor ainda, guarde alguns dados de exemplo
   }
 }
 ```
 
-With a fallback value in place, the rest of our sketch can keep running even when the load fails.
+Com um valor alternativo definido, o resto do nosso sketch pode continuar rodando mesmo quando o carregamento falha.
 
-## I see reference to callbacks, what's that?
+## Vi referências a callbacks, o que é isso?
 
-Before `async` / `await` existed, JavaScript used **callback functions**: you would pass a function as an argument, and that function would be called once the value was ready.
+Antes de o `async` / `await` existir, o JavaScript usava **funções callback**: você passava uma função como argumento, e essa função era chamada quando o valor estivesse pronto.
 
 ```js
-// callback version
+// versão com callback
 loadJSON("https://data.com/rent.json", (data) => {
-  // use data here, inside the callback
+  // use data aqui, dentro do callback
 });
 ```
 
-The problem with callbacks is that if we need to load several things in order, functions need to nest inside of functions and the code becomes hard to read. With `await` it reads like synchronous code:
+O problema dos callbacks é que, se precisamos carregar várias coisas em sequência, as funções precisam ficar aninhadas dentro de outras funções e o código fica difícil de ler. Com o `await`, o código se lê como código síncrono:
 
 ```js
-// await version: reads top to bottom, like synchronous code
+// versão com await: lê de cima para baixo, como código síncrono
 data = await loadJSON("https://data.com/rent.json");
-// use data here, in the normal flow of our code
+// use data aqui, no fluxo normal do nosso código
 ```
 
-p5.js load functions still accept callbacks, But `await` is the pattern we'll use when we write our own code. We may encounter some libraries that rely on callbacks, but we're going to avoid them when possible.
+As funções de carregamento do p5.js ainda aceitam callbacks, mas o `await` é o padrão que vamos usar quando escrevermos nosso próprio código. Podemos encontrar algumas bibliotecas que dependem de callbacks, mas vamos evitá-los sempre que possível.
 
-## Loading all kinds of things
+## Carregando todo tipo de coisa
 
-This pattern works for all of p5's load functions. 
+Esse padrão funciona para todas as funções de carregamento do p5.
 
-Images:
+Imagens:
 
 ```js
 let mImage;
@@ -117,7 +117,7 @@ function draw() {
 }
 ```
 
-Fonts:
+Fontes:
 
 ```js
 let myFont;
@@ -129,7 +129,7 @@ async function setup() {
 }
 ```
 
-Tables and text files:
+Tabelas e arquivos de texto:
 
 ```js
 let mTable;
@@ -142,7 +142,7 @@ async function setup() {
 }
 ```
 
-Sound files:
+Arquivos de som:
 
 ```js
 let mSound;
@@ -156,11 +156,11 @@ function mousePressed() {
   mSound.play();
 }
 ```
-## Loading several things at once
+## Carregando várias coisas ao mesmo tempo
 
-If we `await` one load function one after another, they download in sequence: first an image, then a font, then some CSV data (or however you arrange that code). Each file would have to finish before the next one starts.
+Se usarmos `await` em uma função de carregamento depois da outra, os arquivos são baixados em sequência: primeiro uma imagem, depois uma fonte, depois alguns dados CSV (ou como você organizar esse código). Cada arquivo teria que terminar antes de o próximo começar.
 
-If your files don't depend on each other, so they can all be downloaded at the same time. JavaScript gives us a helper for this: `Promise.all()`. It takes an array of Promises and returns a single Promise that is fulfilled when all of them are ready:
+Se os seus arquivos não dependem uns dos outros, eles podem ser baixados todos ao mesmo tempo. O JavaScript nos dá um auxiliar para isso: `Promise.all()`. Ele recebe um array de Promises e retorna uma única Promise que é cumprida quando todas elas estão prontas:
 
 ```js
 let images;
@@ -172,24 +172,23 @@ async function setup() {
     loadImage("two.png"),
     loadImage("three.png")
   ]);
-  // results is an array of the three images, in order
+  // results é um array com as três imagens, na ordem
   images = results;
 }
 ```
 
-Using `Promise.all()` is usually faster than loading the files one at a time, because the downloads overlap.
+Usar o `Promise.all()` costuma ser mais rápido do que carregar os arquivos um de cada vez, porque os downloads se sobrepõem.
 
 
-## Recap
+## Resumo
 
-- A **Promise** represents a value that will be available in the future.
-- `loadJSON()`, `loadImage()`, `loadTable()`, `loadStrings()`, `loadFont()` and `loadSound()` all return Promises.
-- `await` pauses our code until a Promise is fulfilled, and `await` only works inside `async` functions.
-- An `async` function is allowed to use `await`, and returns a Promise itself.
-- In p5.js, we load everything we need at the top of an `async function setup()`, before p5.js starts calling `draw()`.
-- Use `Promise.all()` to load several files at the same time.
-- Use `try` / `catch` to handle files that fail to load.
-- `await` works with any Promise, not just p5.js functions.
+- Uma **Promise** representa um valor que estará disponível no futuro.
+- `loadJSON()`, `loadImage()`, `loadTable()`, `loadStrings()`, `loadFont()` e `loadSound()` retornam Promises.
+- O `await` pausa o nosso código até que uma Promise seja cumprida, e o `await` só funciona dentro de funções `async`.
+- Uma função `async` pode usar `await` e retorna uma Promise.
+- No p5.js, carregamos tudo o que precisamos no início de uma `async function setup()`, antes de o p5.js começar a chamar o `draw()`.
+- Use `Promise.all()` para carregar vários arquivos ao mesmo tempo.
+- Use `try` / `catch` para tratar arquivos que falham ao carregar.
+- O `await` funciona com qualquer Promise, não só com funções do p5.js.
 
-Now that we know how to wait for our files, we can put this into practice. Next we'll load real data into our sketches — JSON and CSV files — and visualize it.
-
+Agora que sabemos como esperar nossos arquivos, podemos colocar isso em prática. A seguir, vamos carregar dados reais nos nossos sketches (arquivos JSON e CSV) e visualizá-los.

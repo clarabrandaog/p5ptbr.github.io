@@ -1,46 +1,46 @@
 ---
-title: Randomness
+title: Aleatoriedade
 ---
-## Breaking Patterns
+## Quebrando Padrões
 
-Now that we've seen how to draw [patterns](../counters/) on our canvas using `for()` loops and how to create our own [functions](../functions/), let's see how to use one of the built-in functions from p5.js to make our patterns more interesting.
+Agora que vimos como desenhar [padrões](../counters/) no nosso canvas usando loops `for()` e como criar nossas próprias [funções](../functions/), vamos ver como usar uma das funções nativas do p5.js para deixar nossos padrões mais interessantes.
 
-Let's start with a simple grid of circles.
+Vamos começar com uma grade simples de círculos.
 
-Note the use of a variable to set the circle diameter:
+Note o uso de uma variável para definir o diâmetro dos círculos:
 
 {% include p5-editor.html id="CyTtdVfBe" %}
 
-One way to add variability to our pattern would be to pick a slightly different value for the diameter or the color of each of our circles.
+Uma forma de adicionar variabilidade ao nosso padrão seria escolher um valor ligeiramente diferente para o diâmetro ou a cor de cada um dos nossos círculos.
 
-Let's start with color. We are going to see how we can use [`random()`](https://p5js.org/reference/#/p5/random) to select a value from a pre-determined set of options for the color of our ellipses.
+Vamos começar pela cor. Vamos ver como podemos usar [`random()`](https://p5js.org/reference/#/p5/random) para selecionar um valor de um conjunto pré-determinado de opções para a cor das nossas elipses.
 
-For example, let's say we want half of them to be black and the other half to be white, but we don't want all the black ones in a row, and then the white ones, because that would look like a chessboard and it's boring.
+Por exemplo, digamos que queremos que metade delas seja preta e a outra metade branca, mas não queremos todas as pretas em sequência e depois as brancas, porque isso pareceria um tabuleiro de xadrez e é chato.
 
-We want them to be mixed and shuffled.
+Queremos que elas estejam misturadas e embaralhadas.
 
-We could use `random(0, 255)` to pick a random grayscale value between $$0$$ and $$255$$ to fill each circle:
+Poderíamos usar `random(0, 255)` para escolher um valor aleatório de cinza entre $$0$$ e $$255$$ para preencher cada círculo:
 
 {% include p5-editor.html id="DjylI5wj-N" %}
 
-Hmmmm.... there is an issue with this: we are not drawing black and white circles. All the values between $$0$$ and $$255$$ are equally likely to occur!
+Hmmmm.... tem um problema com isso: não estamos desenhando círculos pretos e brancos. Todos os valores entre $$0$$ e $$255$$ têm a mesma probabilidade de ocorrer!
 
-There are a few ways to fix this, but let's start by using the `random()` function to give us a number between $$0$$ and $$1.0$$. Since all the values between $$0$$ and $$1.0$$ are equally likely to occur, about half of the numbers will be less than $$0.5$$ and the other half will be greater than $$0.5$$.
+Há algumas formas de consertar isso, mas vamos começar usando a função `random()` para nos dar um número entre $$0$$ e $$1.0$$. Como todos os valores entre $$0$$ e $$1.0$$ têm a mesma probabilidade de ocorrer, cerca de metade dos números será menor que $$0.5$$ e a outra metade será maior que $$0.5$$.
 
-If we image a number line and $$50$$ random points along that line, about $$25$$ of them will be less than $$0.5$$ and the rest will be greater than $$0.5$$:
+Se imaginarmos uma reta numérica e $$50$$ pontos aleatórios nessa reta, cerca de $$25$$ deles serão menores que $$0.5$$ e o resto será maior que $$0.5$$:
 
 <div class="scaled-images left w75">
   <img src="{{ '/assets/images/p5/random-lottery-00.jpg' | relative_url }}">
 </div>
 
-Putting this in pseudo-code, our logic could be:
+Colocando isso em pseudocódigo, nossa lógica poderia ser:
 ```js
 aRandomNumber = random()
 if aRandomNumber < 0.5: draw a white circle
 if aRandomNumber > 0.5: draw a black circle
 ```
 
-Since the two choices are mutually exclusive (they can't both happen at the same time), we can use an `else` statement and turn this into the following JavaScript:
+Como as duas escolhas são mutuamente exclusivas (não podem acontecer ao mesmo tempo), podemos usar uma instrução `else` e transformar isso no seguinte JavaScript:
 ```js
 if(random() < 0.5) {
   fill(255);
@@ -51,71 +51,71 @@ if(random() < 0.5) {
 
 {% include p5-editor.html id="Myfh7bORq" %}
 
-Cool ! What if want to use $$3$$ colors now? Like some gold, blue and white circles?
+Legal ! E se quisermos usar $$3$$ cores agora? Como alguns círculos dourados, azuis e brancos?
 
-We could do something similar:
+Poderíamos fazer algo parecido:
 
-Draw a number, if it's less than half, draw a black circle, otherwise, draw another number and repeat the process to pick between gold and blue. This works, but what do we notice about the frequency of the three colors?
+Sortear um número; se for menor que a metade, desenhar um círculo preto; caso contrário, sortear outro número e repetir o processo para escolher entre dourado e azul. Isso funciona, mas o que notamos sobre a frequência das três cores?
 
 {% include p5-editor.html id="0fZEyVwJz" %}
 
-Gold and blue circles happen with similar frequency, but it seems like there are more black circles. Twice as many black circles, actually. In this code we were asking p5.js to draw black circles half of the time, and then to split the remaining half again in half, so blue and gold only happen $$25\%$$ of the time each.
+Os círculos dourados e azuis ocorrem com frequência parecida, mas parece que há mais círculos pretos. O dobro de círculos pretos, na verdade. Neste código estávamos pedindo ao p5.js que desenhasse círculos pretos metade das vezes, e depois dividisse a metade restante de novo ao meio, então o azul e o dourado só acontecem $$25\%$$ das vezes cada um.
 
-We implemented something like this:
+Implementamos algo assim:
 
 <div class="scaled-images left w75">
   <img src="{{ '/assets/images/p5/random-lottery-01.jpg' | relative_url }}">
 </div>
 
-What if we draw a random number between $$0$$ and $$1$$ and save it in a variable. Now we can use this number multiple times in multiple `if()` statements and check if it falls between certain ranges. If we want something to happen about one-third of the time, that's the same as asking if the random number is less than $$0.3333$$, because of all the numbers between $$0$$ and $$1$$ one-third of them are less than $$0.3333$$.
+E se sortearmos um número aleatório entre $$0$$ e $$1$$ e o guardarmos em uma variável. Agora podemos usar esse número várias vezes em várias instruções `if()` e verificar se ele cai em certos intervalos. Se queremos que algo aconteça cerca de um terço das vezes, isso é o mesmo que perguntar se o número aleatório é menor que $$0.3333$$, porque, de todos os números entre $$0$$ e $$1$$, um terço deles é menor que $$0.3333$$.
 
-We're now implementing something like this:
+Agora estamos implementando algo assim:
 
 <div class="scaled-images left w75">
   <img src="{{ '/assets/images/p5/random-lottery-02.jpg' | relative_url }}">
 </div>
 
-The logic for black can be:
+A lógica para o preto pode ser:
 ```js
 if aRandomNumer < 0.333: draw black
 ```
 
-If the number is greater than $$0.3333$$ we can now just check if it's also less than $$0.6666$$. Doing this after we checked that it's greater than $$0.3333$$ guarantees that our random number is between $$0.3333$$ and $$0.6666$$, an interval that accounts for another third of the numbers between $$0$$ and $$1$$.
+Se o número for maior que $$0.3333$$, agora podemos apenas verificar se ele também é menor que $$0.6666$$. Fazer isso depois de verificar que ele é maior que $$0.3333$$ garante que o nosso número aleatório está entre $$0.3333$$ e $$0.6666$$, um intervalo que corresponde a outro terço dos números entre $$0$$ e $$1$$.
 
-The logic for black and gold:
+A lógica para o preto e o dourado:
 ```js
 if aRandomNumer < 0.333: draw black
 else if aRandomNumer < 0.666: draw gold
 ```
 
-And if the number is not less than $$0.6666$$ we get the other third of the numbers between $$0$$ and $$1$$ (all the ones between $$0.6666$$ and $$1.0$$):
+E se o número não for menor que $$0.6666$$, ficamos com o outro terço dos números entre $$0$$ e $$1$$ (todos os que estão entre $$0.6666$$ e $$1.0$$):
 ```js
 if aRandomNumer < 0.333: draw black
 else if aRandomNumer < 0.666: draw gold
 else: draw blue
 ```
 
-In code:
+Em código:
 
 {% include p5-editor.html id="w2bda32Ty" %}
 
-Hooray. Much better.
+Oba. Muito melhor.
 ### ✨✨🎉✨✨
 
-## Lottery
+## Loteria
 
-We're calling this a *lottery* method of picking random numbers because any time there's a choice to be made we're picking one option from a set of possibilities. We're not using the *continuous* value that the `random()` function returns, but are using it to draw from a *discrete* set of options.
+Estamos chamando isso de método da *loteria* para escolher números aleatórios porque, toda vez que há uma escolha a fazer, estamos escolhendo uma opção de um conjunto de possibilidades. Não estamos usando o valor *contínuo* que a função `random()` retorna, mas sim usando-o para sortear de um conjunto *discreto* de opções.
 
-Doing a lottery selection like this is a bit cumbersome, but it gives us a way to precisely control how often something happens. If we want to have different events happen with different probabilities we can just change the values we check inside our `if`/`else-if`/`else` logic.
+Fazer uma seleção por loteria assim é um pouco trabalhoso, mas nos dá uma forma de controlar com precisão a frequência com que algo acontece. Se queremos que eventos diferentes aconteçam com probabilidades diferentes, podemos simplesmente mudar os valores que verificamos dentro da nossa lógica `if`/`else-if`/`else`.
 
-Let's say we want to use six colors: black, white, gold, blue, green, grey and we want black one-third of the time, white one-quarter of the time and the other colors one-tenth of the time. To work with values that add up to $$100\%$$ let's use black: $$35\%$$, white: $$25\%$$, and $$10\%$$ for all others:
+Digamos que queremos usar seis cores: preto, branco, dourado, azul, verde, cinza, e queremos o preto um terço das vezes, o branco um quarto das vezes e as outras cores um décimo das vezes cada. Para trabalhar com valores que somam $$100\%$$, vamos usar preto: $$35\%$$, branco: $$25\%$$ e $$10\%$$ para todas as outras:
 
-Something like this:
+Algo assim:
 <div class="scaled-images left w75">
   <img src="{{ '/assets/images/p5/random-lottery-03.jpg' | relative_url }}">
 </div>
 
-Our logic could be something like:
+Nossa lógica poderia ser algo como:
 ```js
 aRandomNumber = random()
 if aRandomNumber < 0.35: draw black
@@ -126,23 +126,23 @@ else if aRandomNumber < 0.90: draw green
 else: draw grey
 ```
 
-The thresholds we check against are accumulating. When we are checking for black, we already know that it's greater than $$0.35$$, and we only check if it's less than $$0.6$$ because numbers between $$0.35$$ and $$0.60$$ account for $$25\%$$ of all the numbers between $$0.0$$ and $$1.0$$.
+Os limites que verificamos são cumulativos. Quando estamos verificando o branco, já sabemos que o número é maior que $$0.35$$, e só verificamos se ele é menor que $$0.6$$ porque os números entre $$0.35$$ e $$0.60$$ correspondem a $$25\%$$ de todos os números entre $$0.0$$ e $$1.0$$.
 
-In code, the above logic becomes:
+Em código, a lógica acima se torna:
 
 {% include p5-editor.html id="Rf4yj-5hf" %}
 
-Can we use something like this to pick different shapes or different sizes from a set of pre-determined options ?
+Será que podemos usar algo assim para escolher formas diferentes ou tamanhos diferentes de um conjunto de opções pré-determinadas ?
 
-## Size Lottery
+## Loteria de Tamanho
 
-The process is similar, but now we'll have another random number and another block of `if`/`else` statements to select the size.
+O processo é parecido, mas agora vamos ter outro número aleatório e outro bloco de instruções `if`/`else` para selecionar o tamanho.
 
-Let's go back to just $$3$$ colors with equal probabilities:
+Vamos voltar para apenas $$3$$ cores com probabilidades iguais:
 
 {% include p5-editor.html id="gHh7Q8k7g" %}
 
-Now we'll add this logic to select the size of the ellipse:
+Agora vamos adicionar esta lógica para selecionar o tamanho da elipse:
 
 ```js
 aRandomNumber = random()
@@ -152,15 +152,15 @@ else if aRandomNumber < 0.75: draw small
 else: draw extra-small
 ```
 
-And we'll use a variable called `maxDiam` to keep track of the maximum diameter of our ellipses, so we don't have to fix the spacing we are using in the `for` loops.
+E vamos usar uma variável chamada `maxDiam` para registrar o diâmetro máximo das nossas elipses, para que não precisemos fixar o espaçamento que estamos usando nos loops `for`.
 
 {% include p5-editor.html id="Ps_Z5TmvK" %}
 
-## Position Lottery
+## Loteria de Posição
 
-We can use the same idea to slightly vary the `x` and `y` locations of our ellipses.
+Podemos usar a mesma ideia para variar ligeiramente as posições `x` e `y` das nossas elipses.
 
-After we choose a diameter, we can use another `if`/`else` statement to pick the direction we want to move our ellipse:
+Depois de escolher um diâmetro, podemos usar outra instrução `if`/`else` para escolher a direção em que queremos mover a nossa elipse:
 
 ```js
 aRandomNumber = random()
@@ -170,24 +170,24 @@ else if aRandomNumber < 0.75: move up
 else: move down
 ```
 
-We'll use an extra variable called `dValue` to calculate how far we want to move the ellipses, and variables called `dx` and `dy` to keep track of which direction to change.
+Vamos usar uma variável extra chamada `dValue` para calcular o quanto queremos mover as elipses, e variáveis chamadas `dx` e `dy` para registrar em qual direção mudar.
 
-This calculation makes the smaller ellipses move further, and larger ellipses move less:
+Este cálculo faz com que as elipses menores se movam mais, e as elipses maiores se movam menos:
 ```js
 let dValue = (maxDiam - eDiam) / 2;
 ```
 
-And in code:
+E em código:
 
 {% include p5-editor.html id="Rlaj-c9Ft" %}
 
-What's useful about this is that we now have a way to create non-regular patterns that don't really look like patterns. The `for` loops are still there, so in the background of our logic we have a grid, but visually it doens't necessarily look like a grid.
+O que é útil nisso é que agora temos uma forma de criar padrões não regulares que não parecem realmente padrões. Os loops `for` continuam lá, então, nos bastidores da nossa lógica, temos uma grade, mas visualmente ela não necessariamente parece uma grade.
 
-## Uniformly Distributed Continuous Variations
+## Variações Contínuas Uniformemente Distribuídas
 
-We've been using the values from the `random()` function to choose between a set of pre-defined options because in some cases it's nice to add random variation while maintaining some control over the results.
+Temos usado os valores da função `random()` para escolher entre um conjunto de opções pré-definidas porque, em alguns casos, é bom adicionar variação aleatória mantendo algum controle sobre os resultados.
 
-For example, a sketch that picks completely random colors for each ellipse will most likely pick a bunch of unpalatable colors. The way to pick a completely random color is to draw $$3$$ random numbers between $$0$$ and $$255$$ and use them as red, green and blue values for our fill color:
+Por exemplo, um sketch que escolhe cores completamente aleatórias para cada elipse provavelmente vai escolher um monte de cores desagradáveis. A forma de escolher uma cor completamente aleatória é sortear $$3$$ números aleatórios entre $$0$$ e $$255$$ e usá-los como os valores de vermelho, verde e azul da nossa cor de preenchimento:
 
 ```js
 let redRandom = random(0, 255);
@@ -201,16 +201,16 @@ fill(redRandom, greenRandom, blueRandom);
 
 ## 🤮
 
-But, maybe uniformly distributed continuous values can be used for the ellipses's diameter and position variations.
+Mas, talvez valores contínuos uniformemente distribuídos possam ser usados para as variações de diâmetro e de posição das elipses.
 
-This will pick a random diameter between $$4$$ and $$40$$ when `maxDiam` is $$40$$:
+Isto vai escolher um diâmetro aleatório entre $$4$$ e $$40$$ quando `maxDiam` for $$40$$:
 ```js
 eDiam = random(maxDiam / 4, maxDiam);
 ```
 
 {% include p5-editor.html id="2JCHEP_4g" %}
 
-And this will add random variations in both the `x` and `y` directions, based on the value of the ellipse's diameter. The difference is that now *ANY* number between `-dValue` and `dValue` is possible:
+E isto vai adicionar variações aleatórias nas direções `x` e `y`, com base no valor do diâmetro da elipse. A diferença é que agora *QUALQUER* número entre `-dValue` e `dValue` é possível:
 
 ```js
 let dValue = (maxDiam - eDiam) / 2;
@@ -220,8 +220,8 @@ let dy = random(-dValue, dValue);
 
 {% include p5-editor.html id="zcNqTwUpM" %}
 
-This looks pretty cool. Our underlying grid is almost unnoticeable.
+Isso fica bem legal. A nossa grade subjacente quase não é perceptível.
 
-And combining random positions and size:
+E combinando posições e tamanhos aleatórios:
 
 {% include p5-editor.html id="p1yFq_-SN" %}

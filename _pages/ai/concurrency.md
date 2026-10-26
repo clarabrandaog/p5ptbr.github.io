@@ -1,68 +1,68 @@
 ---
-title: Concurrency
+title: Concorrência
 ---
 
-Before we really talk about AI models and how to use them, we have to talk about concurrency.
+Antes de realmente falarmos sobre modelos de IA e como usá-los, precisamos falar sobre concorrência.
 
-Generally speaking, programs are sequential processes: the code we write is executed one line at a time following the order in which it's written.
+Em geral, os programas são processos sequenciais: o código que escrevemos é executado uma linha de cada vez, seguindo a ordem em que foi escrito.
 
-Traditionally, this mental model also worked well with how processors executed the code: one instruction/command at a time.
+Tradicionalmente, esse modelo mental também funcionava bem com a forma como os processadores executavam o código: uma instrução/comando de cada vez.
 
-Nowadays, both of these assumptions/models are not entirely true all the time: processors can do multiple things at the same time, and we might need code to run out of order.
+Hoje em dia, nenhuma dessas suposições/modelos é totalmente verdadeira o tempo todo: os processadores conseguem fazer várias coisas ao mesmo tempo, e podemos precisar que o código rode fora de ordem.
 
-## Interactivity
+## Interatividade
 
-One place where the sequential model for code execution really breaks down is in places where we have heavy user interactions, like in a browser. Let's say we have a page with an animation and a button for downloading a snapshot of the animation. When the user clicks the button, the button spins and changes color, and also triggers a pop up asking for the user's email.
+Um lugar em que o modelo sequencial de execução de código realmente desmorona é onde há muita interação do usuário, como em um navegador. Digamos que temos uma página com uma animação e um botão para baixar um snapshot da animação. Quando o usuário clica no botão, o botão gira e muda de cor, e também dispara um pop up pedindo o email do usuário.
 
-If we were running these tasks sequentially, a possible order for them might look like this:
+Se estivéssemos executando essas tarefas sequencialmente, uma ordem possível para elas seria esta:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/concurrency-00.jpg' |relative_url }}">
 </div>
 
-Each of these steps has to finish before the next one can begin and during the whole time these are being executed the animation is paused on the screen and the user can't click on anything else. If it's an interactive animation, and it takes a while for the image to get ready and be downloaded, the user has to wait and in some cases they might not even have control of their mouse.
+Cada um desses passos tem que terminar antes que o próximo possa começar e, durante todo o tempo em que eles estão sendo executados, a animação fica pausada na tela e o usuário não consegue clicar em mais nada. Se for uma animação interativa, e a imagem demorar a ficar pronta e a ser baixada, o usuário tem que esperar e, em alguns casos, pode até ficar sem controle do mouse.
 
-If, however, we have some way of telling the computer that some of these tasks can be run independent of each other and in parallel, the execution graph for the above actions might look like this:
+Se, no entanto, tivermos alguma forma de dizer ao computador que algumas dessas tarefas podem ser executadas de forma independente umas das outras e em paralelo, o grafo de execução das ações acima pode ficar assim:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/concurrency-01.jpg' |relative_url }}">
 </div>
 
-Some of the code that executes the button animation, displays the download form, and prepares the image can all be run at the same time, concurrently. And, more importantly, the animation can keep running in the background. It doesn't have to stop and wait for the other actions to finish executing.
+Parte do código que executa a animação do botão, exibe o formulário de download e prepara a imagem pode rodar ao mesmo tempo, de forma concorrente. E, mais importante, a animação pode continuar rodando em segundo plano. Ela não precisa parar e esperar que as outras ações terminem de ser executadas.
 
-Once the image is ready and the user has filled out the form, it will be downloaded in parallel with whatever other action the user might be performing. The animation stays interactive the whole time and at no moment did the user lose control of their mouse.
+Quando a imagem estiver pronta e o usuário tiver preenchido o formulário, ela será baixada em paralelo com qualquer outra ação que o usuário esteja realizando. A animação continua interativa o tempo todo e em nenhum momento o usuário perdeu o controle do mouse.
 
-## Concurrency in JavaScript
+## Concorrência em JavaScript
 
-One small, but extremely important detail that was overlooked in the description above was implied in the phrase "_once the image is ready and the user has filled out the form_". We actually need a mechanism that either detects when certain actions are done executing, or that will trigger new parallel actions once a certain action is done executing.
+Um pequeno, mas extremamente importante detalhe, que passou despercebido na descrição acima, estava implícito na frase "_quando a imagem estiver pronta e o usuário tiver preenchido o formulário_". Na verdade, precisamos de um mecanismo que detecte quando certas ações terminam de ser executadas, ou que dispare novas ações paralelas quando uma certa ação termina de ser executada.
 
-We've seen something like this in some of the `p5.js` functions that load data from files, like: `loadImage()`, `loadStrings()` and `loadJSON()`. If we look at their [documentation](https://p5js.org/reference/p5/loadImage/) we'll see that they all have this similar signature:
+Já vimos algo assim em algumas das funções do `p5.js` que carregam dados de arquivos, como: `loadImage()`, `loadStrings()` e `loadJSON()`. Se olharmos a [documentação](https://p5js.org/reference/p5/loadImage/) delas, vamos ver que todas têm uma assinatura parecida:
 
 `loadImage(path, [successCallback], [failureCallback])`
 
-where `successCallback` and `failureCallback` are optional arguments that specify functions to be executed once the file in the `path` argument has been downloaded, or has failed to load.
+onde `successCallback` e `failureCallback` são argumentos opcionais que especificam funções a serem executadas quando o arquivo do argumento `path` tiver sido baixado, ou tiver falhado ao carregar.
 
-Downloading a file is something that can take a really long time, depending on the file size and location, and since we don't want to pause our program while that happens, we tell the computer to start downloading the file and specify what it should do when it's done.
+Baixar um arquivo pode demorar bastante, dependendo do tamanho e da localização do arquivo, e como não queremos pausar o nosso programa enquanto isso acontece, dizemos ao computador para começar a baixar o arquivo e especificamos o que ele deve fazer quando terminar.
 
 <div class="scaled-images left w50">
   <img src="{{ 'assets/images/ai/concurrency-02.jpg' |relative_url }}">
 </div>
 
-These functions to be called in the future are called _callback_ functions and this is a really common pattern for interactive code in JavaScript.
+Essas funções que serão chamadas no futuro são chamadas de funções _callback_, e esse é um padrão muito comum para código interativo em JavaScript.
 
-Consider the following code:
+Considere o seguinte código:
 
 {% include p5-editor.html id="tHDUhP9Nb9" %}
 
-The function `takesLongTimeSync()` does something that takes a long time to finish, and since it's a synchronous function, our code doesn't do anything else while it waits for it to finish. We call it once at frame $$61$$ and print `DONE!` once it's finished running.
+A função `takesLongTimeSync()` faz algo que demora muito para terminar e, como é uma função síncrona, o nosso código não faz mais nada enquanto espera ela terminar. Chamamos a função uma vez no frame $$61$$ e imprimimos `DONE!` quando ela termina de rodar.
 
-We can clearly see when the `takesLongTimeSync()` function executes because our animation just stops.
+Conseguimos ver claramente quando a função `takesLongTimeSync()` é executada, porque a nossa animação simplesmente para.
 
-Now, consider running an asynchronous version of the function that takes a callback as an argument `takesLongTime(callback)`.
+Agora, considere rodar uma versão assíncrona da função, que recebe um callback como argumento: `takesLongTime(callback)`.
 
 {% include p5-editor.html id="ppUUVBffy" %}
 
-The code is mostly the same, but we have to create the function that will be called when `takesLongTime()` finishes. In this case it can be as simple as a function that just prints `DONE!` like before:
+O código é quase o mesmo, mas temos que criar a função que será chamada quando `takesLongTime()` terminar. Neste caso, ela pode ser tão simples quanto uma função que apenas imprime `DONE!`, como antes:
 
 ```js
 function printDone() {
@@ -70,11 +70,11 @@ function printDone() {
 }
 ```
 
-The big difference now is that while `takesLongTime()` is executing, our code will keep running and our `draw()` loop can keep drawing.
+A grande diferença agora é que, enquanto `takesLongTime()` está sendo executada, o nosso código continua rodando e o nosso loop `draw()` pode continuar desenhando.
 
 ## `async` / `await`
 
-The _callback_ pattern for concurrent programming is good for simple cases, but can lead to something like this if we have to chain multiple asynchronous function calls together:
+O padrão _callback_ para programação concorrente é bom para casos simples, mas pode levar a algo assim se tivermos que encadear várias chamadas de funções assíncronas:
 
 ```js
 function evenMoreCallback() {
@@ -97,7 +97,7 @@ takesLongTime(firstCallback);
 
 ```
 
-This is confusing to read and write. The version where we use anonymous functions is even worse:
+Isso é confuso de ler e de escrever. A versão em que usamos funções anônimas é ainda pior:
 
 ```js
 takesLongTime(function() {
@@ -109,17 +109,17 @@ takesLongTime(function() {
 });
 ```
 
-Since chaining asynchronous functions like this is such a common pattern in interactive/browser code, `JavaScript` gives us another wait of doing this, using `async` functions.
+Como encadear funções assíncronas assim é um padrão tão comum em código interativo/de navegador, o `JavaScript` nos dá outra forma de fazer isso, usando funções `async`.
 
-An `async` function tells the `JavaScript` execution engine that it should go execute the function and then come back to the main code once the execution is done.
+Uma função `async` diz ao motor de execução do `JavaScript` que ele deve ir executar a função e depois voltar ao código principal quando a execução terminar.
 
-Using it in our example above looks like this:
+Usando isso no nosso exemplo acima, fica assim:
 
 {% include p5-editor.html id="iJ93v33Tx" %}
 
-It's a way to pretend like the asynchronous functions are synchronous and write code that looks like synchronous code, but in reality runs asynchronously.
+É uma forma de fingir que as funções assíncronas são síncronas e escrever código que parece síncrono, mas que na realidade roda de forma assíncrona.
 
-It doesn't look much different for this very simple case, but if we had to chain together multiple calls to asynchronous functions it might look like this instead:
+Não parece muito diferente para este caso bem simples, mas, se tivéssemos que encadear várias chamadas de funções assíncronas, ficaria assim:
 
 ```js
 await takesLongTime();
@@ -129,8 +129,8 @@ await evenMoreAsyncFunction();
 print("DONE!");
 ```
 
-No nested function calls or convoluted function definitions. The asynchronous functions `takesLongTime()`, `secondAsyncFunction()`, etc all have to return a special `JavaScript` object called a `Promise`, but once that's setup up properly, our code looks like synchronous code.
+Sem chamadas de função aninhadas nem definições de função complicadas. As funções assíncronas `takesLongTime()`, `secondAsyncFunction()`, etc. todas precisam retornar um objeto especial do `JavaScript` chamado `Promise`, mas, quando isso está configurado direito, o nosso código parece código síncrono.
 
-This was a quick intro to concurrent / asynchronous code execution in JavaScript.
+Esta foi uma introdução rápida à execução concorrente / assíncrona de código em JavaScript.
 
-Let's see how this shows up when we start working with ML / AI models.
+Vamos ver como isso aparece quando começamos a trabalhar com modelos de ML / IA.

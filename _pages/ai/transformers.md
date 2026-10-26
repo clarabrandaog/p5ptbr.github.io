@@ -2,121 +2,121 @@
 title: Transformers.js
 ---
 
-The [`ml5` library](../ml5/) and the [Teachable Machine](/../teachable-machine/) projects are the easiest ways to start using AI models in our sketches. They're well documented and maintained, and they provide an easy interface for some of the most common ML tasks.
+A [biblioteca `ml5`](../ml5/) e os projetos do [Teachable Machine](/../teachable-machine/) são as formas mais fáceis de começar a usar modelos de IA nos nossos sketches. Eles são bem documentados e mantidos, e oferecem uma interface fácil para algumas das tarefas de ML mais comuns.
 
-But, there are other models out there. Lots of them.
+Mas existem outros modelos por aí. Muitos deles.
 
-Lots of different architectures, different tasks, different libraries....
+Muitas arquiteturas diferentes, tarefas diferentes, bibliotecas diferentes....
 
-We can get an idea for the variety of existing open source models by visiting the _models_ section of [Hugging Face](https://huggingface.co/models). Hugging Face is like the GitHub of AI models. It's a platform where companies, researchers, students, anyone can download and upload different AI models.
+Podemos ter uma ideia da variedade de modelos de código aberto existentes visitando a seção _models_ do [Hugging Face](https://huggingface.co/models). O Hugging Face é como o GitHub dos modelos de IA. É uma plataforma onde empresas, pesquisadores, estudantes, qualquer pessoa, pode baixar e enviar diferentes modelos de IA.
 
-It's pretty overwhelming and extensive, and not easy to navigate.
+É bem sobrecarregado e extenso, e não é fácil de navegar.
 
-One thing that helps is that we can focus on models that run on the browser. A lot of the models on Hugging Face require huge computers and/or huge GPUs to run. Most of them are distributed to be used with libraries written in `Python`, `C` or `Lua`, but there are quite a lot that have been ported to `JavaScript` using a library called [`Transformers.js`](https://huggingface.co/docs/transformers.js/en/index).
+Uma coisa que ajuda é que podemos focar em modelos que rodam no navegador. Muitos dos modelos do Hugging Face exigem computadores enormes e/ou GPUs enormes para rodar. A maioria deles é distribuída para ser usada com bibliotecas escritas em `Python`, `C` ou `Lua`, mas há bastante modelos que foram portados para `JavaScript` usando uma biblioteca chamada [`Transformers.js`](https://huggingface.co/docs/transformers.js/en/index).
 
 ## Transformers.js
 
-This is a library written and maintained by the same people who wrote the widely used [transformers](https://huggingface.co/docs/transformers/en/index) library for `Python`. It allows us to download and run models hosted on Hugging Face with an extremely small amount of code.
+Esta é uma biblioteca escrita e mantida pelas mesmas pessoas que escreveram a biblioteca [transformers](https://huggingface.co/docs/transformers/en/index), muito usada em `Python`. Ela nos permite baixar e rodar modelos hospedados no Hugging Face com uma quantidade extremamente pequena de código.
 
-We can search for `Transformers.js` libraries by clicking on the _lLibraries_ tab and selecting the yellow JS icon (or, follow [this link](https://huggingface.co/models?library=transformers.js&sort=downloads)).
+Podemos procurar bibliotecas `Transformers.js` clicando na aba _Libraries_ e selecionando o ícone amarelo de JS (ou seguindo [este link](https://huggingface.co/models?library=transformers.js&sort=downloads)).
 
-There are over $$1000$$ models available !
+Existem mais de $$1000$$ modelos disponíveis !
 
-Let's start by experimenting with an image description model, found [here](https://huggingface.co/Xenova/vit-gpt2-image-captioning).
+Vamos começar experimentando com um modelo de descrição de imagens, encontrado [aqui](https://huggingface.co/Xenova/vit-gpt2-image-captioning).
 
-The documentation for some of these models is really sparse, but what we have to do is create a `pipeline` object in our sketch, and then process images with this `pipeline` object. Something like this:
+A documentação de alguns desses modelos é bem escassa, mas o que temos que fazer é criar um objeto `pipeline` no nosso sketch e depois processar imagens com esse objeto `pipeline`. Algo assim:
 
 ```js
 model = pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
 captions = model(image);
 ```
 
-Easy. But, let's see how to set this up.
+Fácil. Mas vamos ver como configurar isso.
 
-## Setup
+## Configuração
 
-The first thing we have to do is load the `Transformers.js` library and get access to its `pipeline` object constructor.
+A primeira coisa que precisamos fazer é carregar a biblioteca `Transformers.js` e ter acesso ao construtor do objeto `pipeline`.
 
-Due to choices made by the developers of the `Transformers.js` library, we can't just load it from a `.js` file in our `index.html`, but instead have to dynamically load it during the `preload()` portion of our sketch. We can do this with:
+Por causa de escolhas feitas pelos desenvolvedores da biblioteca `Transformers.js`, não podemos simplesmente carregá-la a partir de um arquivo `.js` no nosso `index.html`, e sim carregá-la dinamicamente durante a parte `preload()` do nosso sketch. Podemos fazer isso com:
 
 ```js
 const module = await import("https://cdn.jsdelivr.net/npm/@xenova/transformers");
 ```
 
-And then the `pipeline` object constructor will be available as `module.pipeline`. Ace.
+E então o construtor do objeto `pipeline` vai estar disponível como `module.pipeline`. Perfeito.
 
-Now, we just have to instantiate the model with:
+Agora só precisamos instanciar o modelo com:
 
 ```js
 model = await pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
 ```
 
-All these `await` keywords ... Good thing we saw those in our [concurrency tutorial](../concurrency/).
+Todas essas palavras-chave `await` ... Ainda bem que vimos elas no nosso [tutorial de concorrência](../concurrency/).
 
 {% include p5-editor.html id="z_fQzI1DG" %}
 
-We have our model setup, we just have to start using it.
+Temos o nosso modelo configurado, só falta começar a usá-lo.
 
-## Grabbing Images
+## Capturando Imagens
 
-Let's make our sketch describe what it sees through the webcam.
+Vamos fazer o nosso sketch descrever o que vê pela webcam.
 
-Even though these `Transformers.js` models are meant to run on the browser with `JavaScript`, they aren't always as optimized as the `ml5` models, so we don't want to run our image description model on every frame of our video stream.
+Embora esses modelos do `Transformers.js` sejam feitos para rodar no navegador com `JavaScript`, eles nem sempre são tão otimizados quanto os modelos do `ml5`, então não queremos rodar o nosso modelo de descrição de imagens em cada frame do nosso stream de vídeo.
 
-Let's create a button that captures one frame from the video stream as an image, and we'll use that on our model. This way we can control which images get described by the model.
+Vamos criar um botão que captura um frame do stream de vídeo como imagem, e vamos usar essa imagem no nosso modelo. Assim podemos controlar quais imagens são descritas pelo modelo.
 
-We'll add a video stream to our sketch with:
+Vamos adicionar um stream de vídeo ao nosso sketch com:
 ```js
 mCamera = createCapture(VIDEO, { flipped: true }, setupButton);
 ```
 
-This should look familiar. This time we're using a [callback function](../concurrency/) called `setupButton` to create and place a button that we can use to trigger the image extraction and description process.
+Isso deve parecer familiar. Desta vez estamos usando uma [função callback](../concurrency/) chamada `setupButton` para criar e posicionar um botão que podemos usar para disparar o processo de extração e descrição da imagem.
 
-For now, when clicked, this button should just grab a frame from the video stream, and do a bit of preprocessing to get it ready for the model. This function grabs the current frame from our camera and turns it into a format that the model understands.
+Por enquanto, quando clicado, esse botão deve apenas capturar um frame do stream de vídeo e fazer um pouco de pré-processamento para deixá-lo pronto para o modelo. Esta função pega o frame atual da nossa câmera e o transforma em um formato que o modelo entende.
 ```js
 mCamera.canvas.toDataURL();
 ```
 
-We can display this by turning it back into a `p5.js` image:
+Podemos exibir isso transformando-o de volta em uma imagem do `p5.js`:
 ```js
 mFrame = loadImage(mCamera.canvas.toDataURL());
 ```
 
 {% include p5-editor.html id="KM8aYkAO-" %}
 
-## Inference
+## Inferência
 
-Ok. We're ready to have our image described.
+Ok. Estamos prontos para ter a nossa imagem descrita.
 
-We just need to call the model on the image, and then wait for the result.
+Só precisamos chamar o modelo na imagem e depois esperar o resultado.
 ```js
 let result = await model(mCamera.canvas.toDataURL());
 print(result);
 ```
 
-This will help us navigate the format of the result returned by the model. If we look at `result`, we'll see that what we really want to grab is the text in `result[0].generated_text`. We'll put that in a variable and display it on top of the captured image:
+Isso vai nos ajudar a entender o formato do resultado retornado pelo modelo. Se olharmos para `result`, vamos ver que o que realmente queremos pegar é o texto em `result[0].generated_text`. Vamos colocar isso em uma variável e exibi-lo por cima da imagem capturada:
 
 {% include p5-editor.html id="ZuwaVgRID" %}
 
-## More Models
+## Mais Modelos
 
-Let's explore our newly developed superpowers of using models from Hugging Face and create a sketch that automatically generate stories based on the contents of our webcam. We'll also run our story through a sentiment analysis model to see what kind of stories our sketch is generating, and to give the story a title.
+Vamos explorar os nossos superpoderes recém-desenvolvidos de usar modelos do Hugging Face e criar um sketch que gera histórias automaticamente com base no conteúdo da nossa webcam. Também vamos passar a nossa história por um modelo de análise de sentimento, para ver que tipo de histórias o nosso sketch está gerando e para dar um título à história.
 
-We need to add some models to our existing sketch. The first one, [llama2-stories110M](https://huggingface.co/Xenova/llama2.c-stories110M), is the story generating model, and the second one, [roberta-emotions](https://huggingface.co/thiagohersan/roberta-base-go_emotions), is the model that will classify our story into one of $$28$$ sentiments.
+Precisamos adicionar alguns modelos ao nosso sketch existente. O primeiro, [llama2-stories110M](https://huggingface.co/Xenova/llama2.c-stories110M), é o modelo que gera histórias, e o segundo, [roberta-emotions](https://huggingface.co/thiagohersan/roberta-base-go_emotions), é o modelo que vai classificar a nossa história em um entre $$28$$ sentimentos.
 
-Let's get started by instantiating our new models:
+Vamos começar instanciando os nossos novos modelos:
 ```js
 imgModel = await module.pipeline("image-to-text", "Xenova/vit-gpt2-image-captioning");
 strModel = await module.pipeline("text-generation", "Xenova/llama2.c-stories110M");
 txtModel = await module.pipeline("sentiment-analysis", "thiagohersan/roberta-base-go_emotions");
 ```
-It takes a bit longer to get started, but that's because we have $$3$$ models to load now.
+Demora um pouco mais para começar, mas isso porque agora temos $$3$$ modelos para carregar.
 
 {% include p5-editor.html id="-e2pGdczT" %}
 
-We just have to create variables to hold the results of our story model and of our sentiment analysis model.
+Só precisamos criar variáveis para guardar os resultados do nosso modelo de histórias e do nosso modelo de análise de sentimento.
 
-First, let's see what they return:
+Primeiro, vamos ver o que eles retornam:
 ```js
 let strResult = await strModel("Once upon a time, there was ");
 print(strResult);
@@ -127,60 +127,60 @@ print(txtResult);
 
 {% include p5-editor.html id="F4FMKgiuI" %}
 
-Ok, we can just get `strResult[0].generated_text` and `txtResult[0].label`. Let's save these in the correct variables and display them on the canvas once they're ready.
+Ok, podemos simplesmente pegar `strResult[0].generated_text` e `txtResult[0].label`. Vamos guardá-los nas variáveis corretas e exibi-los no canvas quando estiverem prontos.
 
-We can also extend the length of our story by adding an options object with a `max_new_tokens` key to our inference call:
+Também podemos aumentar o tamanho da nossa história adicionando um objeto de opções com uma chave `max_new_tokens` à nossa chamada de inferência:
 ```js
 let strResult = await strModel(caption, { max_new_tokens: 256 });
 ```
 
 {% include p5-editor.html id="qTC_hvDVF" %}
 
-## Image Models
+## Modelos de Imagem
 
-We're all set to go forth and explore the vast, wonderful, and often poorly-documented, world of Hugging Face transformer image models.
+Estamos prontos para sair e explorar o vasto, maravilhoso e, muitas vezes, mal documentado mundo dos modelos transformers de imagem do Hugging Face.
 
-One thing to keep in mind: models that receive _images_ as inputs don't work with `p5.js` image objects, but their `dataUrl` representation. We can get the `dataUrl` for `p5.js` images and video streams using:
+Uma coisa para ter em mente: os modelos que recebem _imagens_ como entrada não funcionam com objetos de imagem do `p5.js`, e sim com a sua representação em `dataUrl`. Podemos obter o `dataUrl` de imagens e streams de vídeo do `p5.js` usando:
 ```js
 mCamera.canvas.toDataURL();
 mImage.canvas.toDataURL();
 ```
 
-## Audio Models
+## Modelos de Áudio
 
-Audio models are a little trickier to use. This is due to two reasons: first, `p5.js` has a very complicated and non-intuitive process for recording audio from the microphone, and second, audio models require their inputs to have very specific audio formats, which `p5.js` and `JavaScript` don't always directly support.
+Modelos de áudio são um pouco mais complicados de usar. Isso se deve a duas razões: primeiro, o `p5.js` tem um processo muito complicado e pouco intuitivo para gravar áudio do microfone e, segundo, os modelos de áudio exigem que as entradas tenham formatos de áudio bem específicos, que o `p5.js` e o `JavaScript` nem sempre suportam diretamente.
 
-Let's take a look at an audio model called [whisper](https://huggingface.co/Xenova/whisper-tiny.en) that transcribes audio.
+Vamos dar uma olhada em um modelo de áudio chamado [whisper](https://huggingface.co/Xenova/whisper-tiny.en), que transcreve áudio.
 
-We'll start by setting up the audio recording. We need to instantiate three separate objects for this: a microphone stream, a sound recorder and a sound file:
+Vamos começar configurando a gravação de áudio. Precisamos instanciar três objetos separados para isso: um stream de microfone, um gravador de som e um arquivo de som:
 ```js
 mMic = new p5.AudioIn();
 mRecSound = new p5.SoundFile();
 mRecorder = new p5.SoundRecorder();
 ```
 
-Then, we'll need a button that triggers the following code to initialize the browser's audio engine, enable the microphone stream and connect it to the recorder:
+Depois, vamos precisar de um botão que dispare o código a seguir, para inicializar o motor de áudio do navegador, habilitar o stream do microfone e conectá-lo ao gravador:
 ```js
 mMic.start();
 mRecorder.setInput(mMic);
 userStartAudio();
 ```
 
-Now, when we press the record button, we just start recording:
+Agora, quando apertamos o botão de gravar, é só começar a gravar:
 ```js
 mRecorder.record(mRecSound, 100, captionAudio);
 ```
 
-The `captionAudio` parameter is a [callback function](../concurrency/) that will be called whenever we stop recording, which we can do by calling:
+O parâmetro `captionAudio` é uma [função callback](../concurrency/) que será chamada quando pararmos a gravação, o que podemos fazer chamando:
 ```js
 mRecorder.stop();
 ```
 
-The `captionAudio()` function will eventually have to have some code to transcribe our audio.
+A função `captionAudio()` eventualmente vai ter que ter algum código para transcrever o nosso áudio.
 
 {% include p5-editor.html id="2DXn3eJYV" %}
 
-Let's add our model to the sketch. This is similar to how we instantiated image models, but with a different option object that specifies the datatype for the samples that will be analyzed:
+Vamos adicionar o nosso modelo ao sketch. É parecido com a forma como instanciamos os modelos de imagem, mas com um objeto de opções diferente, que especifica o tipo de dado das amostras que serão analisadas:
 ```js
 sttModel = await module.pipeline(
   "automatic-speech-recognition",
@@ -189,7 +189,7 @@ sttModel = await module.pipeline(
 );
 ```
 
-Once we stop recording, we should be able to just call the model on our recorded samples:
+Quando paramos a gravação, devemos conseguir simplesmente chamar o modelo nas nossas amostras gravadas:
 ```js
 let sttResult = await sttModel(mRecSound.buffer.getChannelData(0));
 print(sttResult);
@@ -197,11 +197,11 @@ print(sttResult);
 
 {% include p5-editor.html id="KkzenTAU5" %}
 
-But, if we look at `sttResult.text`, we'll see that we're getting garbage.
+Mas, se olharmos para `sttResult.text`, vamos ver que estamos recebendo lixo.
 
-The `mRecSound.buffer.getChannelData(0)` function definitely returns our recorded samples, but, if we print `mRecSound.buffer.sampleRate`, we'll see that our browser likes to record audio at $$44\text{,}100$$ or $$48\text{,}000$$ samples per second, where our model wants to analyze audio recorded at $$16\text{,}000$$ samples per second.
+A função `mRecSound.buffer.getChannelData(0)` definitivamente retorna as nossas amostras gravadas, mas, se imprimirmos `mRecSound.buffer.sampleRate`, vamos ver que o nosso navegador grava áudio a $$44\text{,}100$$ ou $$48\text{,}000$$ amostras por segundo, enquanto o nosso modelo quer analisar áudio gravado a $$16\text{,}000$$ amostras por segundo.
 
-Resampling audio in `JavaScript` isn't easy nor fun. Luckily, there's a function called `resample()` included in this sketch that will do just that. It takes $$3$$ arguments: the list of samples, the original sample rate and the target sample rate. It eventually (asynchronously) returns a resampled version of the audio, ready to be analyzed and transcribed by our model:
+Reamostrar áudio em `JavaScript` não é fácil nem divertido. Felizmente, há uma função chamada `resample()` incluída neste sketch que faz exatamente isso. Ela recebe $$3$$ argumentos: a lista de amostras, a taxa de amostragem original e a taxa de amostragem desejada. Eventualmente (de forma assíncrona), ela retorna uma versão reamostrada do áudio, pronta para ser analisada e transcrita pelo nosso modelo:
 
 ```js
 let samples16k = await resample(
@@ -211,6 +211,6 @@ let samples16k = await resample(
 );
 ```
 
-Using it before calling our model fixes the sampling issue and we are now able to get clean transcribed audios:
+Usá-la antes de chamar o nosso modelo resolve o problema da taxa de amostragem e agora conseguimos obter transcrições de áudio limpas:
 
 {% include p5-editor.html id="1VNjI7XFs" %}

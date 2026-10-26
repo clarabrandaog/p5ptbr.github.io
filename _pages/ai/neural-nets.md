@@ -1,215 +1,215 @@
 ---
-title: Intro to Neural Networks
+title: Introdução às Redes Neurais
 ---
-It's impossible to talk about creative coding, interactive experiences or generative design without talking about AI and generative models.
+É impossível falar de creative coding, experiências interativas ou design generativo sem falar de IA e modelos generativos.
 
-What are they ? Where do they come from ?
+O que são eles ? De onde vêm ?
 
-Most of today's large generative models are actually built by combining some basic ideas that have been around for a while, like predictive systems and Machine Learning models.
+A maioria dos grandes modelos generativos de hoje é, na verdade, construída combinando algumas ideias básicas que já existem há um tempo, como sistemas preditivos e modelos de Machine Learning.
 
-Let's look at some of the building blocks of these models and how they come to be created.
+Vamos olhar alguns dos blocos de construção desses modelos e como eles são criados.
 
 ## Machine Learning
 
-Machine Learning is the process of using data to automatically adjust parameters in our code.
+Machine Learning é o processo de usar dados para ajustar automaticamente parâmetros no nosso código.
 
-Let's say we own an online store and we only want to display advertisement during times when we know we have a large number of visitors on our site.
+Digamos que temos uma loja online e só queremos exibir anúncios nos horários em que sabemos que temos muitos visitantes no nosso site.
 
-We could guess at what those times are, and write some code that looks like this:
+Poderíamos chutar quais são esses horários e escrever um código que se parece com isto:
 ```js
 if (time == "10am" or time == "4pm" or time == "8pm") {
   displayAds();
 }
 ```
 
-Or, instead, we could have our code use information about yesterday's visits to activate the advertisements. We might find out that we actually want to show the ads at 10:15, 4:33 and 8:10. This is Machine Learning.
+Ou, em vez disso, poderíamos fazer o nosso código usar informações sobre as visitas de ontem para ativar os anúncios. Poderíamos descobrir que na verdade queremos mostrar os anúncios às 10:15, 4:33 e 8:10. Isso é Machine Learning.
 
-## ML at a Glance
+## ML em Resumo
 
-There are two stages to the process of modeling:
+Existem duas etapas no processo de modelagem:
 
-Training, when we create a model, and inference, when we use the model on new data.
+Treinamento, quando criamos um modelo, e inferência, quando usamos o modelo em dados novos.
 
-During training, we show lots and lots of data to some piece of code that automatically adjusts itself to detect patterns and improve its understanding about the data being shown. If we also show the model the correct answer we want it to learn, we are performing supervised learning.
+Durante o treinamento, mostramos muitos e muitos dados para um pedaço de código que se ajusta automaticamente para detectar padrões e melhorar seu entendimento sobre os dados que estão sendo mostrados. Se também mostrarmos ao modelo a resposta correta que queremos que ele aprenda, estamos fazendo aprendizado supervisionado.
 
-Here, we are showing a variety of ways that the number $$8$$ can be drawn to a piece of code that learns patterns in the shapes that it sees in images:
+Aqui, estamos mostrando uma variedade de formas de desenhar o número $$8$$ para um pedaço de código que aprende padrões nos formatos que vê nas imagens:
 
 <div class="scaled-images w66">
   <img src="{{ 'assets/images/ai/nn-training-inference-00.jpg' |relative_url }}">
 </div>
 
-During inference we show the model some new piece of data and expect it to be able to predict something about this new data based on what it previously learned in training.
+Durante a inferência, mostramos ao modelo um novo dado e esperamos que ele consiga prever algo sobre esse dado novo com base no que aprendeu anteriormente no treinamento.
 
-Given a new drawing of the number $$8$$, we want the model to still be able to recognize this as the number $$8$$:
+Dado um novo desenho do número $$8$$, queremos que o modelo ainda consiga reconhecê-lo como o número $$8$$:
 
 <div class="scaled-images w66">
   <img src="{{ 'assets/images/ai/nn-training-inference-01.jpg' |relative_url }}">
 </div>
 
-## Types of Tasks
+## Tipos de Tarefas
 
-This kind of task (predicting numeric value from image of a digit) is called _classification_ and is one of the two major types of tasks that supervised models are good at performing.
+Esse tipo de tarefa (prever um valor numérico a partir da imagem de um dígito) é chamado de _classificação_ e é um dos dois grandes tipos de tarefas que os modelos supervisionados executam bem.
 
-Classification is when we train a model to group similar items into pre-defined classes. While it might seem like a classification model is able to "detect" objects in an image, what it's actually doing is learning how to divide the space of all possible inputs into subgroups or categories.
+Classificação é quando treinamos um modelo para agrupar itens semelhantes em classes pré-definidas. Embora possa parecer que um modelo de classificação consegue "detectar" objetos em uma imagem, o que ele realmente está fazendo é aprender a dividir o espaço de todas as entradas possíveis em subgrupos ou categorias.
 
-If we're training a digit classification model, what the model is actually doing is learning how to divide the space of all possible images of digits into $$10$$ sub categories, one for each possible digit. If we show the model an image of a cat it will classify it as a digit since that's what it knows how to do; that's how it divided its input space.
+Se estamos treinando um modelo de classificação de dígitos, o que o modelo realmente está fazendo é aprender a dividir o espaço de todas as imagens possíveis de dígitos em $$10$$ subcategorias, uma para cada dígito possível. Se mostrarmos ao modelo uma imagem de um gato, ele vai classificá-la como um dígito, já que é isso que ele sabe fazer; foi assim que ele dividiu o seu espaço de entrada.
 
-Classification model after training:
+Modelo de classificação depois do treinamento:
 
 <div class="scaled-images w66">
   <img src="{{ 'assets/images/ai/nn-classification-00.jpg' |relative_url }}">
 </div>
 
-Classification model inference:
+Inferência do modelo de classificação:
 
 <div class="scaled-images w66">
   <img src="{{ 'assets/images/ai/nn-classification-01.jpg' |relative_url }}">
 </div>
 
-The other type of task that supervised learning is often used for is called _regression_.
+O outro tipo de tarefa para o qual o aprendizado supervisionado costuma ser usado é chamado de _regressão_.
 
-This is where a model learns trends and patterns within numerical data in order to output a continuous-valued prediction from new input data. For example, we can train a regression model that learns about house prices based on their age, location, number of rooms and distance to public transit. Then, when we show the model information about the age, location, number of rooms and distance to public transit of new houses, the model will predict how much these new houses are worth.
+É quando um modelo aprende tendências e padrões em dados numéricos para produzir uma previsão de valor contínuo a partir de novos dados de entrada. Por exemplo, podemos treinar um modelo de regressão que aprende sobre preços de casas com base na idade, localização, número de quartos e distância até o transporte público. Depois, quando mostramos ao modelo informações sobre a idade, localização, número de quartos e distância até o transporte público de casas novas, o modelo prevê quanto essas casas novas valem.
 
-Regression data:
+Dados de regressão:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-regression-00.jpg' |relative_url }}">
 </div>
 
-Regression model training, or, fitting:
+Treinamento do modelo de regressão, ou ajuste (fitting):
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-regression-01.jpg' |relative_url }}">
 </div>
 
-Regression model inference:
+Inferência do modelo de regressão:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-regression-02.jpg' |relative_url }}">
 </div>
 
-Regression outputs continuous values, while classification outputs discrete values.
+A regressão produz valores contínuos, enquanto a classificação produz valores discretos.
 
-It's common to see classification models that are so specific in their predictions that it seems like they're learning as they see new data, or that they're interpolating between classes, but this is usually not the case. A classification model like this was probably trained to separate images into thousands or tens-of-thousands of classes.
+É comum ver modelos de classificação tão específicos nas suas previsões que parece que estão aprendendo conforme veem dados novos, ou que estão interpolando entre classes, mas normalmente não é isso que acontece. Um modelo de classificação assim provavelmente foi treinado para separar imagens em milhares ou dezenas de milhares de classes.
 
-## Neural Networks
+## Redes Neurais
 
-But, how do we get models ?
+Mas, como conseguimos modelos ?
 
-There are many different ways to build models depending on the type and quantity of data that we have available for training. People have been fitting classification and regression models for a very long time. Some of the earliest [mechanical computers](https://en.wikipedia.org/wiki/Tide-predicting_machine) where built to learn ocean patterns and predict tide rhythms.
+Existem muitas formas diferentes de construir modelos, dependendo do tipo e da quantidade de dados que temos disponíveis para o treinamento. As pessoas ajustam modelos de classificação e regressão há muito tempo. Alguns dos primeiros [computadores mecânicos](https://en.wikipedia.org/wiki/Tide-predicting_machine) foram construídos para aprender padrões do oceano e prever o ritmo das marés.
 
-Today, given advancements in parallel computing using GPUs and the massive amounts of data we've collected about ourselves, it's more common to build models using neural networks.
+Hoje, dados os avanços da computação paralela com GPUs e a quantidade enorme de dados que coletamos sobre nós mesmos, é mais comum construir modelos usando redes neurais.
 
-This is a topic for a whole other series of tutorials, but for now, what is important to know about neural networks is that they're made up of lots and lots of very simple computational units called "neurons" that turn `on` or `off` based on the inputs that they receive.
+Esse é um assunto para uma série inteira de tutoriais, mas, por enquanto, o que é importante saber sobre as redes neurais é que elas são feitas de muitas e muitas unidades computacionais muito simples, chamadas "neurônios", que ligam (`on`) ou desligam (`off`) com base nas entradas que recebem.
 
-These neurons can have any number of inputs and the calculation they perform is usually a weighted sum followed by an activation function. For the neuron below, its output is calculated by first taking half of $$X_0$$, adding it to $$0.3$$ of $$X_1$$, $$1.2$$ times $$X_2$$ and $$0.1$$ of $$X_3$$. Then, if that sum is greater than $$W_T$$ ($$2.2$$) the neuron will be activated and its activation value propagated to the next neuron in the network.
+Esses neurônios podem ter qualquer número de entradas e o cálculo que realizam geralmente é uma soma ponderada seguida de uma função de ativação. Para o neurônio abaixo, a saída é calculada primeiro pegando metade de $$X_0$$, somando $$0.3$$ de $$X_1$$, $$1.2$$ vezes $$X_2$$ e $$0.1$$ de $$X_3$$. Depois, se essa soma for maior que $$W_T$$ ($$2.2$$), o neurônio será ativado e o seu valor de ativação será propagado para o próximo neurônio da rede.
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-neuron-00.jpg' |relative_url }}">
 </div>
 
-This might seem really simple, and it is, but once we cleverly connect hundreds, thousands, millions of these, they can be trained to activate under very specific conditions and patterns.
+Isso pode parecer muito simples, e é, mas, quando conectamos de forma inteligente centenas, milhares, milhões deles, eles podem ser treinados para ativar sob condições e padrões bem específicos.
 
-But... how ?
+Mas... como ?
 
-Well... those $$W$$ parameters on the image above, sometimes called the weights of the inputs, are learned during training.
+Bem... aqueles parâmetros $$W$$ na imagem acima, às vezes chamados de pesos das entradas, são aprendidos durante o treinamento.
 
-## Building a Neural Network
+## Construindo uma Rede Neural
 
-The simplified process of creating a neural network model might look something like this:
+O processo simplificado de criar um modelo de rede neural pode ser mais ou menos assim:
 
-First, create a network. These can have as many layers and neurons as we'd like, but there are some specific network architectures that work better for certain types of tasks and certain types of data. Also, the more neurons we have to train, the more data we will need, so it's kind of a tradeoff we have to make.
+Primeiro, criar uma rede. Elas podem ter quantas camadas e neurônios quisermos, mas existem algumas arquiteturas de rede específicas que funcionam melhor para certos tipos de tarefas e certos tipos de dados. Além disso, quanto mais neurônios tivermos para treinar, mais dados vamos precisar, então é uma troca que temos que fazer.
 
-Two important aspects of the network that have to be considered here are its input and output layers. The input layer has to have enough neurons to accommodate the type of data we're working with, and the output layer has to have as many neurons as output signals.
+Dois aspectos importantes da rede que precisam ser considerados aqui são as camadas de entrada e de saída. A camada de entrada tem que ter neurônios suficientes para acomodar o tipo de dado com o qual estamos trabalhando, e a camada de saída tem que ter tantos neurônios quanto sinais de saída.
 
-In this example, our digit input images are all $$28$$ x $$28$$ pixels, for a total of $$784$$ pixels, so we need $$784$$ neurons at the input:
+Neste exemplo, as nossas imagens de dígitos de entrada têm todas $$28$$ x $$28$$ pixels, para um total de $$784$$ pixels, então precisamos de $$784$$ neurônios na entrada:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-layers-01.jpg' |relative_url }}">
 </div>
 
-If we were working with words from the english language, we might need one neuron for each possible word in the language.
+Se estivéssemos trabalhando com palavras da língua inglesa, poderíamos precisar de um neurônio para cada palavra possível da língua.
 
-Since here we're trying to predict one of $$10$$ digits, we need $$10$$ output neurons. When we give the network an image of a digit, its prediction is encoded in this output layer. We can usually decode which class is being predicted by looking at the position of the most-strongly activated neuron: if the first neuron is the strongest, the network is predicting a $$0$$, if the second neuron is the strongest, then it's a $$1$$, and so on.
+Como aqui estamos tentando prever um entre $$10$$ dígitos, precisamos de $$10$$ neurônios de saída. Quando damos à rede uma imagem de um dígito, a previsão dela é codificada nessa camada de saída. Normalmente conseguimos decodificar qual classe está sendo prevista olhando a posição do neurônio mais fortemente ativado: se o primeiro neurônio é o mais forte, a rede está prevendo um $$0$$, se o segundo neurônio é o mais forte, então é um $$1$$, e assim por diante.
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-layers-02.jpg' |relative_url }}">
 </div>
 
-If we were predicting house prices, we would only need $$1$$ continuous-valued output neuron. If we were predicting sale and rental prices separately for these houses, we would need $$2$$ output neurons.
+Se estivéssemos prevendo preços de casas, precisaríamos de apenas $$1$$ neurônio de saída de valor contínuo. Se estivéssemos prevendo preços de venda e de aluguel separadamente para essas casas, precisaríamos de $$2$$ neurônios de saída.
 
-Once we have the network architecture selected and wired up, we can start training it.
+Depois que a arquitetura da rede está selecionada e conectada, podemos começar a treiná-la.
 
-## Training a Network
+## Treinando uma Rede
 
-Training our digit classification network might go somewhat like this:
+Treinar a nossa rede de classificação de dígitos pode ser mais ou menos assim:
 
-Give the network an image of a number and see what it predicts:
+Dar à rede uma imagem de um número e ver o que ela prevê:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-00.jpg' |relative_url }}">
 </div>
 
-Adjust the weights/parameters of the output layer so the next time the network sees this image it makes a slightly better prediction:
+Ajustar os pesos/parâmetros da camada de saída para que, da próxima vez que a rede vir essa imagem, ela faça uma previsão um pouco melhor:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-01.jpg' |relative_url }}">
 </div>
 
-Then, adjust the weights/parameters of the second-to-last layer so the next time the network sees this image the last layer has better information to make a better prediction:
+Depois, ajustar os pesos/parâmetros da penúltima camada para que, da próxima vez que a rede vir essa imagem, a última camada tenha informações melhores para fazer uma previsão melhor:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-02.jpg' |relative_url }}">
 </div>
 
-Then... propagate this kind of adjusting all the way to the input layer:
+Depois... propagar esse tipo de ajuste até a camada de entrada:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-03.jpg' |relative_url }}">
 </div>
 
-And, proceed by showing the network another image of a number and repeating the process:
+E continuar mostrando à rede outra imagem de um número e repetindo o processo:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-04.jpg' |relative_url }}">
 </div>
 
-Keep showing all of the training images to the network until it has adjusted enough of its weights to achieve an acceptable level of accuracy for its predictions. No prediction is going to be $$100\%$$ certain: some of the _wrong_ output neurons will always activate. The important thing is that the correct neuron is the most-strongly activated:
+Continuar mostrando todas as imagens de treinamento para a rede até que ela tenha ajustado pesos suficientes para atingir um nível aceitável de acurácia nas suas previsões. Nenhuma previsão vai ter $$100\%$$ de certeza: alguns dos neurônios de saída _errados_ sempre vão ativar. O importante é que o neurônio correto seja o mais fortemente ativado:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-training-05.jpg' |relative_url }}">
 </div>
 
-One important thing to note here is that this is a slow process. The neurons have to learn not only how to detect patterns about the $$10$$ digits, but also different patterns within a given digit. Not all zeros look the same. In order to do this, the network can't just pick the optimal parameter values for any given image, but instead has to slowly adjust itself over time, and over hundreds or thousands of images, in order to arrive at a set of parameters that work for a wide variety of images.
+Uma coisa importante a notar aqui é que esse é um processo lento. Os neurônios têm que aprender não só a detectar padrões sobre os $$10$$ dígitos, mas também padrões diferentes dentro de um mesmo dígito. Nem todos os zeros são iguais. Para fazer isso, a rede não pode simplesmente escolher os valores ótimos de parâmetros para uma imagem específica, e sim ajustar-se lentamente ao longo do tempo, e ao longo de centenas ou milhares de imagens, para chegar a um conjunto de parâmetros que funcione para uma grande variedade de imagens.
 
-But that is it.
+Mas é isso.
 
-In short: AI models do one of two things: they classify input data or predict continuous values. Nowadays, most, if not all, of our AI models are built using Neural Networks, which are very large collections of very simple summing units that get adjusted by looking at thousands and thousands of input examples.
+Resumindo: os modelos de IA fazem uma de duas coisas: classificam dados de entrada ou preveem valores contínuos. Hoje em dia, a maioria, se não todos, os nossos modelos de IA são construídos usando Redes Neurais, que são coleções muito grandes de unidades de soma muito simples que são ajustadas olhando milhares e milhares de exemplos de entrada.
 
-## More Models
+## Mais Modelos
 
-This overall process for training a model is pretty much the same, regardless of the type of network.
+Esse processo geral de treinamento de um modelo é praticamente o mesmo, independente do tipo de rede.
 
-Other kinds of AI models that we often encounter might not look related to the classification or regression models we looked at, but there's a good chance that they are.
+Outros tipos de modelos de IA que encontramos com frequência podem não parecer relacionados aos modelos de classificação ou regressão que vimos, mas há uma boa chance de que sejam.
 
-For example, a text generation model, like ChatGPT, is in reality a complex classification model. During training the model learns to classify sequences of words from different sentences into classes. Sometimes these are sequences of $$5$$ words, sometimes of $$1000$$ words, but if we set up our network to have one output neuron for each possible word in our language, what the model really ends up learning is how to predict the next word in a given sequence of words:
+Por exemplo, um modelo de geração de texto, como o ChatGPT, é na realidade um modelo de classificação complexo. Durante o treinamento, o modelo aprende a classificar sequências de palavras de frases diferentes em classes. Às vezes são sequências de $$5$$ palavras, às vezes de $$1000$$ palavras, mas, se configurarmos a nossa rede para ter um neurônio de saída para cada palavra possível da nossa língua, o que o modelo realmente acaba aprendendo é a prever a próxima palavra de uma dada sequência de palavras:
 
 <div class="scaled-images left w75">
   <img src="{{ 'assets/images/ai/nn-gen-text-00.jpg' |relative_url }}">
 </div>
 
-Models that detect not only if there's a particular object in an image, but also where in the image the object is, might seem like totally different models. In reality, these object detection models are a combination of a classification model with a regression model. The classification model classifies subsections of the image into possible object classes, and the regression model learns the $$8$$ values associated with the boxes that get drawn around objects:
+Modelos que detectam não só se há um objeto específico em uma imagem, mas também onde na imagem o objeto está, podem parecer modelos totalmente diferentes. Na realidade, esses modelos de detecção de objetos são uma combinação de um modelo de classificação com um modelo de regressão. O modelo de classificação classifica subseções da imagem em possíveis classes de objetos, e o modelo de regressão aprende os $$8$$ valores associados às caixas que são desenhadas em volta dos objetos:
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/nn-bike-dog-05.jpg' |relative_url }}">
 </div>
 
-The regression model doesn't know what the objects are, and the classification model doesn't know where the objects start or finish, but their predictions can be combined to give us exact locations of specific objects.
+O modelo de regressão não sabe o que são os objetos, e o modelo de classificação não sabe onde os objetos começam ou terminam, mas as previsões dos dois podem ser combinadas para nos dar localizações exatas de objetos específicos.
 
-## But, Really
+## Mas, Falando Sério
 
-Training models can be fun, but takes so much time, data and energy.
+Treinar modelos pode ser divertido, mas leva muito tempo, dados e energia.
 
-What we can focus on here is how to pick the correct pre-built model for a particular task and how to use different libraries and strategies for running inference using these pre-built models.
+O que podemos fazer aqui é focar em como escolher o modelo pré-construído correto para uma tarefa específica e como usar diferentes bibliotecas e estratégias para rodar inferência com esses modelos pré-construídos.
 
-Let's get started.
+Vamos começar.

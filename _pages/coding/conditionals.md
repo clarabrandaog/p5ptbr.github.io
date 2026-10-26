@@ -1,17 +1,17 @@
 ---
-title: Conditionals
+title: Condicionais
 ---
-## Mouse Over Shapes
+## Mouse Sobre Formas
 
-Now that we've seen how to create [variables](../variables/) to keep track of changing values and parameters in our code, let's see how they can be used in boolean expressions to create interactive shapes.
+Agora que vimos como criar [variáveis](../variables/) para acompanhar valores e parâmetros que mudam no nosso código, vamos ver como elas podem ser usadas em expressões booleanas para criar formas interativas.
 
-Let's start with a square, centered on our canvas. Notice the use of variables for setting the location and dimensions of the ```rect()```. This will be important soon.
+Vamos começar com um quadrado, centralizado no nosso canvas. Note o uso de variáveis para definir a posição e as dimensões do ```rect()```. Isso vai ser importante daqui a pouco.
 
 {% include p5-editor.html id="jLZVEU6rq" %}
 
-Now, let's say we want to detect when the mouse is inside the square and change its color from white to gold.
+Agora, digamos que queremos detectar quando o mouse está dentro do quadrado e mudar a cor dele de branco para dourado.
 
-Our code structure could look something like this:
+A estrutura do nosso código poderia ser mais ou menos assim:
 ```js
 if (mouse is inside the square) {
   fill(gold);
@@ -21,15 +21,15 @@ if (mouse is inside the square) {
 rect(rectX, rectY, rectWidth);
 ```
 
-We use the `if()` statement to specify that we have some code that shouldn't be executed every time, but instead should only run if certain *conditions* are met. In our case we only want to execute the `fill(gold)` command *if* the mouse is inside the square during that iteration of our `draw()` loop. In case the mouse is not inside the square during a given iteration, the if condition is not met and the code specified by the `else` statement gets executed instead.
+Usamos a instrução `if()` para especificar que temos um código que não deve ser executado toda vez, mas sim apenas se certas *condições* forem satisfeitas. No nosso caso, só queremos executar o comando `fill(gold)` *se* o mouse estiver dentro do quadrado naquela iteração do nosso loop `draw()`. Caso o mouse não esteja dentro do quadrado em uma determinada iteração, a condição do if não é satisfeita e o código especificado pela instrução `else` é executado no lugar.
 
-Now we just have to figure out exactly how to calculate when the mouse is inside the square during an iteration of our `draw()` loop.
+Agora só precisamos descobrir exatamente como calcular quando o mouse está dentro do quadrado durante uma iteração do nosso loop `draw()`.
 
-We know that the `mouseX` and `mouseY` variables always hold the current location of our mouse, so we could use them to determine where the mouse is in relation to each of the four edges of the square.
+Sabemos que as variáveis `mouseX` e `mouseY` sempre guardam a posição atual do nosso mouse, então podemos usá-las para determinar onde o mouse está em relação a cada uma das quatro bordas do quadrado.
 
-## Square Edges
+## Bordas do Quadrado
 
-Let's start with the leftmost edge. For the mouse to be inside the square, its x-position has to be to the right of the square's leftmost edge. Since we have a variable for the x-position of the square this can be determined by asking the computer:
+Vamos começar pela borda mais à esquerda. Para o mouse estar dentro do quadrado, a sua posição x tem que estar à direita da borda esquerda do quadrado. Como temos uma variável para a posição x do quadrado, isso pode ser determinado perguntando ao computador:
 
 ```
 if(mouseX > rectX)
@@ -37,55 +37,55 @@ if(mouseX > rectX)
 
 {% include p5-editor.html id="w7AcLo3Ai" %}
 
-As we move the mouse around the canvas we'll notice that, yes, the square changes color when the mouse goes from the left side of the canvas into the square, but it also stays gold when the mouse exits on the right side, or when the mouse is above or below the square. Let's fix that.
+Conforme movemos o mouse pelo canvas, vamos notar que, sim, o quadrado muda de cor quando o mouse vai do lado esquerdo do canvas para dentro do quadrado, mas ele também continua dourado quando o mouse sai pelo lado direito, ou quando o mouse está acima ou abaixo do quadrado. Vamos consertar isso.
 
-Focusing on the x-direction only, the logic we want to implement could be described in words as: "fill the square with gold as long as the mouse is *between* the left and right edges of the square".
+Focando apenas na direção x, a lógica que queremos implementar pode ser descrita em palavras como: "preencha o quadrado de dourado enquanto o mouse estiver *entre* as bordas esquerda e direita do quadrado".
 
-This could be expressed as the following equation:
+Isso poderia ser expresso pela seguinte equação:
 ```js
 leftEdge < mouseX < rightEdge
 ```
 
-Unfortunately we can't just put a double conditional like that inside an `if()` statement, but we can break it up using boolean logic. Since we want both conditions to be true, this is equivalent to:
+Infelizmente não podemos simplesmente colocar uma condição dupla assim dentro de uma instrução `if()`, mas podemos dividi-la usando lógica booleana. Como queremos que as duas condições sejam verdadeiras, isso equivale a:
 ```js
 leftEdge < mouseX AND mouseX < rightEdge
 ```
 
-And this can be rearranged a bit to improve legibility, as "mouse is greater than left edge AND less than right edge":
+E isso pode ser reorganizado um pouco para melhorar a legibilidade, como "o mouse é maior que a borda esquerda E menor que a borda direita":
 ```js
 mouseX > leftEdge AND mouseX < rightEdge
 ```
 
-We don't have the location of the rightmost edge, but we can calculate it from the rectangle's x-position and its width:
+Não temos a posição da borda mais à direita, mas podemos calculá-la a partir da posição x do retângulo e da sua largura:
 ```js
 let rightEdge = rectX + rectWidth
 ```
 
-Putting it into JavaScript and using our variables this becomes:
+Colocando em JavaScript e usando as nossas variáveis, isso se torna:
 ```js
 if(mouseX > rectX && mouseX < rightEdge)
 ```
 {% include p5-editor.html id="8bEIeXtHV" %}
 
-Better! But the square is still gold when the mouse is directly above or below the square.
+Melhor! Mas o quadrado ainda fica dourado quando o mouse está diretamente acima ou abaixo dele.
 
 # 🤔
 
-We can go through the above reasoning again, but this time including the y-direction as well.
+Podemos repetir o raciocínio acima, mas desta vez incluindo também a direção y.
 
-A phrase that could describe what we want could be something like: "fill the square with gold if the mouse x-position is *between* the left and right edges of the square AND the mouse y-position is *between* its bottom and top edges".
+Uma frase que poderia descrever o que queremos seria algo como: "preencha o quadrado de dourado se a posição x do mouse estiver *entre* as bordas esquerda e direita do quadrado E a posição y do mouse estiver *entre* as bordas inferior e superior".
 
-The logic in pseudo-code would then be:
+A lógica em pseudocódigo seria então:
 ```js
 mouseX > leftEdge AND mouseX < rightEdge AND
 mouseY > topEdge AND mouseY < bottomEdge
 ```
 
-The y-direction logic statements (`mouseY < bottomEdge`) look "upside down". We want to detect when the mouse is above the bottom edge, not below!
+As instruções lógicas da direção y (`mouseY < bottomEdge`) parecem "de cabeça para baixo". Queremos detectar quando o mouse está acima da borda inferior, não abaixo!
 
-This is actually correct the way it is though because ```mouseY``` grows towards the bottom of the screen.
+Mas, na verdade, isso está correto do jeito que está, porque ```mouseY``` cresce em direção à parte de baixo da tela.
 
-We just have to declare a `bottomEdge` variable and our JavaScript could look like:
+Só precisamos declarar uma variável `bottomEdge` e o nosso JavaScript pode ficar assim:
 ```js
 if (mouseX > rectX && mouseX < rightEdge &&
     mouseY > rectY && mouseY < bottomEdge)
@@ -93,51 +93,51 @@ if (mouseX > rectX && mouseX < rightEdge &&
 
 {% include p5-editor.html id="EqZNExq9y" %}
 
-The `if()` statement in the code above is actually one long line, but the editor has separated it into more lines for better legibility.
+A instrução `if()` no código acima é, na verdade, uma única linha longa, mas o editor a separou em mais linhas para melhorar a legibilidade.
 
-## Beyond One Square
+## Além de Um Quadrado
 
-Since we used variables to define all of the parameters for our square, we could easily change its dimensions and move it anywhere else on the screen by only changing its parameters `rectX`, `rectY`, `rectWidth` and `rectHeight`:
+Como usamos variáveis para definir todos os parâmetros do nosso quadrado, podemos facilmente mudar suas dimensões e movê-lo para qualquer outro lugar da tela mudando apenas os parâmetros `rectX`, `rectY`, `rectWidth` e `rectHeight`:
 
 {% include p5-editor.html id="SG0OB3O50" %}
 
-We can even extend it to multiple shapes:
+Podemos até estender isso para várias formas:
 
 {% include p5-editor.html id="IOAIaoJ2b" %}
 
-There is a lot of repeated code here, which makes the sketch look messy and more complicated than it is.
+Há muito código repetido aqui, o que faz o sketch parecer bagunçado e mais complicado do que é.
 
-We'll later see how to use [functions](../functions/), [arrays](../arrays/) and [objects](../objects/) to clean this up and make it easier to understand, extend and maintain:
+Mais adiante vamos ver como usar [funções](../functions/), [arrays](../arrays/) e [objetos](../objects/) para limpar isso e facilitar o entendimento, a extensão e a manutenção:
 
 {% include p5-editor.html id="Htlpfx91a" %}
 
-## Collision
+## Colisão
 
-This kind of logic is actually a common pattern in certain types of programming. It's useful not just for detecting when our mouse is over objects, but also for detecting when different shapes overlap or collide, like in a video-game.
+Esse tipo de lógica é, na verdade, um padrão comum em certos tipos de programação. É útil não só para detectar quando o nosso mouse está sobre objetos, mas também para detectar quando formas diferentes se sobrepõem ou colidem, como em um videogame.
 
-In the sketch below, can we detect when our circle overlaps with the rectangle?
+No sketch abaixo, conseguimos detectar quando o nosso círculo se sobrepõe ao retângulo?
 
 {% include p5-editor.html id="ez8oUpy_o" %}
 
-We can start with the logic from before, except it won't detect when the circle overlaps with the rectangle, only when the center of the circle goes inside the rectangle.
+Podemos começar com a lógica de antes, só que ela não vai detectar quando o círculo se sobrepõe ao retângulo, apenas quando o centro do círculo entra no retângulo.
 
 {% include p5-editor.html id="ZGC9WPXig" %}
 
-If we look at a diagram of what's happening and what we want to happen, we can see that instead of detecting when the center of the circle is inside the rectangle, we should instead detect when the center of the circle is within $$r$$ pixels from the edge of the rectangle (where $$r$$ is the circle's radius, or, half of its diameter):
+Se olharmos um diagrama do que está acontecendo e do que queremos que aconteça, podemos ver que, em vez de detectar quando o centro do círculo está dentro do retângulo, devemos detectar quando o centro do círculo está a até $$r$$ pixels da borda do retângulo (onde $$r$$ é o raio do círculo, ou seja, metade do seu diâmetro):
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/overlap-00.jpg' | relative_url }}">
 </div>
 
-If we extend the drawing to consider all four sides of the rectangle, we get something like this:
+Se estendermos o desenho para considerar os quatro lados do retângulo, obtemos algo assim:
 
 <div class="scaled-images">
   <img src="{{ '/assets/images/p5/overlap-01.jpg' | relative_url }}">
 </div>
 
-This looks exactly like our original situation of detecting whether the center of the circle is inside a rectangle, but now we just have to use a bigger rectangle.
+Isso é exatamente igual à nossa situação original de detectar se o centro do círculo está dentro de um retângulo, só que agora precisamos usar um retângulo maior.
 
-We can create some new variables for our new overlap rectangle:
+Podemos criar algumas variáveis novas para o nosso novo retângulo de sobreposição:
 ```js
 let ellipseRadius = ellipseDiam / 2;
 
@@ -147,7 +147,7 @@ let oRightEdge = rightEdge + ellipseRadius;
 let oBottomEdge = bottomEdge + ellipseRadius;
 ```
 
-And update the variables in the `if()` statement, but the logic is exactly the same:
+E atualizar as variáveis na instrução `if()`, mas a lógica é exatamente a mesma:
 ```js
 if (mouseX > oRectX && mouseX < oRightEdge &&
     mouseY > oRectY && mouseY < oBottomEdge)
@@ -155,11 +155,11 @@ if (mouseX > oRectX && mouseX < oRightEdge &&
 
 {% include p5-editor.html id="Pm6T8XToP" %}
 
-It would be a nice touch to have the circle and rectangle turn different colors when they overlap.
+Seria um bom toque fazer o círculo e o retângulo mudarem de cor quando se sobrepõem.
 
-We could do that by repeating the detection logic before drawing each shape:
+Poderíamos fazer isso repetindo a lógica de detecção antes de desenhar cada forma:
 ```js
-// draw rectangle
+// desenha o retângulo
 if (mouseX > oRectX && mouseX < oRightEdge &&
     mouseY > oRectY && mouseY < oBottomEdge) {
   fill(rectColor);
@@ -168,7 +168,7 @@ if (mouseX > oRectX && mouseX < oRightEdge &&
 }
 rect(x,y,w,h);
 
-// draw circle
+// desenha o círculo
 if (mouseX > oRectX && mouseX < oRightEdge &&
     mouseY > oRectY && mouseY < oBottomEdge) {
   fill(rectColor);
@@ -178,9 +178,9 @@ if (mouseX > oRectX && mouseX < oRightEdge &&
 ellipse(mouseX, mouseY, diam, diam);
 ```
 
-But, this is unnecessary and makes our code harder to read.
+Mas isso é desnecessário e deixa o nosso código mais difícil de ler.
 
-What we can do instead is calculate the overlap logic once, and save the result in a variable that we can check multiple times inside our `draw()` loop:
+O que podemos fazer, em vez disso, é calcular a lógica de sobreposição uma vez e guardar o resultado em uma variável que podemos consultar várias vezes dentro do nosso loop `draw()`:
 ```js
 let overlap = mouseX > oRectX && mouseX < oRightEdge &&
               mouseY > oRectY && mouseY < oBottomEdge;
@@ -188,4 +188,4 @@ let overlap = mouseX > oRectX && mouseX < oRightEdge &&
 
 {% include p5-editor.html id="RIBXWiq2-" %}
 
-This could still be improved to account for the cases where it wrongly detects an overlap when the circle moves near the corners of the rectangle (a literal [corner case](https://en.wikipedia.org/wiki/Corner_case)), but we'll wait until we see [functions](../functions/) and a little bit of [trigonometry](../../creative-coding/vectors/).
+Isso ainda poderia ser melhorado para tratar os casos em que ele detecta uma sobreposição de forma errada quando o círculo se move perto dos cantos do retângulo (um [corner case](https://en.wikipedia.org/wiki/Corner_case) literal), mas vamos esperar até vermos [funções](../functions/) e um pouco de [trigonometria](../../creative-coding/vectors/).

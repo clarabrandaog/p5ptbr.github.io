@@ -2,11 +2,11 @@
 title: Teachable Machine
 ---
 
-We've seen how to use the [ml5 library](https://ml5js.org/) to detect faces and hands on images, and briefly mentioned that it can be used to detect objects or classify images coming from video streams.
+Vimos como usar a [biblioteca ml5](https://ml5js.org/) para detectar rostos e mãos em imagens, e mencionamos rapidamente que ela pode ser usada para detectar objetos ou classificar imagens vindas de streams de vídeo.
 
-Let's set up a sketch to do classification on a video stream.
+Vamos montar um sketch para fazer classificação em um stream de vídeo.
 
-We'll start by modifying our hand detection sketch to work with the camera. We'll have to add a capture stream, and instead of calling `detect()` just once on a static image, we'll have to keep calling `detect()` every time we're done detecting. So our detection callback function will look like this now:
+Vamos começar modificando o nosso sketch de detecção de mãos para funcionar com a câmera. Vamos ter que adicionar um stream de captura e, em vez de chamar `detect()` só uma vez em uma imagem estática, vamos ter que continuar chamando `detect()` toda vez que terminarmos de detectar. Então a nossa função callback de detecção vai ficar assim agora:
 
 ```js
 function doneDetecting(results) {
@@ -15,31 +15,31 @@ function doneDetecting(results) {
 }
 ```
 
-Since we're drawing the video stream at every frame of `draw()`, and we might be drawing faster than detecting, we can't rely on drawing the landmarks inside the callback function anymore. What we can do is copy the results of the detection to a global variable to make sure they are available in our `draw()` function. That's what `mResults = results;` is doing.
+Como estamos desenhando o stream de vídeo a cada frame do `draw()`, e podemos estar desenhando mais rápido do que detectando, não podemos mais contar com o desenho dos pontos de referência dentro da função callback. O que podemos fazer é copiar os resultados da detecção para uma variável global, para garantir que eles estejam disponíveis na nossa função `draw()`. É isso que `mResults = results;` está fazendo.
 
-The rest of the sketch should look very familiar, we run `detect()`, make the results available globally, and run `detect()` again. Then, in `draw()`, we iterate through the latest results and draw landmark points for detected hands:
+O resto do sketch deve parecer bem familiar: rodamos `detect()`, disponibilizamos os resultados globalmente e rodamos `detect()` de novo. Depois, no `draw()`, iteramos pelos resultados mais recentes e desenhamos pontos de referência para as mãos detectadas:
 
 {% include p5-editor.html id="xQrvjIfCT" %}
 
-This works and we could use specific landmark locations to detect basic gestures like pinches or taps.
+Isso funciona e poderíamos usar localizações específicas dos pontos de referência para detectar gestos básicos, como pinças ou toques.
 
-## Classification Model
+## Modelo de Classificação
 
-Let's try the image classification model from `ml5`.
+Vamos testar o modelo de classificação de imagens do `ml5`.
 
-Since the `ml5` library wraps up a bunch of different models into consistent interfaces, we can swap our hand model for a classification model with some minor changes.
+Como a biblioteca `ml5` embrulha vários modelos diferentes em interfaces consistentes, podemos trocar o nosso modelo de mãos por um modelo de classificação com algumas mudanças pequenas.
 
-The new model is instantiated like this:
+O novo modelo é instanciado assim:
 ```js
 model = ml5.imageClassifier("MobileNet");
 ```
 
-And used like this:
+E usado assim:
 ```js
 model.classify(mCamera, doneDetecting);
 ```
 
-The results are not lists of hands or faces and their landmark objects, but lists of detected objects and how confident the model is about its classification of the image. For example:
+Os resultados não são listas de mãos ou rostos e seus objetos de pontos de referência, e sim listas de objetos detectados e o quão confiante o modelo está sobre a classificação da imagem. Por exemplo:
 
 ```js
 [
@@ -58,101 +58,101 @@ The results are not lists of hands or faces and their landmark objects, but list
 ]
 ```
 
-By default, the model only outputs the top-3 classes, but this can be adjusted with the `{topk: K}` parameter to the model constructor, where `K` is an integer that specifies how many classes to report.
+Por padrão, o modelo só retorna as 3 melhores classes (top-3), mas isso pode ser ajustado com o parâmetro `{topk: K}` no construtor do modelo, onde `K` é um inteiro que especifica quantas classes reportar.
 
 {% include p5-editor.html id="C-ZVXe2Xm" %}
 
-Like previously mentioned, the `ml5` documentation doesn't really specify which version of `MobileNetV2` was used, nor does it specify which classes this model detects.
+Como mencionado anteriormente, a documentação do `ml5` não especifica de fato qual versão do `MobileNetV2` foi usada, nem quais classes esse modelo detecta.
 
-The `wig, mask, neck tie` result was for a picture of a human face 🤔.
+O resultado `wig, mask, neck tie` foi para uma foto de um rosto humano 🤔.
 
-Other images give slightly more accurate, or rather, reasonable, results:
+Outras imagens dão resultados um pouco mais precisos, ou melhor, razoáveis:
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-classification-00.jpg' |relative_url }}">
 </div>
 
-They're very specific in some cases, and in other cases, wildly varying.
+Em alguns casos eles são muito específicos e, em outros, variam bastante.
 
-This isn't a problem, but if we're going to use this model it would help to know exactly what classes it was trained to identify. We might also want to add, remove or edit the classes in the model.
+Isso não é um problema, mas, se vamos usar esse modelo, ajudaria saber exatamente quais classes ele foi treinado para identificar. Também podemos querer adicionar, remover ou editar as classes do modelo.
 
-Luckily, there's a separate project that helps us do just that.
+Felizmente, existe um projeto separado que nos ajuda justamente com isso.
 
 ## Teachable Machine
 
-[Teachable Machine](https://teachablemachine.withgoogle.com/) is a web-based platform that helps us collect data and finetune certain types of models.
+O [Teachable Machine](https://teachablemachine.withgoogle.com/) é uma plataforma web que nos ajuda a coletar dados e fazer o ajuste fino (finetuning) de certos tipos de modelos.
 
-When we access the site we first have to choose the type of project we're working on, so it sets up the correct framework and initial model for our tuning. Let's see how to use it to augment an image classification model.
+Quando acessamos o site, primeiro temos que escolher o tipo de projeto no qual estamos trabalhando, para que ele configure o framework e o modelo inicial corretos para o nosso ajuste. Vamos ver como usá-lo para ampliar um modelo de classificação de imagens.
 
-Again, these are models that look at an image and predict what class of objects it represents. It can be used to differentiate between breeds of dogs, or classify digits written on envelopes. What we want to do, though, is use a classification model to detect and interpret American Sign Language signs.
+De novo, esses são modelos que olham uma imagem e preveem a qual classe de objetos ela corresponde. Podem ser usados para diferenciar raças de cachorros, ou classificar dígitos escritos em envelopes. O que queremos fazer, no entanto, é usar um modelo de classificação para detectar e interpretar sinais da Língua de Sinais Americana (ASL).
 
-We looked at the hand pose model from `ml5`, and we could use that to detect hand landmarks, but then we would need to manually come up with specific landmark relationships for each of the letters we want to detect. With the proper data, we can just train an image classification model to do the same thing, but in a more automated fashion.
+Vimos o modelo de pose de mão do `ml5`, e poderíamos usá-lo para detectar pontos de referência das mãos, mas aí precisaríamos criar manualmente relações específicas entre pontos de referência para cada uma das letras que queremos detectar. Com os dados certos, podemos simplesmente treinar um modelo de classificação de imagens para fazer a mesma coisa, só que de forma mais automatizada.
 
-### The Data
+### Os Dados
 
-We'll go to [Teachable Machine](https://teachablemachine.withgoogle.com/), select _Image Project_ and then _Standard image model_. We're greeted with this interface:
+Vamos até o [Teachable Machine](https://teachablemachine.withgoogle.com/), selecionar _Image Project_ e depois _Standard image model_. Somos recebidos por esta interface:
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-interface-00.jpg' |relative_url }}">
 </div>
 
-We can start by adding a class for the letter 'A'. Once we give it a name, we could start uploading hand signal images we find on the internet, but the interface gives us a simpler way to do this: video. If we click the Webcam button, we can use video to generate a series of images of the hand signal for the letter 'A'.
+Podemos começar adicionando uma classe para a letra 'A'. Depois de dar um nome a ela, poderíamos começar a enviar imagens do sinal dessa letra que encontrarmos na internet, mas a interface nos dá uma forma mais simples de fazer isso: vídeo. Se clicarmos no botão Webcam, podemos usar o vídeo para gerar uma série de imagens do sinal da letra 'A'.
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-interface-01.jpg' |relative_url }}">
 </div>
 
-When generating images for training a classification model, it's good to have as large of a variety of images as possible. The hand signal should always be for the letter 'A', but its position on the screen, the distance from the camera, the lighting, the background, etc... should all be different from image to image.
+Ao gerar imagens para treinar um modelo de classificação, é bom ter a maior variedade possível de imagens. O sinal da mão deve ser sempre o da letra 'A', mas a sua posição na tela, a distância da câmera, a iluminação, o fundo, etc... devem ser todos diferentes de imagem para imagem.
 
-We want the model to pick up on the common elements of all of the images.
+Queremos que o modelo capte os elementos em comum de todas as imagens.
 
 {% include video.html url="ai/tm-capture-00.webm" %}
 
-Sometimes it's a good idea to add an "_empty_" class to our dataset with images that aren't part of any other class. For this example, this could be a series of images without hands, or with hands that aren't showing any of the alphabet signals.
+Às vezes é uma boa ideia adicionar uma classe "_empty_" (vazia) ao nosso conjunto de dados, com imagens que não fazem parte de nenhuma outra classe. Para este exemplo, pode ser uma série de imagens sem mãos, ou com mãos que não estão mostrando nenhum dos sinais do alfabeto.
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-interface-02.jpg' |relative_url }}">
 </div>
 
-Once we've collected enough varied images for all of the classes we want to detect, we can press the _Train Model_ button. This will use our images to modify a pre-trained model and make it so it only detects the classes that we're specifying.
+Quando tivermos coletado imagens variadas o suficiente para todas as classes que queremos detectar, podemos apertar o botão _Train Model_. Isso vai usar as nossas imagens para modificar um modelo pré-treinado, fazendo com que ele detecte apenas as classes que estamos especificando.
 
-Once the model is ready, Teachable Machine gives us an interface for testing it, but more importantly, it gives us a way to add it to a `p5.js` sketch using `ml5`.
+Quando o modelo estiver pronto, o Teachable Machine nos dá uma interface para testá-lo e, mais importante, uma forma de adicioná-lo a um sketch `p5.js` usando o `ml5`.
 
-### The Model
+### O Modelo
 
-When we click on the _Export Model_ button, we get a screen like this:
+Quando clicamos no botão _Export Model_, vemos uma tela assim:
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-export-00.jpg' |relative_url }}">
 </div>
 
-We want to select the _Tensorflow.js_ tab and the _Upload_ option, and then click the _Upload my model_ button.
+Queremos selecionar a aba _Tensorflow.js_ e a opção _Upload_, e depois clicar no botão _Upload my model_.
 
-Once the model is done uploading, we want to copy the url it gives us for our finetuned model.
+Quando o modelo terminar de ser enviado, queremos copiar a url que ele nos dá para o nosso modelo com ajuste fino.
 
-For this example it was:
+Para este exemplo foi:
 ```
 https://teachablemachine.withgoogle.com/models/hrStMX1V2/
 ```
 
-Save the url somewhere. Don't worry too much about the `p5.js` example code that Teachable Machine provides. It was written for an older version of `p5.js` and an older version of `ml5`, and it doesn't work, so we'll just modify the code we already have working.
+Guarde a url em algum lugar. Não se preocupe muito com o código de exemplo em `p5.js` que o Teachable Machine fornece. Ele foi escrito para uma versão mais antiga do `p5.js` e uma versão mais antiga do `ml5`, e não funciona, então vamos simplesmente modificar o código que já temos funcionando.
 
-### The `p5.js` Code
+### O Código `p5.js`
 
-If we start with the plain image classifier example from above, all we have to do is change the line that instantiates our model to use the model that we finetuned.
+Se começarmos com o exemplo simples de classificador de imagens acima, tudo o que precisamos fazer é mudar a linha que instancia o nosso modelo para usar o modelo que ajustamos.
 
-We do this with:
+Fazemos isso com:
 ```js
 model = ml5.imageClassifier(modelUrl + "/model.json");
 ```
 
-Where `modelUrl` is the url we got from Teachable Machine above.
+Onde `modelUrl` é a url que recebemos do Teachable Machine acima.
 
-And that's it ! Done ! We now have a custom, finetuned, image classification model.
+E é isso ! Pronto ! Agora temos um modelo de classificação de imagens personalizado, com ajuste fino.
 
 {% include p5-editor.html id="3plC1NlxY" %}
 
-We can change the output a little bit, adjust it to make something visual or auditory happen based on the letters detected, but the majority of the code for setting up the camera, the model and the detection, stays the same.
+Podemos mudar um pouco a saída, adaptá-la para fazer algo visual ou sonoro acontecer com base nas letras detectadas, mas a maior parte do código para configurar a câmera, o modelo e a detecção continua igual.
 
 <div class="scaled-images left">
   <img src="{{ 'assets/images/ai/tm-result-00.jpg' |relative_url }}">
